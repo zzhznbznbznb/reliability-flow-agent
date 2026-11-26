@@ -1,0 +1,725 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="4540" height="2488" viewBox="0 0 4540 2488" role="img" aria-label="用户故事地图">
+
+<defs>
+  <filter id="storyShadow" x="-8%" y="-8%" width="116%" height="124%">
+    <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#102A43" flood-opacity="0.09"/>
+  </filter>
+  <filter id="softShadow" x="-8%" y="-8%" width="116%" height="124%">
+    <feDropShadow dx="0" dy="3" stdDeviation="6" flood-color="#0B2545" flood-opacity="0.06"/>
+  </filter>
+  <marker id="openArrow" viewBox="0 0 12 12" refX="10.5" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+    <path d="M 2 2 L 10.5 6 L 2 10" fill="none" stroke="#5E7184" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+</defs>
+
+<rect x="0" y="0" width="4540" height="2488" fill="#F7F9FC"/>
+<rect x="0" y="0" width="4540" height="12" fill="#132A45" stroke="none" stroke-width="1" opacity="1"/>
+<text x="60" y="74" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="37" fill="#102A43" font-weight="700" text-anchor="start" opacity="1">图 2  用户故事地图：基于自然语言的流程建模与设备可靠性仿真 Agent</text>
+<text x="60" y="114" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="16.5" fill="#52667A" font-weight="400" text-anchor="start" opacity="1">从需求输入到实验比较的完整用户旅程 · 九项用户活动 · 三个版本切片</text>
+<path d="M 60 145 L 2760 145" fill="none" stroke="#2D5F8A" stroke-width="2.2" opacity="1" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="3020" y="44" width="1460" height="92" fill="#FFFFFF" stroke="#D9E3EE" stroke-width="1.1" opacity="1" rx="13"/>
+<text x="3044" y="70" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#102A43" font-weight="700" text-anchor="start" opacity="1">版本切片</text>
+<rect x="3125" y="58" width="13" height="13" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="3"/>
+<text x="3147" y="69" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13" fill="#34495E" font-weight="700" text-anchor="start" opacity="1">MVP</text>
+<rect x="3325" y="58" width="13" height="13" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="3"/>
+<text x="3347" y="69" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13" fill="#34495E" font-weight="700" text-anchor="start" opacity="1">V1.1</text>
+<rect x="3525" y="58" width="13" height="13" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="3"/>
+<text x="3547" y="69" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13" fill="#34495E" font-weight="700" text-anchor="start" opacity="1">V1.2</text>
+<text x="3044" y="101" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="12.8" fill="#52667A" font-weight="400" text-anchor="start" opacity="1">横向为用户旅程（Backbone），纵向为版本切片；卡片标题为用户任务，正文为用户故事。</text>
+<text x="3044" y="123" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="12.2" fill="#6B7C8F" font-weight="400" text-anchor="start" opacity="1">MVP 完成闭环 · V1.1 增强建模与实验管理 · V1.2 引入智能解释与优化</text>
+<text x="62" y="226" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="18" fill="#102A43" font-weight="700" text-anchor="start" opacity="1">用户活动</text>
+<text x="62" y="250" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.8" fill="#7B8A9A" font-weight="600" text-anchor="start" opacity="1" letter-spacing="1.2">BACKBONE</text>
+<text x="62" y="274" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="12" fill="#7B8A9A" font-weight="400" text-anchor="start" opacity="1">按使用顺序 →</text>
+<rect x="330" y="200" width="440" height="108" fill="#132A45" stroke="#132A45" stroke-width="1" opacity="1" rx="14" filter="url(#softShadow)"/>
+<rect x="348" y="212" width="38" height="4" fill="#2D5F8A" stroke="#2D5F8A" stroke-width="1" opacity="1" rx="2"/>
+<text x="348" y="234" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="11.5" fill="#2D5F8A" font-weight="700" text-anchor="start" opacity="1">01</text>
+<text x="348" y="264" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="20.5" fill="#FFFFFF" font-weight="700" text-anchor="start" opacity="1">提出业务需求</text>
+<text x="348" y="289" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="12.2" fill="#B8C8DA" font-weight="400" text-anchor="start" opacity="1">明确目标、流程与约束</text>
+<rect x="788" y="200" width="440" height="108" fill="#132A45" stroke="#132A45" stroke-width="1" opacity="1" rx="14" filter="url(#softShadow)"/>
+<rect x="806" y="212" width="38" height="4" fill="#0F766E" stroke="#0F766E" stroke-width="1" opacity="1" rx="2"/>
+<text x="806" y="234" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="11.5" fill="#0F766E" font-weight="700" text-anchor="start" opacity="1">02</text>
+<text x="806" y="264" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="20.5" fill="#FFFFFF" font-weight="700" text-anchor="start" opacity="1">理解和构建流程</text>
+<text x="806" y="289" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="12.2" fill="#B8C8DA" font-weight="400" text-anchor="start" opacity="1">得到结构化流程模型</text>
+<rect x="1246" y="200" width="440" height="108" fill="#132A45" stroke="#132A45" stroke-width="1" opacity="1" rx="14" filter="url(#softShadow)"/>
+<rect x="1264" y="212" width="38" height="4" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="2"/>
+<text x="1264" y="234" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="11.5" fill="#B45309" font-weight="700" text-anchor="start" opacity="1">03</text>
+<text x="1264" y="264" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="20.5" fill="#FFFFFF" font-weight="700" text-anchor="start" opacity="1">编辑和确认流程</text>
+<text x="1264" y="289" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="12.2" fill="#B8C8DA" font-weight="400" text-anchor="start" opacity="1">形成可执行流程图</text>
+<rect x="1704" y="200" width="440" height="108" fill="#132A45" stroke="#132A45" stroke-width="1" opacity="1" rx="14" filter="url(#softShadow)"/>
+<rect x="1722" y="212" width="38" height="4" fill="#BE123C" stroke="#BE123C" stroke-width="1" opacity="1" rx="2"/>
+<text x="1722" y="234" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="11.5" fill="#BE123C" font-weight="700" text-anchor="start" opacity="1">04</text>
+<text x="1722" y="264" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="20.5" fill="#FFFFFF" font-weight="700" text-anchor="start" opacity="1">配置设备可靠性</text>
+<text x="1722" y="289" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="12.2" fill="#B8C8DA" font-weight="400" text-anchor="start" opacity="1">量化节点失效风险</text>
+<rect x="2162" y="200" width="440" height="108" fill="#132A45" stroke="#132A45" stroke-width="1" opacity="1" rx="14" filter="url(#softShadow)"/>
+<rect x="2180" y="212" width="38" height="4" fill="#1D4ED8" stroke="#1D4ED8" stroke-width="1" opacity="1" rx="2"/>
+<text x="2180" y="234" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="11.5" fill="#1D4ED8" font-weight="700" text-anchor="start" opacity="1">05</text>
+<text x="2180" y="264" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="20.5" fill="#FFFFFF" font-weight="700" text-anchor="start" opacity="1">配置故障检测与维修</text>
+<text x="2180" y="289" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="12.2" fill="#B8C8DA" font-weight="400" text-anchor="start" opacity="1">建立检测与维修规则</text>
+<rect x="2620" y="200" width="440" height="108" fill="#132A45" stroke="#132A45" stroke-width="1" opacity="1" rx="14" filter="url(#softShadow)"/>
+<rect x="2638" y="212" width="38" height="4" fill="#6D28D9" stroke="#6D28D9" stroke-width="1" opacity="1" rx="2"/>
+<text x="2638" y="234" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="11.5" fill="#6D28D9" font-weight="700" text-anchor="start" opacity="1">06</text>
+<text x="2638" y="264" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="20.5" fill="#FFFFFF" font-weight="700" text-anchor="start" opacity="1">创建仿真任务</text>
+<text x="2638" y="289" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="12.2" fill="#B8C8DA" font-weight="400" text-anchor="start" opacity="1">确定实验边界</text>
+<rect x="3078" y="200" width="440" height="108" fill="#132A45" stroke="#132A45" stroke-width="1" opacity="1" rx="14" filter="url(#softShadow)"/>
+<rect x="3096" y="212" width="38" height="4" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="2"/>
+<text x="3096" y="234" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="11.5" fill="#15803D" font-weight="700" text-anchor="start" opacity="1">07</text>
+<text x="3096" y="264" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="20.5" fill="#FFFFFF" font-weight="700" text-anchor="start" opacity="1">执行多设备仿真</text>
+<text x="3096" y="289" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="12.2" fill="#B8C8DA" font-weight="400" text-anchor="start" opacity="1">获得多设备运行事实</text>
+<rect x="3536" y="200" width="440" height="108" fill="#132A45" stroke="#132A45" stroke-width="1" opacity="1" rx="14" filter="url(#softShadow)"/>
+<rect x="3554" y="212" width="38" height="4" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="2"/>
+<text x="3554" y="234" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="11.5" fill="#B45309" font-weight="700" text-anchor="start" opacity="1">08</text>
+<text x="3554" y="264" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="20.5" fill="#FFFFFF" font-weight="700" text-anchor="start" opacity="1">分析仿真结果</text>
+<text x="3554" y="289" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="12.2" fill="#B8C8DA" font-weight="400" text-anchor="start" opacity="1">形成可靠性结论</text>
+<rect x="3994" y="200" width="440" height="108" fill="#132A45" stroke="#132A45" stroke-width="1" opacity="1" rx="14" filter="url(#softShadow)"/>
+<rect x="4012" y="212" width="38" height="4" fill="#0F766E" stroke="#0F766E" stroke-width="1" opacity="1" rx="2"/>
+<text x="4012" y="234" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="11.5" fill="#0F766E" font-weight="700" text-anchor="start" opacity="1">09</text>
+<text x="4012" y="264" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="20.5" fill="#FFFFFF" font-weight="700" text-anchor="start" opacity="1">管理和比较实验</text>
+<text x="4012" y="289" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="12.2" fill="#B8C8DA" font-weight="400" text-anchor="start" opacity="1">沉淀实验与决策依据</text>
+<rect x="50" y="330" width="4440" height="948" fill="#F2F7FF" stroke="#E0E8F1" stroke-width="1.1" opacity="1" rx="16"/>
+<rect x="50" y="330" width="6" height="948" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1"/>
+<text x="76" y="373" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="25" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">MVP</text>
+<text x="76" y="396" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13" fill="#34495E" font-weight="700" text-anchor="start" opacity="1">最小可行版本</text>
+<text x="76" y="424" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="12.2" fill="#52667A" font-weight="400" text-anchor="start" opacity="1">完成一次完整的</text>
+<text x="76" y="442" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="12.2" fill="#52667A" font-weight="400" text-anchor="start" opacity="1">自然语言建模 →</text>
+<text x="76" y="460" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="12.2" fill="#52667A" font-weight="400" text-anchor="start" opacity="1">可靠性配置 →</text>
+<text x="76" y="478" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="12.2" fill="#52667A" font-weight="400" text-anchor="start" opacity="1">多设备仿真 →</text>
+<text x="76" y="496" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="12.2" fill="#52667A" font-weight="400" text-anchor="start" opacity="1">结果分析闭环</text>
+<text x="76" y="1254" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="12.5" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">36 个用户故事</text>
+<rect x="339" y="350" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="353" y="363" width="4" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="2"/>
+<text x="366" y="380" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">输入业务目标与流程</text>
+<rect x="702" y="363" width="45" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="6"/>
+<text x="724.5" y="377" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">MVP</text>
+<text x="359" y="400" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">作为一名业务建模人员，</text>
+<text x="359" y="420" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望用自然语言说明业务目标、流程步骤和参与角色，</text>
+<text x="359" y="441" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便快速获得可编辑的初始流程模型。</text>
+<rect x="339" y="502" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="353" y="515" width="4" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="2"/>
+<text x="366" y="532" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">说明设备与规模</text>
+<rect x="702" y="515" width="45" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="6"/>
+<text x="724.5" y="529" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">MVP</text>
+<text x="359" y="552" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">作为一名业务建模人员，</text>
+<text x="359" y="572" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望说明设备类型、数量及运行方式，</text>
+<text x="359" y="593" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便系统确定可靠性建模范围和仿真规模。</text>
+<rect x="339" y="654" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="353" y="667" width="4" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="2"/>
+<text x="366" y="684" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">补充业务约束</text>
+<rect x="702" y="667" width="45" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="6"/>
+<text x="724.5" y="681" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">MVP</text>
+<text x="359" y="704" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">作为一名业务建模人员，</text>
+<text x="359" y="724" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望补充时间、顺序、资源和异常等约束，</text>
+<text x="359" y="745" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便生成的模型符合真实业务规则。</text>
+<rect x="339" y="806" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="353" y="819" width="4" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="2"/>
+<text x="366" y="836" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">回答澄清问题</text>
+<rect x="702" y="819" width="45" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="6"/>
+<text x="724.5" y="833" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">MVP</text>
+<text x="359" y="856" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">作为一名业务建模人员，</text>
+<text x="359" y="876" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望回答 Agent 对缺失信息和歧义的澄清问题，</text>
+<text x="359" y="897" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便完善需求并减少建模偏差。</text>
+<rect x="797" y="350" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="811" y="363" width="4" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="2"/>
+<text x="824" y="380" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">理解业务目标</text>
+<rect x="1160" y="363" width="45" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="6"/>
+<text x="1182.5" y="377" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">MVP</text>
+<text x="817" y="400" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">作为一名业务建模人员，</text>
+<text x="817" y="420" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望Agent 识别业务目标、边界与成功标准，</text>
+<text x="817" y="441" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便确认系统真正理解了问题。</text>
+<rect x="797" y="502" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="811" y="515" width="4" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="2"/>
+<text x="824" y="532" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">提取流程逻辑</text>
+<rect x="1160" y="515" width="45" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="6"/>
+<text x="1182.5" y="529" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">MVP</text>
+<text x="817" y="552" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">作为一名业务建模人员，</text>
+<text x="817" y="572" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望自动提取步骤、顺序、条件和循环，</text>
+<text x="817" y="593" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便获得结构化的业务流程。</text>
+<rect x="797" y="654" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="811" y="667" width="4" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="2"/>
+<text x="824" y="684" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">生成流程模型</text>
+<rect x="1160" y="667" width="45" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="6"/>
+<text x="1182.5" y="681" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">MVP</text>
+<text x="817" y="704" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">作为一名业务建模人员，</text>
+<text x="817" y="724" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望得到包含节点、连接和属性的可编辑模型，</text>
+<text x="817" y="745" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便继续完善而不是从零搭建。</text>
+<rect x="797" y="806" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="811" y="819" width="4" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="2"/>
+<text x="824" y="836" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">生成可视化流程图</text>
+<rect x="1160" y="819" width="45" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="6"/>
+<text x="1182.5" y="833" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">MVP</text>
+<text x="817" y="856" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">作为一名业务建模人员，</text>
+<text x="817" y="876" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望自动获得业务流程图，</text>
+<text x="817" y="897" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便与业务人员核对并定位理解偏差。</text>
+<rect x="1255" y="350" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="1269" y="363" width="4" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="2"/>
+<text x="1282" y="380" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">查看流程图</text>
+<rect x="1618" y="363" width="45" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="6"/>
+<text x="1640.5" y="377" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">MVP</text>
+<text x="1275" y="400" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">作为一名业务建模人员，</text>
+<text x="1275" y="420" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望缩放、平移并查看节点详情，</text>
+<text x="1275" y="441" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便检查流程结构和关键路径。</text>
+<rect x="1255" y="502" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="1269" y="515" width="4" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="2"/>
+<text x="1282" y="532" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">新增或删除节点</text>
+<rect x="1618" y="515" width="45" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="6"/>
+<text x="1640.5" y="529" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">MVP</text>
+<text x="1275" y="552" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">作为一名业务建模人员，</text>
+<text x="1275" y="572" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望增加遗漏步骤或删除多余节点，</text>
+<text x="1275" y="593" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便让流程与实际业务一致。</text>
+<rect x="1255" y="654" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="1269" y="667" width="4" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="2"/>
+<text x="1282" y="684" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">修改节点属性与执行时间</text>
+<rect x="1618" y="667" width="45" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="6"/>
+<text x="1640.5" y="681" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">MVP</text>
+<text x="1275" y="704" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">作为一名业务建模人员，</text>
+<text x="1275" y="724" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望修改节点名称、资源和执行时间，</text>
+<text x="1275" y="745" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便模型反映真实作业耗时。</text>
+<rect x="1255" y="806" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="1269" y="819" width="4" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="2"/>
+<text x="1282" y="836" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">编辑连接与分支循环</text>
+<rect x="1618" y="819" width="45" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="6"/>
+<text x="1640.5" y="833" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">MVP</text>
+<text x="1275" y="856" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">作为一名业务建模人员，</text>
+<text x="1275" y="876" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望调整连接、条件分支和循环，</text>
+<text x="1275" y="897" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便准确表达业务规则与异常路径。</text>
+<rect x="1255" y="958" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="1269" y="971" width="4" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="2"/>
+<text x="1282" y="988" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">保存并校验流程</text>
+<rect x="1618" y="971" width="45" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="6"/>
+<text x="1640.5" y="985" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">MVP</text>
+<text x="1275" y="1008" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">作为一名业务建模人员，</text>
+<text x="1275" y="1028" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望保存前自动校验连通性和循环退出条件，</text>
+<text x="1275" y="1049" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便保证模型可以进入仿真。</text>
+<rect x="1713" y="350" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="1727" y="363" width="4" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="2"/>
+<text x="1740" y="380" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">选择可靠性节点</text>
+<rect x="2076" y="363" width="45" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="6"/>
+<text x="2098.5" y="377" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">MVP</text>
+<text x="1733" y="400" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">作为一名可靠性工程师，</text>
+<text x="1733" y="420" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望选择需要参与可靠性计算的流程节点，</text>
+<text x="1733" y="441" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便把分析聚焦在真实设备环节。</text>
+<rect x="1713" y="502" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="1727" y="515" width="4" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="2"/>
+<text x="1740" y="532" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">设置参与状态</text>
+<rect x="2076" y="515" width="45" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="6"/>
+<text x="2098.5" y="529" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">MVP</text>
+<text x="1733" y="552" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">作为一名可靠性工程师，</text>
+<text x="1733" y="572" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望设置节点是否参与可靠性计算，</text>
+<text x="1733" y="593" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便区分普通业务步骤与设备失效风险。</text>
+<rect x="1713" y="654" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="1727" y="667" width="4" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="2"/>
+<text x="1740" y="684" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">配置故障率 λ</text>
+<rect x="2076" y="667" width="45" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="6"/>
+<text x="2098.5" y="681" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">MVP</text>
+<text x="1733" y="704" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">作为一名可靠性工程师，</text>
+<text x="1733" y="724" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望为每个设备节点配置故障率 λ，</text>
+<text x="1733" y="745" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便量化设备在流程中的失效可能性。</text>
+<rect x="1713" y="806" width="422" height="148" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="1727" y="819" width="4" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="2"/>
+<text x="1740" y="836" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">查看并校验可靠性配置</text>
+<rect x="2076" y="819" width="45" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="6"/>
+<text x="2098.5" y="833" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">MVP</text>
+<text x="1733" y="856" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">作为一名可靠性工程师，</text>
+<text x="1733" y="876" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望查看节点与流程的理论可靠度，并校验可靠性参数的关</text>
+<text x="1733" y="897" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">联，</text>
+<text x="1733" y="918" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便避免遗漏、错配或无效参数。</text>
+<rect x="2171" y="350" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="2185" y="363" width="4" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="2"/>
+<text x="2198" y="380" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">指定故障检测节点</text>
+<rect x="2534" y="363" width="45" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="6"/>
+<text x="2556.5" y="377" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">MVP</text>
+<text x="2191" y="400" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">作为一名可靠性工程师，</text>
+<text x="2191" y="420" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望指定具备故障检测能力的节点，</text>
+<text x="2191" y="441" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便潜在故障在正确的业务环节被发现。</text>
+<rect x="2171" y="502" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="2185" y="515" width="4" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="2"/>
+<text x="2198" y="532" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">配置检测耗时</text>
+<rect x="2534" y="515" width="45" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="6"/>
+<text x="2556.5" y="529" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">MVP</text>
+<text x="2191" y="552" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">作为一名可靠性工程师，</text>
+<text x="2191" y="572" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望设置检测节点执行时间，</text>
+<text x="2191" y="593" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便把检测开销纳入流程与可靠性分析。</text>
+<rect x="2171" y="654" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="2185" y="667" width="4" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="2"/>
+<text x="2198" y="684" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">配置处理、维修与恢复</text>
+<rect x="2534" y="667" width="45" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="6"/>
+<text x="2556.5" y="681" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">MVP</text>
+<text x="2191" y="704" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">作为一名可靠性工程师，</text>
+<text x="2191" y="724" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望设计故障发现后的处理路径、维修流程和恢复位置，</text>
+<text x="2191" y="745" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便设备能够继续运行并形成闭环。</text>
+<rect x="2171" y="806" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="2185" y="819" width="4" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="2"/>
+<text x="2198" y="836" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">预览故障生命周期</text>
+<rect x="2534" y="819" width="45" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="6"/>
+<text x="2556.5" y="833" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">MVP</text>
+<text x="2191" y="856" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">作为一名可靠性工程师，</text>
+<text x="2191" y="876" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望预览潜在故障、检测、维修和恢复过程，</text>
+<text x="2191" y="897" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便确认机制完整且业务路径闭环。</text>
+<rect x="2629" y="350" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="2643" y="363" width="4" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="2"/>
+<text x="2656" y="380" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">设置设备数量</text>
+<rect x="2992" y="363" width="45" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="6"/>
+<text x="3014.5" y="377" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">MVP</text>
+<text x="2649" y="400" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">作为一名仿真分析人员，</text>
+<text x="2649" y="420" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望设置参与仿真的设备数量，</text>
+<text x="2649" y="441" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便分析设备规模对系统可靠性的影响。</text>
+<rect x="2629" y="502" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="2643" y="515" width="4" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="2"/>
+<text x="2656" y="532" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">设置时间、种子与运行参数</text>
+<rect x="2992" y="515" width="45" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="6"/>
+<text x="3014.5" y="529" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">MVP</text>
+<text x="2649" y="552" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">作为一名仿真分析人员，</text>
+<text x="2649" y="572" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望设置仿真结束时间、随机种子和运行参数，</text>
+<text x="2649" y="593" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便控制实验范围并保证结果可复现。</text>
+<rect x="2629" y="654" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="2643" y="667" width="4" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="2"/>
+<text x="2656" y="684" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">检查模型与参数</text>
+<rect x="2992" y="667" width="45" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="6"/>
+<text x="3014.5" y="681" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">MVP</text>
+<text x="2649" y="704" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">作为一名仿真分析人员，</text>
+<text x="2649" y="724" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望运行前自动检查流程、可靠性、检测和维修配置，</text>
+<text x="2649" y="745" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便避免无效仿真和参数遗漏。</text>
+<rect x="2629" y="806" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="2643" y="819" width="4" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="2"/>
+<text x="2656" y="836" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">创建仿真任务</text>
+<rect x="2992" y="819" width="45" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="6"/>
+<text x="3014.5" y="833" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">MVP</text>
+<text x="2649" y="856" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">作为一名仿真分析人员，</text>
+<text x="2649" y="876" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望保存本次仿真配置并创建任务，</text>
+<text x="2649" y="897" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便开始执行并支持后续复用。</text>
+<rect x="3087" y="350" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="3101" y="363" width="4" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="2"/>
+<text x="3114" y="380" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">启动并查看进度</text>
+<rect x="3450" y="363" width="45" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="6"/>
+<text x="3472.5" y="377" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">MVP</text>
+<text x="3107" y="400" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">作为一名仿真分析人员，</text>
+<text x="3107" y="420" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望启动多设备仿真并查看运行进度，</text>
+<text x="3107" y="441" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便掌握实验状态。</text>
+<rect x="3087" y="502" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="3101" y="515" width="4" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="2"/>
+<text x="3114" y="532" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">查看设备独立状态</text>
+<rect x="3450" y="515" width="45" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="6"/>
+<text x="3472.5" y="529" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">MVP</text>
+<text x="3107" y="552" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">作为一名仿真分析人员，</text>
+<text x="3107" y="572" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望查看每台设备当前节点、状态和运行轨迹，</text>
+<text x="3107" y="593" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便观察设备之间的行为差异。</text>
+<rect x="3087" y="654" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="3101" y="667" width="4" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="2"/>
+<text x="3114" y="684" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">查看故障与维修事件</text>
+<rect x="3450" y="667" width="45" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="6"/>
+<text x="3472.5" y="681" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">MVP</text>
+<text x="3107" y="704" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">作为一名仿真分析人员，</text>
+<text x="3107" y="724" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望实时查看故障发生、检测、维修和恢复事件，</text>
+<text x="3107" y="745" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便理解设备可靠性变化过程。</text>
+<rect x="3087" y="806" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="3101" y="819" width="4" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="2"/>
+<text x="3114" y="836" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">验证设备独立运行</text>
+<rect x="3450" y="819" width="45" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="6"/>
+<text x="3472.5" y="833" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">MVP</text>
+<text x="3107" y="856" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">作为一名仿真分析人员，</text>
+<text x="3107" y="876" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望确认单台设备故障不会中断其他设备，</text>
+<text x="3107" y="897" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便正确评估多设备系统的整体行为。</text>
+<rect x="3545" y="350" width="422" height="148" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="3559" y="363" width="4" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="2"/>
+<text x="3572" y="380" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">查看整体可靠性指标</text>
+<rect x="3908" y="363" width="45" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="6"/>
+<text x="3930.5" y="377" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">MVP</text>
+<text x="3565" y="400" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">作为一名仿真分析人员，</text>
+<text x="3565" y="420" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望查看系统可靠度、节点可靠度、故障次数和平均修复时</text>
+<text x="3565" y="441" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">间，</text>
+<text x="3565" y="462" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便量化评估系统可靠性。</text>
+<rect x="3545" y="510" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="3559" y="523" width="4" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="2"/>
+<text x="3572" y="540" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">查看设备最终状态与轨迹</text>
+<rect x="3908" y="523" width="45" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="6"/>
+<text x="3930.5" y="537" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">MVP</text>
+<text x="3565" y="560" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">作为一名仿真分析人员，</text>
+<text x="3565" y="580" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望查看每台设备的最终状态和运行轨迹，</text>
+<text x="3565" y="601" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便定位不同设备的结果差异。</text>
+<rect x="3545" y="662" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="3559" y="675" width="4" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="2"/>
+<text x="3572" y="692" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">查看节点执行统计</text>
+<rect x="3908" y="675" width="45" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="6"/>
+<text x="3930.5" y="689" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">MVP</text>
+<text x="3565" y="712" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">作为一名仿真分析人员，</text>
+<text x="3565" y="732" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望查看节点执行次数、忙闲时间和等待情况，</text>
+<text x="3565" y="753" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便发现流程瓶颈。</text>
+<rect x="3545" y="814" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="3559" y="827" width="4" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="2"/>
+<text x="3572" y="844" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">查看故障发现与维修统计</text>
+<rect x="3908" y="827" width="45" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="6"/>
+<text x="3930.5" y="841" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">MVP</text>
+<text x="3565" y="864" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">作为一名仿真分析人员，</text>
+<text x="3565" y="884" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望查看潜在故障、已发现故障和维修记录，</text>
+<text x="3565" y="905" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便评估检测与维修机制。</text>
+<rect x="3545" y="966" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="3559" y="979" width="4" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="2"/>
+<text x="3572" y="996" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">对比理论与实际</text>
+<rect x="3908" y="979" width="45" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="6"/>
+<text x="3930.5" y="993" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">MVP</text>
+<text x="3565" y="1016" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">作为一名仿真分析人员，</text>
+<text x="3565" y="1036" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望对比理论可靠度与实际仿真故障统计，</text>
+<text x="3565" y="1057" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便判断模型假设与仿真结果是否一致。</text>
+<rect x="3545" y="1118" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="3559" y="1131" width="4" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="2"/>
+<text x="3572" y="1148" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">获取 Agent 解释</text>
+<rect x="3908" y="1131" width="45" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="6"/>
+<text x="3930.5" y="1145" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">MVP</text>
+<text x="3565" y="1168" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">作为一名仿真分析人员，</text>
+<text x="3565" y="1188" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望Agent 用自然语言解释关键指标和异常结果，</text>
+<text x="3565" y="1209" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便形成可汇报的分析结论。</text>
+<rect x="4003" y="350" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="4017" y="363" width="4" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="2"/>
+<text x="4030" y="380" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">保存实验</text>
+<rect x="4366" y="363" width="45" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1" rx="6"/>
+<text x="4388.5" y="377" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">MVP</text>
+<text x="4023" y="400" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#2563EB" font-weight="700" text-anchor="start" opacity="1">作为一名仿真分析人员，</text>
+<text x="4023" y="420" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望保存本次实验的模型、参数和结果，</text>
+<text x="4023" y="441" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便后续追溯与复现。</text>
+<rect x="50" y="1278" width="4440" height="788" fill="#FFFBF2" stroke="#E0E8F1" stroke-width="1.1" opacity="1" rx="16"/>
+<rect x="50" y="1278" width="6" height="788" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1"/>
+<text x="76" y="1321" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="25" fill="#B45309" font-weight="700" text-anchor="start" opacity="1">V1.1</text>
+<text x="76" y="1344" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13" fill="#34495E" font-weight="700" text-anchor="start" opacity="1">增强版本</text>
+<text x="76" y="1372" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="12.2" fill="#52667A" font-weight="400" text-anchor="start" opacity="1">增强自然语言理解、</text>
+<text x="76" y="1390" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="12.2" fill="#52667A" font-weight="400" text-anchor="start" opacity="1">复杂流程编辑、</text>
+<text x="76" y="1408" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="12.2" fill="#52667A" font-weight="400" text-anchor="start" opacity="1">实验管理与比较</text>
+<text x="76" y="2042" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="12.5" fill="#B45309" font-weight="700" text-anchor="start" opacity="1">23 个用户故事</text>
+<rect x="339" y="1298" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="353" y="1311" width="4" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="2"/>
+<text x="366" y="1328" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">维护领域术语</text>
+<rect x="695" y="1311" width="52" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="6"/>
+<text x="721" y="1325" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.1</text>
+<text x="359" y="1348" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#B45309" font-weight="700" text-anchor="start" opacity="1">作为一名业务建模人员，</text>
+<text x="359" y="1368" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望维护业务术语和同义词，</text>
+<text x="359" y="1389" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便Agent 更准确地理解行业表达。</text>
+<rect x="339" y="1450" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="353" y="1463" width="4" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="2"/>
+<text x="366" y="1480" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">导入需求文档</text>
+<rect x="695" y="1463" width="52" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="6"/>
+<text x="721" y="1477" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.1</text>
+<text x="359" y="1500" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#B45309" font-weight="700" text-anchor="start" opacity="1">作为一名业务建模人员，</text>
+<text x="359" y="1520" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望导入需求文档并让 Agent 提取要点，</text>
+<text x="359" y="1541" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便复用已有材料开展建模。</text>
+<rect x="797" y="1298" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="811" y="1311" width="4" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="2"/>
+<text x="824" y="1328" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">查看建模依据</text>
+<rect x="1153" y="1311" width="52" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="6"/>
+<text x="1179" y="1325" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.1</text>
+<text x="817" y="1348" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#B45309" font-weight="700" text-anchor="start" opacity="1">作为一名业务建模人员，</text>
+<text x="817" y="1368" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望查看每个节点和连接的提取依据，</text>
+<text x="817" y="1389" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便核验 Agent 的建模判断。</text>
+<rect x="797" y="1450" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="811" y="1463" width="4" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="2"/>
+<text x="824" y="1480" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">识别异常与补偿路径</text>
+<rect x="1153" y="1463" width="52" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="6"/>
+<text x="1179" y="1477" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.1</text>
+<text x="817" y="1500" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#B45309" font-weight="700" text-anchor="start" opacity="1">作为一名业务建模人员，</text>
+<text x="817" y="1520" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望让 Agent 识别异常路径和补偿措施，</text>
+<text x="817" y="1541" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便流程覆盖更多真实业务情况。</text>
+<rect x="797" y="1602" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="811" y="1615" width="4" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="2"/>
+<text x="824" y="1632" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">复用流程模板</text>
+<rect x="1153" y="1615" width="52" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="6"/>
+<text x="1179" y="1629" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.1</text>
+<text x="817" y="1652" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#B45309" font-weight="700" text-anchor="start" opacity="1">作为一名业务建模人员，</text>
+<text x="817" y="1672" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望从历史模型或模板开始建模，</text>
+<text x="817" y="1693" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便加速相似业务的流程设计。</text>
+<rect x="1255" y="1298" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="1269" y="1311" width="4" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="2"/>
+<text x="1282" y="1328" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">批量编辑节点</text>
+<rect x="1611" y="1311" width="52" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="6"/>
+<text x="1637" y="1325" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.1</text>
+<text x="1275" y="1348" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#B45309" font-weight="700" text-anchor="start" opacity="1">作为一名业务建模人员，</text>
+<text x="1275" y="1368" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望批量修改节点属性和执行时间，</text>
+<text x="1275" y="1389" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便高效维护大型流程。</text>
+<rect x="1255" y="1450" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="1269" y="1463" width="4" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="2"/>
+<text x="1282" y="1480" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">撤销、重做与版本对比</text>
+<rect x="1611" y="1463" width="52" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="6"/>
+<text x="1637" y="1477" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.1</text>
+<text x="1275" y="1500" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#B45309" font-weight="700" text-anchor="start" opacity="1">作为一名业务建模人员，</text>
+<text x="1275" y="1520" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望安全撤销修改并比较模型版本，</text>
+<text x="1275" y="1541" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便控制编辑风险并保留演进依据。</text>
+<rect x="1713" y="1298" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="1727" y="1311" width="4" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="2"/>
+<text x="1740" y="1328" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">按设备类型批量配置</text>
+<rect x="2069" y="1311" width="52" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="6"/>
+<text x="2095" y="1325" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.1</text>
+<text x="1733" y="1348" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#B45309" font-weight="700" text-anchor="start" opacity="1">作为一名可靠性工程师，</text>
+<text x="1733" y="1368" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望按设备类型批量应用故障率，</text>
+<text x="1733" y="1389" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便减少重复配置并保持参数一致。</text>
+<rect x="1713" y="1450" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="1727" y="1463" width="4" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="2"/>
+<text x="1740" y="1480" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">选择故障分布</text>
+<rect x="2069" y="1463" width="52" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="6"/>
+<text x="2095" y="1477" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.1</text>
+<text x="1733" y="1500" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#B45309" font-weight="700" text-anchor="start" opacity="1">作为一名可靠性工程师，</text>
+<text x="1733" y="1520" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望配置指数、威布尔等故障分布，</text>
+<text x="1733" y="1541" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便更贴近真实设备失效规律。</text>
+<rect x="1713" y="1602" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="1727" y="1615" width="4" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="2"/>
+<text x="1740" y="1632" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">建立可靠性参数库</text>
+<rect x="2069" y="1615" width="52" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="6"/>
+<text x="2095" y="1629" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.1</text>
+<text x="1733" y="1652" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#B45309" font-weight="700" text-anchor="start" opacity="1">作为一名可靠性工程师，</text>
+<text x="1733" y="1672" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望沉淀可复用的设备可靠性参数，</text>
+<text x="1733" y="1693" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便在不同实验间保持一致。</text>
+<rect x="2171" y="1298" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="2185" y="1311" width="4" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="2"/>
+<text x="2198" y="1328" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">配置维修资源约束</text>
+<rect x="2527" y="1311" width="52" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="6"/>
+<text x="2553" y="1325" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.1</text>
+<text x="2191" y="1348" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#B45309" font-weight="700" text-anchor="start" opacity="1">作为一名可靠性工程师，</text>
+<text x="2191" y="1368" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望配置备件、维修人员和维修能力约束，</text>
+<text x="2191" y="1389" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便分析维修等待对可靠性的影响。</text>
+<rect x="2171" y="1450" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="2185" y="1463" width="4" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="2"/>
+<text x="2198" y="1480" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">比较检测策略</text>
+<rect x="2527" y="1463" width="52" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="6"/>
+<text x="2553" y="1477" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.1</text>
+<text x="2191" y="1500" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#B45309" font-weight="700" text-anchor="start" opacity="1">作为一名可靠性工程师，</text>
+<text x="2191" y="1520" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望配置不同检测节点方案并比较，</text>
+<text x="2191" y="1541" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便选择更有效的故障检测策略。</text>
+<rect x="2629" y="1298" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="2643" y="1311" width="4" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="2"/>
+<text x="2656" y="1328" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">生成参数扫描任务</text>
+<rect x="2985" y="1311" width="52" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="6"/>
+<text x="3011" y="1325" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.1</text>
+<text x="2649" y="1348" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#B45309" font-weight="700" text-anchor="start" opacity="1">作为一名仿真分析人员，</text>
+<text x="2649" y="1368" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望设置参数范围并批量生成任务，</text>
+<text x="2649" y="1389" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便系统开展多组对比实验。</text>
+<rect x="2629" y="1450" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="2643" y="1463" width="4" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="2"/>
+<text x="2656" y="1480" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">克隆历史任务</text>
+<rect x="2985" y="1463" width="52" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="6"/>
+<text x="3011" y="1477" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.1</text>
+<text x="2649" y="1500" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#B45309" font-weight="700" text-anchor="start" opacity="1">作为一名仿真分析人员，</text>
+<text x="2649" y="1520" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望从历史任务克隆配置，</text>
+<text x="2649" y="1541" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便快速创建相似仿真。</text>
+<rect x="3087" y="1298" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="3101" y="1311" width="4" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="2"/>
+<text x="3114" y="1328" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">暂停、继续与终止</text>
+<rect x="3443" y="1311" width="52" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="6"/>
+<text x="3469" y="1325" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.1</text>
+<text x="3107" y="1348" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#B45309" font-weight="700" text-anchor="start" opacity="1">作为一名仿真分析人员，</text>
+<text x="3107" y="1368" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望暂停、继续或终止仿真，</text>
+<text x="3107" y="1389" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便控制长时间运行任务。</text>
+<rect x="3087" y="1450" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="3101" y="1463" width="4" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="2"/>
+<text x="3114" y="1480" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">查看日志与告警</text>
+<rect x="3443" y="1463" width="52" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="6"/>
+<text x="3469" y="1477" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.1</text>
+<text x="3107" y="1500" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#B45309" font-weight="700" text-anchor="start" opacity="1">作为一名仿真分析人员，</text>
+<text x="3107" y="1520" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望查看运行日志和异常告警，</text>
+<text x="3107" y="1541" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便诊断仿真问题并定位异常。</text>
+<rect x="3545" y="1298" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="3559" y="1311" width="4" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="2"/>
+<text x="3572" y="1328" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">筛选与导出报告</text>
+<rect x="3901" y="1311" width="52" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="6"/>
+<text x="3927" y="1325" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.1</text>
+<text x="3565" y="1348" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#B45309" font-weight="700" text-anchor="start" opacity="1">作为一名仿真分析人员，</text>
+<text x="3565" y="1368" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望按设备、节点和故障类型筛选并导出报告，</text>
+<text x="3565" y="1389" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便用于项目汇报和评审。</text>
+<rect x="3545" y="1450" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="3559" y="1463" width="4" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="2"/>
+<text x="3572" y="1480" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">图表联动与下钻</text>
+<rect x="3901" y="1463" width="52" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="6"/>
+<text x="3927" y="1477" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.1</text>
+<text x="3565" y="1500" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#B45309" font-weight="700" text-anchor="start" opacity="1">作为一名仿真分析人员，</text>
+<text x="3565" y="1520" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望从总体指标下钻到设备和节点明细，</text>
+<text x="3565" y="1541" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便快速定位问题。</text>
+<rect x="4003" y="1298" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="4017" y="1311" width="4" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="2"/>
+<text x="4030" y="1328" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">查看历史实验</text>
+<rect x="4359" y="1311" width="52" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="6"/>
+<text x="4385" y="1325" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.1</text>
+<text x="4023" y="1348" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#B45309" font-weight="700" text-anchor="start" opacity="1">作为一名仿真分析人员，</text>
+<text x="4023" y="1368" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望浏览并检索历史实验，</text>
+<text x="4023" y="1389" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便找回和复用过去的分析。</text>
+<rect x="4003" y="1450" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="4017" y="1463" width="4" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="2"/>
+<text x="4030" y="1480" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">复现实验</text>
+<rect x="4359" y="1463" width="52" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="6"/>
+<text x="4385" y="1477" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.1</text>
+<text x="4023" y="1500" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#B45309" font-weight="700" text-anchor="start" opacity="1">作为一名仿真分析人员，</text>
+<text x="4023" y="1520" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望用相同模型和随机种子重跑实验，</text>
+<text x="4023" y="1541" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便验证结果一致性。</text>
+<rect x="4003" y="1602" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="4017" y="1615" width="4" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="2"/>
+<text x="4030" y="1632" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">修改参数并派生</text>
+<rect x="4359" y="1615" width="52" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="6"/>
+<text x="4385" y="1629" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.1</text>
+<text x="4023" y="1652" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#B45309" font-weight="700" text-anchor="start" opacity="1">作为一名仿真分析人员，</text>
+<text x="4023" y="1672" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望复制实验并修改关键参数，</text>
+<text x="4023" y="1693" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便快速开展对照实验。</text>
+<rect x="4003" y="1754" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="4017" y="1767" width="4" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="2"/>
+<text x="4030" y="1784" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">比较实验结果</text>
+<rect x="4359" y="1767" width="52" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="6"/>
+<text x="4385" y="1781" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.1</text>
+<text x="4023" y="1804" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#B45309" font-weight="700" text-anchor="start" opacity="1">作为一名仿真分析人员，</text>
+<text x="4023" y="1824" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望并排比较多个实验的指标和配置，</text>
+<text x="4023" y="1845" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便识别实验差异。</text>
+<rect x="4003" y="1906" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="4017" y="1919" width="4" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="2"/>
+<text x="4030" y="1936" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">分析参数影响</text>
+<rect x="4359" y="1919" width="52" height="20" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1" rx="6"/>
+<text x="4385" y="1933" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.1</text>
+<text x="4023" y="1956" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#B45309" font-weight="700" text-anchor="start" opacity="1">作为一名仿真分析人员，</text>
+<text x="4023" y="1976" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望分析设备数量、故障率、检测策略等参数的影响，</text>
+<text x="4023" y="1997" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便支撑可靠性改进决策。</text>
+<rect x="50" y="2066" width="4440" height="332" fill="#F3FBF6" stroke="#E0E8F1" stroke-width="1.1" opacity="1" rx="16"/>
+<rect x="50" y="2066" width="6" height="332" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1"/>
+<text x="76" y="2109" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="25" fill="#15803D" font-weight="700" text-anchor="start" opacity="1">V1.2</text>
+<text x="76" y="2132" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13" fill="#34495E" font-weight="700" text-anchor="start" opacity="1">智能版本</text>
+<text x="76" y="2160" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="12.2" fill="#52667A" font-weight="400" text-anchor="start" opacity="1">智能解释、优化</text>
+<text x="76" y="2178" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="12.2" fill="#52667A" font-weight="400" text-anchor="start" opacity="1">与协同决策</text>
+<text x="76" y="2374" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="12.5" fill="#15803D" font-weight="700" text-anchor="start" opacity="1">18 个用户故事</text>
+<rect x="339" y="2086" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="353" y="2099" width="4" height="20" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="2"/>
+<text x="366" y="2116" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">多轮对话式建模</text>
+<rect x="702" y="2099" width="45" height="20" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="6"/>
+<text x="724.5" y="2113" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.2</text>
+<text x="359" y="2136" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#15803D" font-weight="700" text-anchor="start" opacity="1">作为一名业务建模人员，</text>
+<text x="359" y="2156" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望通过连续对话逐步补充复杂需求，</text>
+<text x="359" y="2177" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便Agent 在上下文中持续完善模型。</text>
+<rect x="339" y="2238" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="353" y="2251" width="4" height="20" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="2"/>
+<text x="366" y="2268" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">语音与文档混合输入</text>
+<rect x="702" y="2251" width="45" height="20" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="6"/>
+<text x="724.5" y="2265" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.2</text>
+<text x="359" y="2288" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#15803D" font-weight="700" text-anchor="start" opacity="1">作为一名业务建模人员，</text>
+<text x="359" y="2308" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望用语音、文档和表单混合表达需求，</text>
+<text x="359" y="2329" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便适配不同工作习惯和输入场景。</text>
+<rect x="797" y="2086" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="811" y="2099" width="4" height="20" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="2"/>
+<text x="824" y="2116" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">自动补全流程</text>
+<rect x="1160" y="2099" width="45" height="20" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="6"/>
+<text x="1182.5" y="2113" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.2</text>
+<text x="817" y="2136" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#15803D" font-weight="700" text-anchor="start" opacity="1">作为一名业务建模人员，</text>
+<text x="817" y="2156" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望Agent 主动建议缺失步骤、分支和约束，</text>
+<text x="817" y="2177" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便发现未被描述的业务环节。</text>
+<rect x="797" y="2238" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="811" y="2251" width="4" height="20" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="2"/>
+<text x="824" y="2268" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">模型质量评估</text>
+<rect x="1160" y="2251" width="45" height="20" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="6"/>
+<text x="1182.5" y="2265" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.2</text>
+<text x="817" y="2288" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#15803D" font-weight="700" text-anchor="start" opacity="1">作为一名业务建模人员，</text>
+<text x="817" y="2308" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望获得完整性、可执行性和可理解性评分，</text>
+<text x="817" y="2329" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便判断模型成熟度和可仿真程度。</text>
+<rect x="1255" y="2086" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="1269" y="2099" width="4" height="20" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="2"/>
+<text x="1282" y="2116" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">AI 辅助优化流程</text>
+<rect x="1618" y="2099" width="45" height="20" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="6"/>
+<text x="1640.5" y="2113" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.2</text>
+<text x="1275" y="2136" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#15803D" font-weight="700" text-anchor="start" opacity="1">作为一名业务建模人员，</text>
+<text x="1275" y="2156" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望Agent 给出简化、并行化和瓶颈优化建议，</text>
+<text x="1275" y="2177" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便提升流程效率。</text>
+<rect x="1255" y="2238" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="1269" y="2251" width="4" height="20" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="2"/>
+<text x="1282" y="2268" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">协同编辑与评审</text>
+<rect x="1618" y="2251" width="45" height="20" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="6"/>
+<text x="1640.5" y="2265" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.2</text>
+<text x="1275" y="2288" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#15803D" font-weight="700" text-anchor="start" opacity="1">作为一名业务建模人员，</text>
+<text x="1275" y="2308" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望邀请团队成员评论和审批模型，</text>
+<text x="1275" y="2329" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便形成共同确认的流程版本。</text>
+<rect x="1713" y="2086" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="1727" y="2099" width="4" height="20" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="2"/>
+<text x="1740" y="2116" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">可靠性敏感性分析</text>
+<rect x="2076" y="2099" width="45" height="20" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="6"/>
+<text x="2098.5" y="2113" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.2</text>
+<text x="1733" y="2136" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#15803D" font-weight="700" text-anchor="start" opacity="1">作为一名可靠性工程师，</text>
+<text x="1733" y="2156" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望识别对系统可靠度影响最大的参数，</text>
+<text x="1733" y="2177" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便优先改进关键设备。</text>
+<rect x="1713" y="2238" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="1727" y="2251" width="4" height="20" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="2"/>
+<text x="1740" y="2268" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">参数取值建议</text>
+<rect x="2076" y="2251" width="45" height="20" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="6"/>
+<text x="2098.5" y="2265" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.2</text>
+<text x="1733" y="2288" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#15803D" font-weight="700" text-anchor="start" opacity="1">作为一名可靠性工程师，</text>
+<text x="1733" y="2308" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望由 Agent 根据历史数据推荐故障率取值，</text>
+<text x="1733" y="2329" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便减少主观估计误差。</text>
+<rect x="2171" y="2086" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="2185" y="2099" width="4" height="20" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="2"/>
+<text x="2198" y="2116" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">预防性维修策略</text>
+<rect x="2534" y="2099" width="45" height="20" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="6"/>
+<text x="2556.5" y="2113" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.2</text>
+<text x="2191" y="2136" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#15803D" font-weight="700" text-anchor="start" opacity="1">作为一名可靠性工程师，</text>
+<text x="2191" y="2156" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望配置计划性维护和更换策略，</text>
+<text x="2191" y="2177" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便比较预防维修与故障后维修的收益。</text>
+<rect x="2171" y="2238" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="2185" y="2251" width="4" height="20" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="2"/>
+<text x="2198" y="2268" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">检测与维修联合优化</text>
+<rect x="2534" y="2251" width="45" height="20" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="6"/>
+<text x="2556.5" y="2265" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.2</text>
+<text x="2191" y="2288" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#15803D" font-weight="700" text-anchor="start" opacity="1">作为一名可靠性工程师，</text>
+<text x="2191" y="2308" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望让 Agent 联合优化检测节点和维修资源，</text>
+<text x="2191" y="2329" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便在成本与可靠性之间取得平衡。</text>
+<rect x="2629" y="2086" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="2643" y="2099" width="4" height="20" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="2"/>
+<text x="2656" y="2116" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">目标驱动的实验设计</text>
+<rect x="2992" y="2099" width="45" height="20" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="6"/>
+<text x="3014.5" y="2113" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.2</text>
+<text x="2649" y="2136" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#15803D" font-weight="700" text-anchor="start" opacity="1">作为一名仿真分析人员，</text>
+<text x="2649" y="2156" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望说明分析目标并由 Agent 设计实验方案，</text>
+<text x="2649" y="2177" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便减少人工试错。</text>
+<rect x="2629" y="2238" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="2643" y="2251" width="4" height="20" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="2"/>
+<text x="2656" y="2268" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">仿真资源调度</text>
+<rect x="2992" y="2251" width="45" height="20" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="6"/>
+<text x="3014.5" y="2265" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.2</text>
+<text x="2649" y="2288" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#15803D" font-weight="700" text-anchor="start" opacity="1">作为一名仿真分析人员，</text>
+<text x="2649" y="2308" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望设置计算资源和任务优先级，</text>
+<text x="2649" y="2329" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便高效运行大规模实验。</text>
+<rect x="3087" y="2086" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="3101" y="2099" width="4" height="20" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="2"/>
+<text x="3114" y="2116" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">实时动画追踪</text>
+<rect x="3450" y="2099" width="45" height="20" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="6"/>
+<text x="3472.5" y="2113" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.2</text>
+<text x="3107" y="2136" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#15803D" font-weight="700" text-anchor="start" opacity="1">作为一名仿真分析人员，</text>
+<text x="3107" y="2156" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望用时间轴和动画观察设备运行过程，</text>
+<text x="3107" y="2177" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便直观理解故障传播与恢复。</text>
+<rect x="3087" y="2238" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="3101" y="2251" width="4" height="20" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="2"/>
+<text x="3114" y="2268" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">异常过程智能标注</text>
+<rect x="3450" y="2251" width="45" height="20" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="6"/>
+<text x="3472.5" y="2265" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.2</text>
+<text x="3107" y="2288" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#15803D" font-weight="700" text-anchor="start" opacity="1">作为一名仿真分析人员，</text>
+<text x="3107" y="2308" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望Agent 自动标注关键故障和长等待事件，</text>
+<text x="3107" y="2329" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便快速聚焦异常环节。</text>
+<rect x="3545" y="2086" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="3559" y="2099" width="4" height="20" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="2"/>
+<text x="3572" y="2116" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">根因分析建议</text>
+<rect x="3908" y="2099" width="45" height="20" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="6"/>
+<text x="3930.5" y="2113" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.2</text>
+<text x="3565" y="2136" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#15803D" font-weight="700" text-anchor="start" opacity="1">作为一名仿真分析人员，</text>
+<text x="3565" y="2156" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望由 Agent 分析可靠性瓶颈的主要原因，</text>
+<text x="3565" y="2177" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便制定有针对性的改进措施。</text>
+<rect x="3545" y="2238" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="3559" y="2251" width="4" height="20" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="2"/>
+<text x="3572" y="2268" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">优化建议与方案对比</text>
+<rect x="3908" y="2251" width="45" height="20" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="6"/>
+<text x="3930.5" y="2265" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.2</text>
+<text x="3565" y="2288" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#15803D" font-weight="700" text-anchor="start" opacity="1">作为一名仿真分析人员，</text>
+<text x="3565" y="2308" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望获得流程和维修策略的优化方案对比，</text>
+<text x="3565" y="2329" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便选择最优改进路径。</text>
+<rect x="4003" y="2086" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="4017" y="2099" width="4" height="20" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="2"/>
+<text x="4030" y="2116" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">实验看板与知识沉淀</text>
+<rect x="4366" y="2099" width="45" height="20" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="6"/>
+<text x="4388.5" y="2113" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.2</text>
+<text x="4023" y="2136" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#15803D" font-weight="700" text-anchor="start" opacity="1">作为一名仿真分析人员，</text>
+<text x="4023" y="2156" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望用看板沉淀实验结论和最佳实践，</text>
+<text x="4023" y="2177" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便团队复用分析成果。</text>
+<rect x="4003" y="2238" width="422" height="140" fill="#FFFFFF" stroke="#D7E2EE" stroke-width="1" opacity="1" rx="12" filter="url(#storyShadow)"/>
+<rect x="4017" y="2251" width="4" height="20" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="2"/>
+<text x="4030" y="2268" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14.7" fill="#17324D" font-weight="700" text-anchor="start" opacity="1">决策报告自动生成</text>
+<rect x="4366" y="2251" width="45" height="20" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1" rx="6"/>
+<text x="4388.5" y="2265" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.5" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">V1.2</text>
+<text x="4023" y="2288" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#15803D" font-weight="700" text-anchor="start" opacity="1">作为一名仿真分析人员，</text>
+<text x="4023" y="2308" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">我希望由 Agent 自动生成可靠性与参数影响报告，</text>
+<text x="4023" y="2329" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#243449" font-weight="400" text-anchor="start" opacity="1">以便支撑管理决策。</text>
+<text x="60" y="2436" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.2" fill="#52667A" font-weight="400" text-anchor="start" opacity="1">阅读方式：横向沿 Backbone 完成用户旅程；纵向按版本切片交付；每张卡片由用户任务与用户故事组成。</text>
+<text x="4480" y="2436" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.2" fill="#6B7C8F" font-weight="400" text-anchor="end" opacity="1">MVP 以完整闭环为边界 · 后续版本按用户价值递进</text>
+<text x="60" y="2461" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="12.2" fill="#7B8A9A" font-weight="400" text-anchor="start" opacity="1">说明：本图用于产品需求分析与版本规划，不依赖现有代码实现。</text>
+</svg>

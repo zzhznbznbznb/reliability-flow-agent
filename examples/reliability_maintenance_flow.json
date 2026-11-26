@@ -1,0 +1,89 @@
+{
+  "schema_version": "process-ir/1.0",
+  "name": "设备运行与故障维修流程",
+  "description": "示例：设备运行、可靠性故障、维修和恢复。只包含业务流程结构，可靠性 lambda 由独立 Reliability IR 配置。",
+  "status_catalog": [
+    {
+      "id": "operational",
+      "name": "可运行",
+      "counts_as_available": true
+    },
+    {
+      "id": "under_repair",
+      "name": "维修中",
+      "counts_as_available": false
+    },
+    {
+      "id": "retired",
+      "name": "已退役",
+      "counts_as_available": false
+    }
+  ],
+  "start_node_id": "start",
+  "end_node_ids": ["end"],
+  "nodes": [
+    {
+      "id": "start",
+      "type": "start",
+      "name": "开始",
+      "position": {"x": 40, "y": 220}
+    },
+    {
+      "id": "operation",
+      "type": "task",
+      "name": "设备运行",
+      "description": "执行持续 2 天的设备任务",
+      "position": {"x": 250, "y": 210},
+      "duration": 2,
+      "status_on_enter": "operational"
+    },
+    {
+      "id": "repair",
+      "type": "task",
+      "name": "故障维修",
+      "description": "维修完成后恢复可运行状态",
+      "position": {"x": 520, "y": 400},
+      "duration": 1,
+      "status_on_enter": "under_repair",
+      "status_on_complete": "operational",
+      "on_complete": [
+        {"op": "set_state", "name": "currently_failed", "value": false},
+        {"op": "increment_counter", "name": "repair_count", "by": 1}
+      ]
+    },
+    {
+      "id": "end",
+      "type": "end",
+      "name": "结束",
+      "position": {"x": 780, "y": 220}
+    }
+  ],
+  "edges": [
+    {
+      "id": "e_start_operation",
+      "from": "start",
+      "to": "operation",
+      "kind": "normal"
+    },
+    {
+      "id": "e_operation_end",
+      "from": "operation",
+      "to": "end",
+      "kind": "normal"
+    },
+    {
+      "id": "e_operation_repair",
+      "from": "operation",
+      "to": "repair",
+      "kind": "failure",
+      "label": "可靠性故障"
+    },
+    {
+      "id": "e_repair_end",
+      "from": "repair",
+      "to": "end",
+      "kind": "normal"
+    }
+  ],
+  "guards": {"max_node_visits": 10000}
+}

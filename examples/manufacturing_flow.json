@@ -1,0 +1,184 @@
+{
+  "schema_version": "process-ir/1.0",
+  "name": "制造加工流程",
+  "description": "示例：原材料入库、加工、质检、返工、包装和出库。用于验证 Process IR 不依赖特定设备业务。",
+  "status_catalog": [],
+  "start_node_id": "start",
+  "end_node_ids": [
+    "end"
+  ],
+  "nodes": [
+    {
+      "id": "start",
+      "type": "start",
+      "name": "投料",
+      "position": {
+        "x": 40,
+        "y": 220
+      }
+    },
+    {
+      "id": "raw_store",
+      "type": "task",
+      "name": "原材料入库",
+      "position": {
+        "x": 230,
+        "y": 210
+      },
+      "duration": 0.5
+    },
+    {
+      "id": "machining",
+      "type": "task",
+      "name": "加工",
+      "position": {
+        "x": 460,
+        "y": 210
+      },
+      "duration": 0.8,
+      "outcomes": [
+        {
+          "id": "qualified",
+          "name": "加工合格",
+          "weight": 0.9,
+          "attributes": {
+            "quality_ok": true
+          }
+        },
+        {
+          "id": "defective",
+          "name": "加工不合格",
+          "weight": 0.1,
+          "attributes": {
+            "quality_ok": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "quality_gate",
+      "type": "decision",
+      "name": "质量检查",
+      "position": {
+        "x": 700,
+        "y": 185
+      }
+    },
+    {
+      "id": "rework",
+      "type": "task",
+      "name": "返工",
+      "position": {
+        "x": 700,
+        "y": 400
+      },
+      "duration": 0.4,
+      "outcomes": [
+        {
+          "id": "rework_ok",
+          "name": "返工合格",
+          "weight": 0.9,
+          "attributes": {
+            "quality_ok": true
+          }
+        },
+        {
+          "id": "rework_fail",
+          "name": "返工仍不合格",
+          "weight": 0.1,
+          "attributes": {
+            "quality_ok": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "packaging",
+      "type": "task",
+      "name": "包装",
+      "position": {
+        "x": 950,
+        "y": 210
+      },
+      "duration": 0.2
+    },
+    {
+      "id": "end",
+      "type": "end",
+      "name": "出库完成",
+      "position": {
+        "x": 1190,
+        "y": 220
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e_start_raw",
+      "from": "start",
+      "to": "raw_store",
+      "kind": "normal"
+    },
+    {
+      "id": "e_raw_machining",
+      "from": "raw_store",
+      "to": "machining",
+      "kind": "normal"
+    },
+    {
+      "id": "e_machining_gate",
+      "from": "machining",
+      "to": "quality_gate",
+      "kind": "normal"
+    },
+    {
+      "id": "e_gate_pack",
+      "from": "quality_gate",
+      "to": "packaging",
+      "kind": "conditional",
+      "label": "合格",
+      "priority": 10,
+      "condition": {
+        "op": "eq",
+        "field": "attributes.quality_ok",
+        "value": true
+      }
+    },
+    {
+      "id": "e_gate_rework",
+      "from": "quality_gate",
+      "to": "rework",
+      "kind": "conditional",
+      "label": "不合格",
+      "priority": 10,
+      "condition": {
+        "op": "eq",
+        "field": "attributes.quality_ok",
+        "value": false
+      }
+    },
+    {
+      "id": "e_gate_default",
+      "from": "quality_gate",
+      "to": "rework",
+      "kind": "default",
+      "label": "默认返工"
+    },
+    {
+      "id": "e_rework_gate",
+      "from": "rework",
+      "to": "quality_gate",
+      "kind": "normal",
+      "label": "复检"
+    },
+    {
+      "id": "e_pack_end",
+      "from": "packaging",
+      "to": "end",
+      "kind": "normal"
+    }
+  ],
+  "guards": {
+    "max_node_visits": 10000
+  }
+}

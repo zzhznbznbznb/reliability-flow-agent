@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="3600" height="3960" viewBox="0 0 3600 3960" role="img" aria-label="UML 用例图">
+
+<defs>
+  <filter id="storyShadow" x="-8%" y="-8%" width="116%" height="124%">
+    <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#102A43" flood-opacity="0.09"/>
+  </filter>
+  <filter id="softShadow" x="-8%" y="-8%" width="116%" height="124%">
+    <feDropShadow dx="0" dy="3" stdDeviation="6" flood-color="#0B2545" flood-opacity="0.06"/>
+  </filter>
+  <marker id="openArrow" viewBox="0 0 12 12" refX="10.5" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+    <path d="M 2 2 L 10.5 6 L 2 10" fill="none" stroke="#5E7184" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+</defs>
+
+<rect x="0" y="0" width="3600" height="3960" fill="#F5F8FC"/>
+<rect x="0" y="0" width="3600" height="13" fill="#132A45" stroke="none" stroke-width="1" opacity="1"/>
+<text x="80" y="91" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="38" fill="#102A43" font-weight="700" text-anchor="start" opacity="1">图 1  UML 用例图：基于自然语言的流程建模与设备可靠性仿真 Agent</text>
+<text x="80" y="132" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="17" fill="#52667A" font-weight="400" text-anchor="start" opacity="1">业务闭环：自然语言需求 → 流程模型 → 可靠性配置 → 多设备仿真 → 结果解释 → 实验比较</text>
+<path d="M 80 160 L 2160 160" fill="none" stroke="#2D5F8A" stroke-width="2.2" opacity="1" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="2190" y="35" width="1330" height="176" fill="#FFFFFF" stroke="#D9E3EE" stroke-width="1.2" opacity="1" rx="14" filter="url(#softShadow)"/>
+<text x="2216" y="65" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="16" fill="#102A43" font-weight="700" text-anchor="start" opacity="1">图例</text>
+<path d="M 2216 104 L 2280 104" fill="none" stroke="#7B8A9A" stroke-width="1.6" opacity="1" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="2296" y="109" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#52667A" font-weight="400" text-anchor="start" opacity="1">关联关系</text>
+<path d="M 2216 132 L 2280 132" fill="none" stroke="#5E7184" stroke-width="1.4" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#openArrow)"/>
+<text x="2296" y="137" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#52667A" font-weight="400" text-anchor="start" opacity="1">«include»  必需的子行为</text>
+<path d="M 2216 160 L 2280 160" fill="none" stroke="#5E7184" stroke-width="1.4" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#openArrow)"/>
+<text x="2296" y="165" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#52667A" font-weight="400" text-anchor="start" opacity="1">«extend» [条件]  可选增强行为</text>
+<rect x="2216" y="181" width="28" height="18" fill="#FFFDF4" stroke="#D6A62C" stroke-width="1" opacity="1" rx="4" stroke-dasharray="4 3"/>
+<text x="2258" y="195" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="13.6" fill="#52667A" font-weight="400" text-anchor="start" opacity="1">业务规则 / 机制说明</text>
+<rect x="300" y="250" width="3180" height="3580" fill="#FFFFFF" stroke="#274C77" stroke-width="2.2" opacity="1" rx="24"/>
+<rect x="330" y="250" width="290" height="36" fill="#274C77" stroke="#274C77" stroke-width="1" opacity="1" rx="8"/>
+<text x="352" y="275" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="16" fill="#FFFFFF" font-weight="700" text-anchor="start" opacity="1">系统边界</text>
+<text x="640" y="275" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="16" fill="#274C77" font-weight="600" text-anchor="start" opacity="1">基于自然语言的流程建模与设备可靠性仿真 Agent</text>
+<rect x="330" y="300" width="3120" height="480" fill="#F3F8FE" stroke="#DFE8F1" stroke-width="1.2" opacity="1" rx="18"/>
+<rect x="330" y="820" width="3120" height="500" fill="#F4FAF8" stroke="#DFE8F1" stroke-width="1.2" opacity="1" rx="18"/>
+<rect x="330" y="1360" width="3120" height="340" fill="#FFF9F1" stroke="#DFE8F1" stroke-width="1.2" opacity="1" rx="18"/>
+<rect x="330" y="1740" width="3120" height="330" fill="#FFF6F6" stroke="#DFE8F1" stroke-width="1.2" opacity="1" rx="18"/>
+<rect x="330" y="2110" width="3120" height="700" fill="#F4F7FE" stroke="#DFE8F1" stroke-width="1.2" opacity="1" rx="18"/>
+<rect x="330" y="2850" width="3120" height="430" fill="#F9F5FF" stroke="#DFE8F1" stroke-width="1.2" opacity="1" rx="18"/>
+<rect x="330" y="3320" width="3120" height="470" fill="#F5FBF6" stroke="#DFE8F1" stroke-width="1.2" opacity="1" rx="18"/>
+<path d="M 195 1958 L 635.9 484.8" fill="none" stroke="#7B8A9A" stroke-width="1.2" opacity="0.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 195 1958 L 630.1 934.7" fill="none" stroke="#7B8A9A" stroke-width="1.2" opacity="0.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 195 1958 L 627.5 1064.6" fill="none" stroke="#7B8A9A" stroke-width="1.2" opacity="0.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 195 1958 L 620.8 1284.3" fill="none" stroke="#7B8A9A" stroke-width="1.2" opacity="0.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 195 1958 L 607.3 1523.6" fill="none" stroke="#7B8A9A" stroke-width="1.2" opacity="0.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 195 1958 L 516.4 1897.8" fill="none" stroke="#7B8A9A" stroke-width="1.2" opacity="0.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 195 1958 L 573 2179.9" fill="none" stroke="#7B8A9A" stroke-width="1.2" opacity="0.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 195 1958 L 608.1 2426.4" fill="none" stroke="#7B8A9A" stroke-width="1.2" opacity="0.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 195 1958 L 629.4 2965.3" fill="none" stroke="#7B8A9A" stroke-width="1.2" opacity="0.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 195 1958 L 635.2 3375.2" fill="none" stroke="#7B8A9A" stroke-width="1.2" opacity="0.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 195 1958 L 637.2 3605.1" fill="none" stroke="#7B8A9A" stroke-width="1.2" opacity="0.4" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="330" y="300" width="7" height="480" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1"/>
+<ellipse cx="362" cy="331" rx="17" ry="17" fill="#2563EB" stroke="#2563EB" stroke-width="1" opacity="1"/>
+<text x="362" y="337" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="16" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">A</text>
+<text x="390" y="339" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="23" fill="#102A43" font-weight="700" text-anchor="start" opacity="1">需求理解与流程生成</text>
+<rect x="330" y="820" width="7" height="500" fill="#0F766E" stroke="#0F766E" stroke-width="1" opacity="1"/>
+<ellipse cx="362" cy="851" rx="17" ry="17" fill="#0F766E" stroke="#0F766E" stroke-width="1" opacity="1"/>
+<text x="362" y="857" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="16" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">B</text>
+<text x="390" y="859" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="23" fill="#102A43" font-weight="700" text-anchor="start" opacity="1">流程查看与编辑</text>
+<rect x="330" y="1360" width="7" height="340" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1"/>
+<ellipse cx="362" cy="1391" rx="17" ry="17" fill="#B45309" stroke="#B45309" stroke-width="1" opacity="1"/>
+<text x="362" y="1397" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="16" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">C</text>
+<text x="390" y="1399" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="23" fill="#102A43" font-weight="700" text-anchor="start" opacity="1">设备可靠性配置</text>
+<rect x="330" y="1740" width="7" height="330" fill="#BE123C" stroke="#BE123C" stroke-width="1" opacity="1"/>
+<ellipse cx="362" cy="1771" rx="17" ry="17" fill="#BE123C" stroke="#BE123C" stroke-width="1" opacity="1"/>
+<text x="362" y="1777" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="16" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">D</text>
+<text x="390" y="1779" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="23" fill="#102A43" font-weight="700" text-anchor="start" opacity="1">故障检测与维修</text>
+<rect x="330" y="2110" width="7" height="700" fill="#1D4ED8" stroke="#1D4ED8" stroke-width="1" opacity="1"/>
+<ellipse cx="362" cy="2141" rx="17" ry="17" fill="#1D4ED8" stroke="#1D4ED8" stroke-width="1" opacity="1"/>
+<text x="362" y="2147" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="16" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">E</text>
+<text x="390" y="2149" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="23" fill="#102A43" font-weight="700" text-anchor="start" opacity="1">仿真任务与执行</text>
+<rect x="330" y="2850" width="7" height="430" fill="#6D28D9" stroke="#6D28D9" stroke-width="1" opacity="1"/>
+<ellipse cx="362" cy="2881" rx="17" ry="17" fill="#6D28D9" stroke="#6D28D9" stroke-width="1" opacity="1"/>
+<text x="362" y="2887" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="16" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">F</text>
+<text x="390" y="2889" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="23" fill="#102A43" font-weight="700" text-anchor="start" opacity="1">仿真结果分析</text>
+<rect x="330" y="3320" width="7" height="470" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1"/>
+<ellipse cx="362" cy="3351" rx="17" ry="17" fill="#15803D" stroke="#15803D" stroke-width="1" opacity="1"/>
+<text x="362" y="3357" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="16" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">G</text>
+<text x="390" y="3359" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="23" fill="#102A43" font-weight="700" text-anchor="start" opacity="1">实验管理与比较</text>
+<rect x="2360" y="340" width="1000" height="124" fill="#FFFDF4" stroke="#D6A62C" stroke-width="1.3" opacity="1" rx="12" stroke-dasharray="6 5"/>
+<rect x="2374" y="354" width="30" height="24" fill="#D6A62C" stroke="#D6A62C" stroke-width="1" opacity="1" rx="5"/>
+<text x="2389" y="371" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="12" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">注</text>
+<text x="2414" y="372" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="16" fill="#7A5200" font-weight="700" text-anchor="start" opacity="1">自然语言理解要点</text>
+<text x="2382" y="398" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="15.2" fill="#5B4A2F" font-weight="400" text-anchor="start" opacity="1">
+<tspan x="2382" dy="0">Agent 从自然语言中识别业务目标、流程步骤、顺序、条件、循环与业务约束。信息缺失或存在歧义时，主动提出澄清问题，并根据用户反馈</tspan>
+<tspan x="2382" dy="24">修订模型。</tspan>
+</text>
+<path d="M 2360 382 L 2190 350" fill="none" stroke="#C79A25" stroke-width="1.1" opacity="0.8" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 5"/>
+<rect x="2360" y="870" width="1000" height="124" fill="#FFFDF4" stroke="#D6A62C" stroke-width="1.3" opacity="1" rx="12" stroke-dasharray="6 5"/>
+<rect x="2374" y="884" width="30" height="24" fill="#D6A62C" stroke="#D6A62C" stroke-width="1" opacity="1" rx="5"/>
+<text x="2389" y="901" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="12" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">注</text>
+<text x="2414" y="902" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="16" fill="#7A5200" font-weight="700" text-anchor="start" opacity="1">流程模型约束</text>
+<text x="2382" y="928" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="15.2" fill="#5B4A2F" font-weight="400" text-anchor="start" opacity="1">
+<tspan x="2382" dy="0">流程模型由节点、连接和属性组成，节点记录执行时间等业务属性。保存前校验连通性、条件分支完整性与循环退出条件，避免生成不可执行</tspan>
+<tspan x="2382" dy="24">模型。</tspan>
+</text>
+<path d="M 2360 912 L 1750 900" fill="none" stroke="#C79A25" stroke-width="1.1" opacity="0.8" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 5"/>
+<rect x="2360" y="1400" width="1000" height="100" fill="#FFFDF4" stroke="#D6A62C" stroke-width="1.3" opacity="1" rx="12" stroke-dasharray="6 5"/>
+<rect x="2374" y="1414" width="30" height="24" fill="#D6A62C" stroke="#D6A62C" stroke-width="1" opacity="1" rx="5"/>
+<text x="2389" y="1431" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="12" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">注</text>
+<text x="2414" y="1432" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="16" fill="#7A5200" font-weight="700" text-anchor="start" opacity="1">模型分离原则</text>
+<text x="2382" y="1458" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="15.2" fill="#5B4A2F" font-weight="400" text-anchor="start" opacity="1">
+<tspan x="2382" dy="0">可靠性模型与流程模型分离，仅通过节点标识关联。只有“参与可靠性计算”的节点应用故障率 λ，普通业务节点不进入可靠性统计。</tspan>
+</text>
+<path d="M 2360 1442 L 1770 1560" fill="none" stroke="#C79A25" stroke-width="1.1" opacity="0.8" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 5"/>
+<rect x="2360" y="1800" width="1000" height="124" fill="#FFFDF4" stroke="#D6A62C" stroke-width="1.3" opacity="1" rx="12" stroke-dasharray="6 5"/>
+<rect x="2374" y="1814" width="30" height="24" fill="#D6A62C" stroke="#D6A62C" stroke-width="1" opacity="1" rx="5"/>
+<text x="2389" y="1831" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="12" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">注</text>
+<text x="2414" y="1832" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="16" fill="#7A5200" font-weight="700" text-anchor="start" opacity="1">故障生命周期机制</text>
+<text x="2382" y="1858" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="15.2" fill="#5B4A2F" font-weight="400" text-anchor="start" opacity="1">
+<tspan x="2382" dy="0">潜在故障可先发生，设备仍继续执行；只有进入故障检测节点时才被发现，随后进入处理与维修。维修完成后恢复运行，历史故障记录永久保</tspan>
+<tspan x="2382" dy="24">留。</tspan>
+</text>
+<path d="M 2360 1842 L 1770 1950" fill="none" stroke="#C79A25" stroke-width="1.1" opacity="0.8" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 5"/>
+<rect x="2360" y="2190" width="1000" height="124" fill="#FFFDF4" stroke="#D6A62C" stroke-width="1.3" opacity="1" rx="12" stroke-dasharray="6 5"/>
+<rect x="2374" y="2204" width="30" height="24" fill="#D6A62C" stroke="#D6A62C" stroke-width="1" opacity="1" rx="5"/>
+<text x="2389" y="2221" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="12" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">注</text>
+<text x="2414" y="2222" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="16" fill="#7A5200" font-weight="700" text-anchor="start" opacity="1">多设备运行规则</text>
+<text x="2382" y="2248" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="15.2" fill="#5B4A2F" font-weight="400" text-anchor="start" opacity="1">
+<tspan x="2382" dy="0">多台设备共享同一流程定义，但独立维护运行状态、故障状态和运行历史。单台设备故障不会自动中断其他设备；参数包括设备数量、结束时</tspan>
+<tspan x="2382" dy="24">间、随机种子和运行参数。</tspan>
+</text>
+<path d="M 2360 2232 L 1750 2160" fill="none" stroke="#C79A25" stroke-width="1.1" opacity="0.8" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 5"/>
+<rect x="2360" y="2920" width="1000" height="124" fill="#FFFDF4" stroke="#D6A62C" stroke-width="1.3" opacity="1" rx="12" stroke-dasharray="6 5"/>
+<rect x="2374" y="2934" width="30" height="24" fill="#D6A62C" stroke="#D6A62C" stroke-width="1" opacity="1" rx="5"/>
+<text x="2389" y="2951" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="12" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">注</text>
+<text x="2414" y="2952" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="16" fill="#7A5200" font-weight="700" text-anchor="start" opacity="1">两类可靠性结论</text>
+<text x="2382" y="2978" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="15.2" fill="#5B4A2F" font-weight="400" text-anchor="start" opacity="1">
+<tspan x="2382" dy="0">理论可靠度由可靠性参数解析计算；实际故障统计来自多设备仿真事件。二者并列展示，并由 Agent 解释差异来源，避免把理论值与仿真频率</tspan>
+<tspan x="2382" dy="24">混为一谈。</tspan>
+</text>
+<path d="M 2360 2962 L 1750 3150" fill="none" stroke="#C79A25" stroke-width="1.1" opacity="0.8" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 5"/>
+<rect x="2360" y="3390" width="1000" height="100" fill="#FFFDF4" stroke="#D6A62C" stroke-width="1.3" opacity="1" rx="12" stroke-dasharray="6 5"/>
+<rect x="2374" y="3404" width="30" height="24" fill="#D6A62C" stroke="#D6A62C" stroke-width="1" opacity="1" rx="5"/>
+<text x="2389" y="3421" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="12" fill="#FFFFFF" font-weight="700" text-anchor="middle" opacity="1">注</text>
+<text x="2414" y="3422" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="16" fill="#7A5200" font-weight="700" text-anchor="start" opacity="1">实验比较原则</text>
+<text x="2382" y="3448" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="15.2" fill="#5B4A2F" font-weight="400" text-anchor="start" opacity="1">
+<tspan x="2382" dy="0">固定流程模型与随机种子可复现实验。比较实验时应只改变目标参数，分析其对系统可靠性、故障次数和维修负担的影响。</tspan>
+</text>
+<path d="M 2360 3432 L 1770 3560" fill="none" stroke="#C79A25" stroke-width="1.1" opacity="0.8" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 5"/>
+<ellipse cx="650" cy="440" rx="170" ry="45" fill="#EAF3FE" stroke="#2D5F8A" stroke-width="2.2" opacity="1"/>
+<text x="650" y="447.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="600" text-anchor="middle" opacity="1">描述业务需求</text>
+<ellipse cx="1130" cy="400" rx="170" ry="45" fill="#FFFFFF" stroke="#5F7F98" stroke-width="1.6" opacity="1"/>
+<text x="1130" y="407.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="500" text-anchor="middle" opacity="1">理解业务目标与流程</text>
+<ellipse cx="1580" cy="350" rx="170" ry="45" fill="#FFFFFF" stroke="#5F7F98" stroke-width="1.6" opacity="1"/>
+<text x="1580" y="357.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="500" text-anchor="middle" opacity="1">提取流程步骤</text>
+<ellipse cx="2020" cy="350" rx="170" ry="45" fill="#FFFFFF" stroke="#5F7F98" stroke-width="1.6" opacity="1"/>
+<text x="2020" y="357.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="500" text-anchor="middle" opacity="1">识别分支、循环与约束</text>
+<ellipse cx="1580" cy="520" rx="170" ry="45" fill="#FFFFFF" stroke="#5F7F98" stroke-width="1.6" opacity="1"/>
+<text x="1580" y="527.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="500" text-anchor="middle" opacity="1">生成流程模型与流程图</text>
+<ellipse cx="1130" cy="620" rx="170" ry="45" fill="#FFF8E8" stroke="#B07A16" stroke-width="1.7" opacity="1"/>
+<text x="1130" y="627.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="500" text-anchor="middle" opacity="1">澄清并完善需求</text>
+<ellipse cx="650" cy="890" rx="170" ry="45" fill="#EAF3FE" stroke="#2D5F8A" stroke-width="2.2" opacity="1"/>
+<text x="650" y="897.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="600" text-anchor="middle" opacity="1">查看流程图</text>
+<ellipse cx="650" cy="1020" rx="170" ry="45" fill="#EAF3FE" stroke="#2D5F8A" stroke-width="2.2" opacity="1"/>
+<text x="650" y="1027.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="600" text-anchor="middle" opacity="1">编辑流程模型</text>
+<ellipse cx="1130" cy="960" rx="170" ry="45" fill="#FFFFFF" stroke="#5F7F98" stroke-width="1.6" opacity="1"/>
+<text x="1130" y="967.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="500" text-anchor="middle" opacity="1">编辑节点与连接</text>
+<ellipse cx="1580" cy="900" rx="170" ry="45" fill="#FFFFFF" stroke="#5F7F98" stroke-width="1.6" opacity="1"/>
+<text x="1580" y="907.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="500" text-anchor="middle" opacity="1">修改节点执行时间</text>
+<ellipse cx="1130" cy="1110" rx="170" ry="45" fill="#FFFFFF" stroke="#5F7F98" stroke-width="1.6" opacity="1"/>
+<text x="1130" y="1117.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="500" text-anchor="middle" opacity="1">配置分支与循环</text>
+<ellipse cx="650" cy="1240" rx="170" ry="45" fill="#EAF3FE" stroke="#2D5F8A" stroke-width="2.2" opacity="1"/>
+<text x="650" y="1247.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="600" text-anchor="middle" opacity="1">保存流程模型</text>
+<ellipse cx="1130" cy="1220" rx="170" ry="45" fill="#FFFFFF" stroke="#5F7F98" stroke-width="1.6" opacity="1"/>
+<text x="1130" y="1227.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="500" text-anchor="middle" opacity="1">校验流程模型</text>
+<ellipse cx="650" cy="1480" rx="170" ry="45" fill="#EAF3FE" stroke="#2D5F8A" stroke-width="2.2" opacity="1"/>
+<text x="650" y="1487.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="600" text-anchor="middle" opacity="1">配置设备可靠性</text>
+<ellipse cx="1130" cy="1420" rx="170" ry="45" fill="#FFFFFF" stroke="#5F7F98" stroke-width="1.6" opacity="1"/>
+<text x="1130" y="1427.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="500" text-anchor="middle" opacity="1">选择可靠性计算节点</text>
+<ellipse cx="1130" cy="1560" rx="170" ry="45" fill="#FFFFFF" stroke="#5F7F98" stroke-width="1.6" opacity="1"/>
+<text x="1130" y="1567.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="500" text-anchor="middle" opacity="1">设置节点故障率</text>
+<ellipse cx="1600" cy="1560" rx="170" ry="45" fill="#FFF8E8" stroke="#B07A16" stroke-width="1.7" opacity="1"/>
+<text x="1600" y="1567.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="500" text-anchor="middle" opacity="1">查看并校验可靠性配置</text>
+<ellipse cx="650" cy="1870" rx="170" ry="45" fill="#EAF3FE" stroke="#2D5F8A" stroke-width="2.2" opacity="1"/>
+<text x="650" y="1877.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="600" text-anchor="middle" opacity="1">配置故障检测与维修</text>
+<ellipse cx="1130" cy="1810" rx="170" ry="45" fill="#FFFFFF" stroke="#5F7F98" stroke-width="1.6" opacity="1"/>
+<text x="1130" y="1817.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="500" text-anchor="middle" opacity="1">指定故障检测节点</text>
+<ellipse cx="1130" cy="1950" rx="170" ry="45" fill="#FFFFFF" stroke="#5F7F98" stroke-width="1.6" opacity="1"/>
+<text x="1130" y="1957.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="500" text-anchor="middle" opacity="1">配置处理、维修与恢复</text>
+<ellipse cx="1600" cy="1950" rx="170" ry="45" fill="#FFF8E8" stroke="#B07A16" stroke-width="1.7" opacity="1"/>
+<text x="1600" y="1957.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="500" text-anchor="middle" opacity="1">校验故障维修配置</text>
+<ellipse cx="650" cy="2220" rx="170" ry="45" fill="#EAF3FE" stroke="#2D5F8A" stroke-width="2.2" opacity="1"/>
+<text x="650" y="2227.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="600" text-anchor="middle" opacity="1">创建仿真任务</text>
+<ellipse cx="1130" cy="2160" rx="170" ry="45" fill="#FFFFFF" stroke="#5F7F98" stroke-width="1.6" opacity="1"/>
+<text x="1130" y="2167.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="500" text-anchor="middle" opacity="1">设置仿真参数</text>
+<ellipse cx="1580" cy="2160" rx="170" ry="45" fill="#FFFFFF" stroke="#5F7F98" stroke-width="1.6" opacity="1"/>
+<text x="1580" y="2167.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="500" text-anchor="middle" opacity="1">校验仿真配置</text>
+<ellipse cx="650" cy="2470" rx="170" ry="45" fill="#EAF3FE" stroke="#2D5F8A" stroke-width="2.2" opacity="1"/>
+<text x="650" y="2477.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="600" text-anchor="middle" opacity="1">执行多设备仿真</text>
+<ellipse cx="1130" cy="2410" rx="170" ry="45" fill="#FFFFFF" stroke="#5F7F98" stroke-width="1.6" opacity="1"/>
+<text x="1130" y="2417.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="500" text-anchor="middle" opacity="1">管理设备独立运行</text>
+<ellipse cx="1130" cy="2570" rx="170" ry="45" fill="#FFFFFF" stroke="#5F7F98" stroke-width="1.6" opacity="1"/>
+<text x="1130" y="2577.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="500" text-anchor="middle" opacity="1">模拟设备故障生命周期</text>
+<ellipse cx="1580" cy="2520" rx="170" ry="45" fill="#FFFFFF" stroke="#5F7F98" stroke-width="1.6" opacity="1"/>
+<text x="1580" y="2527.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="500" text-anchor="middle" opacity="1">检测潜在故障</text>
+<ellipse cx="1580" cy="2640" rx="170" ry="45" fill="#FFFFFF" stroke="#5F7F98" stroke-width="1.6" opacity="1"/>
+<text x="1580" y="2647.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="500" text-anchor="middle" opacity="1">维修并恢复运行</text>
+<ellipse cx="650" cy="2670" rx="170" ry="45" fill="#FFF8E8" stroke="#B07A16" stroke-width="1.7" opacity="1"/>
+<text x="650" y="2677.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="500" text-anchor="middle" opacity="1">查看仿真进度</text>
+<ellipse cx="650" cy="3010" rx="170" ry="45" fill="#EAF3FE" stroke="#2D5F8A" stroke-width="2.2" opacity="1"/>
+<text x="650" y="3017.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="600" text-anchor="middle" opacity="1">查看仿真结果</text>
+<ellipse cx="1130" cy="2910" rx="170" ry="45" fill="#FFFFFF" stroke="#5F7F98" stroke-width="1.6" opacity="1"/>
+<text x="1130" y="2917.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="500" text-anchor="middle" opacity="1">查看设备状态与轨迹</text>
+<ellipse cx="1130" cy="2990" rx="170" ry="45" fill="#FFFFFF" stroke="#5F7F98" stroke-width="1.6" opacity="1"/>
+<text x="1130" y="2997.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="500" text-anchor="middle" opacity="1">查看故障与维修记录</text>
+<ellipse cx="1130" cy="3070" rx="170" ry="45" fill="#FFFFFF" stroke="#5F7F98" stroke-width="1.6" opacity="1"/>
+<text x="1130" y="3077.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="500" text-anchor="middle" opacity="1">查看节点执行统计</text>
+<ellipse cx="1130" cy="3150" rx="170" ry="45" fill="#FFFFFF" stroke="#5F7F98" stroke-width="1.6" opacity="1"/>
+<text x="1130" y="3157.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="500" text-anchor="middle" opacity="1">查看可靠性指标</text>
+<ellipse cx="1580" cy="3150" rx="170" ry="45" fill="#FFFFFF" stroke="#5F7F98" stroke-width="1.6" opacity="1"/>
+<text x="1580" y="3157.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="500" text-anchor="middle" opacity="1">对比理论可靠度与实际统计</text>
+<ellipse cx="650" cy="3210" rx="170" ry="45" fill="#FFF8E8" stroke="#B07A16" stroke-width="1.7" opacity="1"/>
+<text x="650" y="3217.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="500" text-anchor="middle" opacity="1">获取结果解释</text>
+<ellipse cx="650" cy="3420" rx="170" ry="45" fill="#EAF3FE" stroke="#2D5F8A" stroke-width="2.2" opacity="1"/>
+<text x="650" y="3427.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="600" text-anchor="middle" opacity="1">管理仿真实验</text>
+<ellipse cx="1130" cy="3380" rx="170" ry="45" fill="#FFFFFF" stroke="#5F7F98" stroke-width="1.6" opacity="1"/>
+<text x="1130" y="3387.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="500" text-anchor="middle" opacity="1">保存实验</text>
+<ellipse cx="1130" cy="3470" rx="170" ry="45" fill="#FFFFFF" stroke="#5F7F98" stroke-width="1.6" opacity="1"/>
+<text x="1130" y="3477.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="500" text-anchor="middle" opacity="1">查看历史实验</text>
+<ellipse cx="1130" cy="3560" rx="170" ry="45" fill="#FFFFFF" stroke="#5F7F98" stroke-width="1.6" opacity="1"/>
+<text x="1130" y="3567.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="500" text-anchor="middle" opacity="1">复现实验</text>
+<ellipse cx="1600" cy="3560" rx="170" ry="45" fill="#FFF8E8" stroke="#B07A16" stroke-width="1.7" opacity="1"/>
+<text x="1600" y="3567.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="500" text-anchor="middle" opacity="1">修改实验参数</text>
+<ellipse cx="1130" cy="3710" rx="170" ry="45" fill="#FFFFFF" stroke="#5F7F98" stroke-width="1.6" opacity="1"/>
+<text x="1130" y="3717.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="500" text-anchor="middle" opacity="1">比较实验结果</text>
+<ellipse cx="650" cy="3650" rx="170" ry="45" fill="#EAF3FE" stroke="#2D5F8A" stroke-width="2.2" opacity="1"/>
+<text x="650" y="3657.5" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="21" fill="#15324E" font-weight="600" text-anchor="middle" opacity="1">分析参数影响</text>
+<path d="M 812.2 426.5 L 967.8 413.5" fill="none" stroke="#5E7184" stroke-width="1.4" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#openArrow)"/>
+<text x="890" y="411" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.8" fill="#52667A" font-weight="500" text-anchor="middle" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">«include»</text>
+<path d="M 1286.8 382.6 L 1423.2 367.4" fill="none" stroke="#5E7184" stroke-width="1.4" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#openArrow)"/>
+<text x="1355" y="366" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.8" fill="#52667A" font-weight="500" text-anchor="middle" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">«include»</text>
+<path d="M 1750 350 L 1850 350" fill="none" stroke="#5E7184" stroke-width="1.4" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#openArrow)"/>
+<text x="1800" y="341" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.8" fill="#52667A" font-weight="500" text-anchor="middle" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">«include»</text>
+<path d="M 1249.8 431.9 L 1460.2 488.1" fill="none" stroke="#5E7184" stroke-width="1.4" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#openArrow)"/>
+<text x="1355" y="471" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.8" fill="#52667A" font-weight="500" text-anchor="middle" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">«include»</text>
+<path d="M 803.7 1000.8 L 976.3 979.2" fill="none" stroke="#5E7184" stroke-width="1.4" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#openArrow)"/>
+<text x="890" y="981" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.8" fill="#52667A" font-weight="500" text-anchor="middle" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">«include»</text>
+<path d="M 1281.8 939.8 L 1428.2 920.2" fill="none" stroke="#5E7184" stroke-width="1.4" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#openArrow)"/>
+<text x="1355" y="921" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.8" fill="#52667A" font-weight="500" text-anchor="middle" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">«include»</text>
+<path d="M 788.7 1046 L 991.3 1084" fill="none" stroke="#5E7184" stroke-width="1.4" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#openArrow)"/>
+<text x="890" y="1076" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.8" fill="#52667A" font-weight="500" text-anchor="middle" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">«include»</text>
+<path d="M 817.9 1233 L 962.1 1227" fill="none" stroke="#5E7184" stroke-width="1.4" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#openArrow)"/>
+<text x="890" y="1221" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.8" fill="#52667A" font-weight="500" text-anchor="middle" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">«include»</text>
+<path d="M 803.7 1460.8 L 976.3 1439.2" fill="none" stroke="#5E7184" stroke-width="1.4" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#openArrow)"/>
+<text x="890" y="1441" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.8" fill="#52667A" font-weight="500" text-anchor="middle" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">«include»</text>
+<path d="M 793.9 1504 L 986.1 1536" fill="none" stroke="#5E7184" stroke-width="1.4" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#openArrow)"/>
+<text x="890" y="1531" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.8" fill="#52667A" font-weight="500" text-anchor="middle" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">«include»</text>
+<path d="M 803.7 1850.8 L 976.3 1829.2" fill="none" stroke="#5E7184" stroke-width="1.4" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#openArrow)"/>
+<text x="890" y="1831" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.8" fill="#52667A" font-weight="500" text-anchor="middle" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">«include»</text>
+<path d="M 793.9 1894 L 986.1 1926" fill="none" stroke="#5E7184" stroke-width="1.4" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#openArrow)"/>
+<text x="890" y="1921" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.8" fill="#52667A" font-weight="500" text-anchor="middle" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">«include»</text>
+<path d="M 803.7 2200.8 L 976.3 2179.2" fill="none" stroke="#5E7184" stroke-width="1.4" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#openArrow)"/>
+<text x="890" y="2181" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.8" fill="#52667A" font-weight="500" text-anchor="middle" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">«include»</text>
+<path d="M 1300 2160 L 1410 2160" fill="none" stroke="#5E7184" stroke-width="1.4" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#openArrow)"/>
+<text x="1355" y="2151" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.8" fill="#52667A" font-weight="500" text-anchor="middle" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">«include»</text>
+<path d="M 803.7 2450.8 L 976.3 2429.2" fill="none" stroke="#5E7184" stroke-width="1.4" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#openArrow)"/>
+<text x="890" y="2431" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.8" fill="#52667A" font-weight="500" text-anchor="middle" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">«include»</text>
+<path d="M 783.6 2497.8 L 996.4 2542.2" fill="none" stroke="#5E7184" stroke-width="1.4" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#openArrow)"/>
+<text x="890" y="2531" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.8" fill="#52667A" font-weight="500" text-anchor="middle" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">«include»</text>
+<path d="M 1286.8 2552.6 L 1423.2 2537.4" fill="none" stroke="#5E7184" stroke-width="1.4" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#openArrow)"/>
+<text x="1355" y="2536" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.8" fill="#52667A" font-weight="500" text-anchor="middle" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">«include»</text>
+<path d="M 1276.6 2592.8 L 1433.4 2617.2" fill="none" stroke="#5E7184" stroke-width="1.4" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#openArrow)"/>
+<text x="1355" y="2616" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.8" fill="#52667A" font-weight="500" text-anchor="middle" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">«include»</text>
+<path d="M 783.6 2982.2 L 996.4 2937.8" fill="none" stroke="#5E7184" stroke-width="1.4" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#openArrow)"/>
+<text x="883.6" y="2955.3" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.8" fill="#52667A" font-weight="500" text-anchor="middle" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">«include»</text>
+<path d="M 817.9 3003 L 962.1 2997" fill="none" stroke="#5E7184" stroke-width="1.4" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#openArrow)"/>
+<text x="888.6" y="2997.1" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.8" fill="#52667A" font-weight="500" text-anchor="middle" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">«include»</text>
+<path d="M 803.7 3029.2 L 976.3 3050.8" fill="none" stroke="#5E7184" stroke-width="1.4" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#openArrow)"/>
+<text x="891.7" y="3043.2" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.8" fill="#52667A" font-weight="500" text-anchor="middle" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">«include»</text>
+<path d="M 764.2 3043.3 L 1015.8 3116.7" fill="none" stroke="#5E7184" stroke-width="1.4" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#openArrow)"/>
+<text x="897.5" y="3088.2" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.8" fill="#52667A" font-weight="500" text-anchor="middle" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">«include»</text>
+<path d="M 1300 3150 L 1410 3150" fill="none" stroke="#5E7184" stroke-width="1.4" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#openArrow)"/>
+<text x="1355" y="3141" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.8" fill="#52667A" font-weight="500" text-anchor="middle" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">«include»</text>
+<path d="M 812.2 3406.5 L 967.8 3393.5" fill="none" stroke="#5E7184" stroke-width="1.4" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#openArrow)"/>
+<text x="890" y="3392" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.8" fill="#52667A" font-weight="500" text-anchor="middle" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">«include»</text>
+<path d="M 808.2 3436.5 L 971.8 3453.5" fill="none" stroke="#5E7184" stroke-width="1.4" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#openArrow)"/>
+<text x="890" y="3441" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.8" fill="#52667A" font-weight="500" text-anchor="middle" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">«include»</text>
+<path d="M 764.2 3453.3 L 1015.8 3526.7" fill="none" stroke="#5E7184" stroke-width="1.4" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#openArrow)"/>
+<text x="890" y="3498" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.8" fill="#52667A" font-weight="500" text-anchor="middle" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">«include»</text>
+<path d="M 803.7 3669.2 L 976.3 3690.8" fill="none" stroke="#5E7184" stroke-width="1.4" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#openArrow)"/>
+<text x="890" y="3671" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.8" fill="#52667A" font-weight="500" text-anchor="middle" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">«include»</text>
+<path d="M 1130 575 L 1130 445" fill="none" stroke="#5E7184" stroke-width="1.4" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#openArrow)"/>
+<text x="1110" y="506" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.8" fill="#52667A" font-weight="500" text-anchor="end" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">«extend»</text>
+<text x="1110" y="521" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.4" fill="#8A5A00" font-weight="500" text-anchor="end" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">[信息不完整或存在歧义]</text>
+<path d="M 1430 1560 L 1300 1560" fill="none" stroke="#5E7184" stroke-width="1.4" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#openArrow)"/>
+<text x="1365" y="1554" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.8" fill="#52667A" font-weight="500" text-anchor="middle" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">«extend»</text>
+<text x="1365" y="1569" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.4" fill="#8A5A00" font-weight="500" text-anchor="middle" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">[配置完成后查看或检查]</text>
+<path d="M 1430 1950 L 1300 1950" fill="none" stroke="#5E7184" stroke-width="1.4" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#openArrow)"/>
+<text x="1365" y="1944" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.8" fill="#52667A" font-weight="500" text-anchor="middle" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">«extend»</text>
+<text x="1365" y="1959" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.4" fill="#8A5A00" font-weight="500" text-anchor="middle" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">[保存或运行前校验]</text>
+<path d="M 650 2625 L 650 2515" fill="none" stroke="#5E7184" stroke-width="1.4" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#openArrow)"/>
+<text x="610" y="2574" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.8" fill="#52667A" font-weight="500" text-anchor="end" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">«extend»</text>
+<text x="610" y="2589" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.4" fill="#8A5A00" font-weight="500" text-anchor="end" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">[仿真运行期间]</text>
+<path d="M 650 3165 L 650 3055" fill="none" stroke="#5E7184" stroke-width="1.4" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#openArrow)"/>
+<text x="610" y="3129" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.8" fill="#52667A" font-weight="500" text-anchor="end" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">«extend»</text>
+<text x="610" y="3144" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.4" fill="#8A5A00" font-weight="500" text-anchor="end" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">[需要自然语言解读]</text>
+<path d="M 1430 3560 L 1300 3560" fill="none" stroke="#5E7184" stroke-width="1.4" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5" marker-end="url(#openArrow)"/>
+<text x="1365" y="3554" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.8" fill="#52667A" font-weight="500" text-anchor="middle" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">«extend»</text>
+<text x="1365" y="3569" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="10.4" fill="#8A5A00" font-weight="500" text-anchor="middle" opacity="1" style="paint-order:stroke;stroke:#FFFFFF;stroke-width:4px;stroke-linejoin:round">[需要调整参数]</text>
+<ellipse cx="170" cy="1927" rx="15" ry="15" fill="#FFFFFF" stroke="#1F2D3D" stroke-width="2.2" opacity="1"/>
+<path d="M 170 1942 L 170 1986" fill="none" stroke="#1F2D3D" stroke-width="2.2" opacity="1" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 143 1959 L 197 1959" fill="none" stroke="#1F2D3D" stroke-width="2.2" opacity="1" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 170 1986 L 148 2028" fill="none" stroke="#1F2D3D" stroke-width="2.2" opacity="1" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 170 1986 L 192 2028" fill="none" stroke="#1F2D3D" stroke-width="2.2" opacity="1" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="170" y="2063" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="24" fill="#102A43" font-weight="700" text-anchor="middle" opacity="1">用户</text>
+<text x="80" y="3895" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#6B7C8F" font-weight="400" text-anchor="start" opacity="1">需求分析基线 v1.0 · 2026-11 · 仅描述产品需求与用户目标，不以现有技术实现为设计依据</text>
+<text x="3520" y="3895" font-family="'Microsoft YaHei','Noto Sans SC','PingFang SC',sans-serif" font-size="14" fill="#6B7C8F" font-weight="400" text-anchor="end" opacity="1">UML 2.x 用例图规范</text>
+</svg>

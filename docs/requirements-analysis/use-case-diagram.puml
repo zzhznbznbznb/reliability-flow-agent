@@ -1,0 +1,136 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+skinparam usecase {
+  BackgroundColor #F8FBFE
+  BorderColor #2D5F8A
+}
+actor "用户" as User
+
+rectangle "基于自然语言的流程建模与设备可靠性仿真 Agent" {
+  package "需求理解与流程生成" {
+    usecase "描述业务需求" as A1
+    usecase "理解业务目标与流程" as A2
+    usecase "提取流程步骤" as A3
+    usecase "识别分支、循环与约束" as A4
+    usecase "生成流程模型与流程图" as A5
+    usecase "澄清并完善需求" as A6
+  }
+  package "流程查看与编辑" {
+    usecase "查看流程图" as B1
+    usecase "编辑流程模型" as B2
+    usecase "编辑节点与连接" as B3
+    usecase "修改节点执行时间" as B4
+    usecase "配置分支与循环" as B5
+    usecase "保存流程模型" as B6
+    usecase "校验流程模型" as B7
+  }
+  package "设备可靠性配置" {
+    usecase "配置设备可靠性" as C1
+    usecase "选择可靠性计算节点" as C2
+    usecase "设置节点故障率" as C3
+    usecase "查看并校验可靠性配置" as C4
+  }
+  package "故障检测与维修" {
+    usecase "配置故障检测与维修" as D1
+    usecase "指定故障检测节点" as D2
+    usecase "配置处理、维修与恢复" as D3
+    usecase "校验故障维修配置" as D4
+  }
+  package "仿真任务与执行" {
+    usecase "创建仿真任务" as E1
+    usecase "设置仿真参数" as E2
+    usecase "校验仿真配置" as E3
+    usecase "执行多设备仿真" as E4
+    usecase "管理设备独立运行" as E5
+    usecase "模拟设备故障生命周期" as E6
+    usecase "检测潜在故障" as E7
+    usecase "维修并恢复运行" as E8
+    usecase "查看仿真进度" as E9
+  }
+  package "仿真结果分析" {
+    usecase "查看仿真结果" as F1
+    usecase "查看设备状态与轨迹" as F2
+    usecase "查看故障与维修记录" as F3
+    usecase "查看节点执行统计" as F4
+    usecase "查看可靠性指标" as F5
+    usecase "对比理论可靠度与实际统计" as F6
+    usecase "获取结果解释" as F7
+  }
+  package "实验管理与比较" {
+    usecase "管理仿真实验" as G1
+    usecase "保存实验" as G2
+    usecase "查看历史实验" as G3
+    usecase "复现实验" as G4
+    usecase "修改实验参数" as G5
+    usecase "比较实验结果" as G6
+    usecase "分析参数影响" as G7
+  }
+}
+
+User -- A1
+User -- B1
+User -- B2
+User -- B6
+User -- C1
+User -- D1
+User -- E1
+User -- E4
+User -- F1
+User -- G1
+User -- G7
+A1 ..> A2 : <<include>>
+A2 ..> A3 : <<include>>
+A3 ..> A4 : <<include>>
+A2 ..> A5 : <<include>>
+B2 ..> B3 : <<include>>
+B3 ..> B4 : <<include>>
+B2 ..> B5 : <<include>>
+B6 ..> B7 : <<include>>
+C1 ..> C2 : <<include>>
+C1 ..> C3 : <<include>>
+D1 ..> D2 : <<include>>
+D1 ..> D3 : <<include>>
+E1 ..> E2 : <<include>>
+E2 ..> E3 : <<include>>
+E4 ..> E5 : <<include>>
+E4 ..> E6 : <<include>>
+E6 ..> E7 : <<include>>
+E6 ..> E8 : <<include>>
+F1 ..> F2 : <<include>>
+F1 ..> F3 : <<include>>
+F1 ..> F4 : <<include>>
+F1 ..> F5 : <<include>>
+F5 ..> F6 : <<include>>
+G1 ..> G2 : <<include>>
+G1 ..> G3 : <<include>>
+G1 ..> G4 : <<include>>
+G7 ..> G6 : <<include>>
+A6 ..> A2 : <<extend>>\n[信息不完整或存在歧义]
+C4 ..> C3 : <<extend>>\n[配置完成后查看或检查]
+D4 ..> D3 : <<extend>>\n[保存或运行前校验]
+E9 ..> E4 : <<extend>>\n[仿真运行期间]
+F7 ..> F1 : <<extend>>\n[需要自然语言解读]
+G5 ..> G4 : <<extend>>\n[需要调整参数]
+
+note right of A2
+  Agent 识别业务目标、流程步骤、顺序、条件、循环与约束；
+  信息缺失或存在歧义时发起澄清，并根据反馈修订模型。
+end note
+note right of C1
+  可靠性模型与流程模型分离，仅通过节点标识关联。
+  只有参与可靠性计算的节点应用故障率 λ。
+end note
+note right of D1
+  潜在故障可先发生；进入故障检测节点时才被发现，
+  随后处理与维修；维修后恢复运行，历史记录保留。
+end note
+note right of E4
+  多台设备共享流程定义，但独立维护状态、故障与历史。
+  单台设备故障不会自动中断其他设备。
+end note
+note right of F5
+  理论可靠度由解析计算得到，实际故障统计来自仿真事件；
+  两者并列展示并由 Agent 解释差异。
+end note
+@enduml

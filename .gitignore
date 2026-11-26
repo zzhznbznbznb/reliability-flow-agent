@@ -1,0 +1,35 @@
+.env
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+*.log
+
+frontend/node_modules/
+frontend/.vite/
+*.tsbuildinfo
+
+data/processes/*.json
+data/reliability/*.json
+data/experiments/*.json
+!data/processes/.gitkeep
+!data/reliability/.gitkeep
+!data/experiments/.gitkeep
+# Environment and local connection settings
+.env.*
+!.env.example
+.riffoid-ir/
+
+# Agent session logs
+data/agent_sessions/
+
+# Node.js dependencies (any directory)
+node_modules/
+
+# Local operating-system files
+.DS_Store
+Thumbs.db
+# Unnamed local image
+/未命名文件(22).png

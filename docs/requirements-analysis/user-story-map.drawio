@@ -1,0 +1,174 @@
+<mxfile host="app.diagrams.net" modified="2026-11-20T00:00:00.000Z" agent="opencode" version="24.0.0"><diagram id="user-story-map" name="用户故事地图"><mxGraphModel dx="1600" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4540" pageHeight="2488" math="0" shadow="0"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="2" value="" style="rounded=0;fillColor=#F7F9FC;strokeColor=none;" vertex="1" parent="1"><mxGeometry x="0" y="0" width="4540" height="2488" as="geometry"/></mxCell><mxCell id="3" value="" style="rounded=1;arcSize=14;fillColor=none;strokeColor=none;" vertex="1" parent="1"><mxGeometry x="330" y="200" width="4104" height="108" as="geometry"/></mxCell><mxCell id="4" value="01  提出业务需求
+明确目标、流程与约束" style="rounded=1;arcSize=14;fillColor=#132A45;strokeColor=none;fontColor=#FFFFFF;align=left;spacingLeft=18;verticalAlign=middle;fontStyle=1;fontSize=18;" vertex="1" parent="1"><mxGeometry x="330" y="200" width="440" height="108" as="geometry"/></mxCell><mxCell id="5" value="02  理解和构建流程
+得到结构化流程模型" style="rounded=1;arcSize=14;fillColor=#132A45;strokeColor=none;fontColor=#FFFFFF;align=left;spacingLeft=18;verticalAlign=middle;fontStyle=1;fontSize=18;" vertex="1" parent="1"><mxGeometry x="788" y="200" width="440" height="108" as="geometry"/></mxCell><mxCell id="6" value="03  编辑和确认流程
+形成可执行流程图" style="rounded=1;arcSize=14;fillColor=#132A45;strokeColor=none;fontColor=#FFFFFF;align=left;spacingLeft=18;verticalAlign=middle;fontStyle=1;fontSize=18;" vertex="1" parent="1"><mxGeometry x="1246" y="200" width="440" height="108" as="geometry"/></mxCell><mxCell id="7" value="04  配置设备可靠性
+量化节点失效风险" style="rounded=1;arcSize=14;fillColor=#132A45;strokeColor=none;fontColor=#FFFFFF;align=left;spacingLeft=18;verticalAlign=middle;fontStyle=1;fontSize=18;" vertex="1" parent="1"><mxGeometry x="1704" y="200" width="440" height="108" as="geometry"/></mxCell><mxCell id="8" value="05  配置故障检测与维修
+建立检测与维修规则" style="rounded=1;arcSize=14;fillColor=#132A45;strokeColor=none;fontColor=#FFFFFF;align=left;spacingLeft=18;verticalAlign=middle;fontStyle=1;fontSize=18;" vertex="1" parent="1"><mxGeometry x="2162" y="200" width="440" height="108" as="geometry"/></mxCell><mxCell id="9" value="06  创建仿真任务
+确定实验边界" style="rounded=1;arcSize=14;fillColor=#132A45;strokeColor=none;fontColor=#FFFFFF;align=left;spacingLeft=18;verticalAlign=middle;fontStyle=1;fontSize=18;" vertex="1" parent="1"><mxGeometry x="2620" y="200" width="440" height="108" as="geometry"/></mxCell><mxCell id="10" value="07  执行多设备仿真
+获得多设备运行事实" style="rounded=1;arcSize=14;fillColor=#132A45;strokeColor=none;fontColor=#FFFFFF;align=left;spacingLeft=18;verticalAlign=middle;fontStyle=1;fontSize=18;" vertex="1" parent="1"><mxGeometry x="3078" y="200" width="440" height="108" as="geometry"/></mxCell><mxCell id="11" value="08  分析仿真结果
+形成可靠性结论" style="rounded=1;arcSize=14;fillColor=#132A45;strokeColor=none;fontColor=#FFFFFF;align=left;spacingLeft=18;verticalAlign=middle;fontStyle=1;fontSize=18;" vertex="1" parent="1"><mxGeometry x="3536" y="200" width="440" height="108" as="geometry"/></mxCell><mxCell id="12" value="09  管理和比较实验
+沉淀实验与决策依据" style="rounded=1;arcSize=14;fillColor=#132A45;strokeColor=none;fontColor=#FFFFFF;align=left;spacingLeft=18;verticalAlign=middle;fontStyle=1;fontSize=18;" vertex="1" parent="1"><mxGeometry x="3994" y="200" width="440" height="108" as="geometry"/></mxCell><mxCell id="13" value="" style="rounded=1;arcSize=3;fillColor=#F2F7FF;strokeColor=#E0E8F1;" vertex="1" parent="1"><mxGeometry x="50" y="330" width="4440" height="948" as="geometry"/></mxCell><mxCell id="14" value="MVP  最小可行版本
+完成一次完整的
+自然语言建模 →
+可靠性配置 →
+多设备仿真 →
+结果分析闭环" style="rounded=0;fillColor=none;strokeColor=none;fontColor=#2563EB;align=left;verticalAlign=top;fontStyle=1;fontSize=22;" vertex="1" parent="1"><mxGeometry x="76" y="348" width="200" height="90" as="geometry"/></mxCell><mxCell id="15" value="输入业务目标与流程
+
+作为一名业务建模人员，我希望用自然语言说明业务目标、流程步骤和参与角色，以便快速获得可编辑的初始流程模型。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="339" y="350" width="422" height="140" as="geometry"/></mxCell><mxCell id="16" value="说明设备与规模
+
+作为一名业务建模人员，我希望说明设备类型、数量及运行方式，以便系统确定可靠性建模范围和仿真规模。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="339" y="502" width="422" height="140" as="geometry"/></mxCell><mxCell id="17" value="补充业务约束
+
+作为一名业务建模人员，我希望补充时间、顺序、资源和异常等约束，以便生成的模型符合真实业务规则。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="339" y="654" width="422" height="140" as="geometry"/></mxCell><mxCell id="18" value="回答澄清问题
+
+作为一名业务建模人员，我希望回答 Agent 对缺失信息和歧义的澄清问题，以便完善需求并减少建模偏差。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="339" y="806" width="422" height="140" as="geometry"/></mxCell><mxCell id="19" value="理解业务目标
+
+作为一名业务建模人员，我希望Agent 识别业务目标、边界与成功标准，以便确认系统真正理解了问题。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="797" y="350" width="422" height="140" as="geometry"/></mxCell><mxCell id="20" value="提取流程逻辑
+
+作为一名业务建模人员，我希望自动提取步骤、顺序、条件和循环，以便获得结构化的业务流程。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="797" y="502" width="422" height="140" as="geometry"/></mxCell><mxCell id="21" value="生成流程模型
+
+作为一名业务建模人员，我希望得到包含节点、连接和属性的可编辑模型，以便继续完善而不是从零搭建。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="797" y="654" width="422" height="140" as="geometry"/></mxCell><mxCell id="22" value="生成可视化流程图
+
+作为一名业务建模人员，我希望自动获得业务流程图，以便与业务人员核对并定位理解偏差。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="797" y="806" width="422" height="140" as="geometry"/></mxCell><mxCell id="23" value="查看流程图
+
+作为一名业务建模人员，我希望缩放、平移并查看节点详情，以便检查流程结构和关键路径。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="1255" y="350" width="422" height="140" as="geometry"/></mxCell><mxCell id="24" value="新增或删除节点
+
+作为一名业务建模人员，我希望增加遗漏步骤或删除多余节点，以便让流程与实际业务一致。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="1255" y="502" width="422" height="140" as="geometry"/></mxCell><mxCell id="25" value="修改节点属性与执行时间
+
+作为一名业务建模人员，我希望修改节点名称、资源和执行时间，以便模型反映真实作业耗时。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="1255" y="654" width="422" height="140" as="geometry"/></mxCell><mxCell id="26" value="编辑连接与分支循环
+
+作为一名业务建模人员，我希望调整连接、条件分支和循环，以便准确表达业务规则与异常路径。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="1255" y="806" width="422" height="140" as="geometry"/></mxCell><mxCell id="27" value="保存并校验流程
+
+作为一名业务建模人员，我希望保存前自动校验连通性和循环退出条件，以便保证模型可以进入仿真。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="1255" y="958" width="422" height="140" as="geometry"/></mxCell><mxCell id="28" value="选择可靠性节点
+
+作为一名可靠性工程师，我希望选择需要参与可靠性计算的流程节点，以便把分析聚焦在真实设备环节。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="1713" y="350" width="422" height="140" as="geometry"/></mxCell><mxCell id="29" value="设置参与状态
+
+作为一名可靠性工程师，我希望设置节点是否参与可靠性计算，以便区分普通业务步骤与设备失效风险。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="1713" y="502" width="422" height="140" as="geometry"/></mxCell><mxCell id="30" value="配置故障率 λ
+
+作为一名可靠性工程师，我希望为每个设备节点配置故障率 λ，以便量化设备在流程中的失效可能性。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="1713" y="654" width="422" height="140" as="geometry"/></mxCell><mxCell id="31" value="查看并校验可靠性配置
+
+作为一名可靠性工程师，我希望查看节点与流程的理论可靠度，并校验可靠性参数的关联，以便避免遗漏、错配或无效参数。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="1713" y="806" width="422" height="148" as="geometry"/></mxCell><mxCell id="32" value="指定故障检测节点
+
+作为一名可靠性工程师，我希望指定具备故障检测能力的节点，以便潜在故障在正确的业务环节被发现。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="2171" y="350" width="422" height="140" as="geometry"/></mxCell><mxCell id="33" value="配置检测耗时
+
+作为一名可靠性工程师，我希望设置检测节点执行时间，以便把检测开销纳入流程与可靠性分析。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="2171" y="502" width="422" height="140" as="geometry"/></mxCell><mxCell id="34" value="配置处理、维修与恢复
+
+作为一名可靠性工程师，我希望设计故障发现后的处理路径、维修流程和恢复位置，以便设备能够继续运行并形成闭环。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="2171" y="654" width="422" height="140" as="geometry"/></mxCell><mxCell id="35" value="预览故障生命周期
+
+作为一名可靠性工程师，我希望预览潜在故障、检测、维修和恢复过程，以便确认机制完整且业务路径闭环。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="2171" y="806" width="422" height="140" as="geometry"/></mxCell><mxCell id="36" value="设置设备数量
+
+作为一名仿真分析人员，我希望设置参与仿真的设备数量，以便分析设备规模对系统可靠性的影响。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="2629" y="350" width="422" height="140" as="geometry"/></mxCell><mxCell id="37" value="设置时间、种子与运行参数
+
+作为一名仿真分析人员，我希望设置仿真结束时间、随机种子和运行参数，以便控制实验范围并保证结果可复现。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="2629" y="502" width="422" height="140" as="geometry"/></mxCell><mxCell id="38" value="检查模型与参数
+
+作为一名仿真分析人员，我希望运行前自动检查流程、可靠性、检测和维修配置，以便避免无效仿真和参数遗漏。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="2629" y="654" width="422" height="140" as="geometry"/></mxCell><mxCell id="39" value="创建仿真任务
+
+作为一名仿真分析人员，我希望保存本次仿真配置并创建任务，以便开始执行并支持后续复用。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="2629" y="806" width="422" height="140" as="geometry"/></mxCell><mxCell id="40" value="启动并查看进度
+
+作为一名仿真分析人员，我希望启动多设备仿真并查看运行进度，以便掌握实验状态。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="3087" y="350" width="422" height="140" as="geometry"/></mxCell><mxCell id="41" value="查看设备独立状态
+
+作为一名仿真分析人员，我希望查看每台设备当前节点、状态和运行轨迹，以便观察设备之间的行为差异。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="3087" y="502" width="422" height="140" as="geometry"/></mxCell><mxCell id="42" value="查看故障与维修事件
+
+作为一名仿真分析人员，我希望实时查看故障发生、检测、维修和恢复事件，以便理解设备可靠性变化过程。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="3087" y="654" width="422" height="140" as="geometry"/></mxCell><mxCell id="43" value="验证设备独立运行
+
+作为一名仿真分析人员，我希望确认单台设备故障不会中断其他设备，以便正确评估多设备系统的整体行为。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="3087" y="806" width="422" height="140" as="geometry"/></mxCell><mxCell id="44" value="查看整体可靠性指标
+
+作为一名仿真分析人员，我希望查看系统可靠度、节点可靠度、故障次数和平均修复时间，以便量化评估系统可靠性。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="3545" y="350" width="422" height="148" as="geometry"/></mxCell><mxCell id="45" value="查看设备最终状态与轨迹
+
+作为一名仿真分析人员，我希望查看每台设备的最终状态和运行轨迹，以便定位不同设备的结果差异。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="3545" y="510" width="422" height="140" as="geometry"/></mxCell><mxCell id="46" value="查看节点执行统计
+
+作为一名仿真分析人员，我希望查看节点执行次数、忙闲时间和等待情况，以便发现流程瓶颈。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="3545" y="662" width="422" height="140" as="geometry"/></mxCell><mxCell id="47" value="查看故障发现与维修统计
+
+作为一名仿真分析人员，我希望查看潜在故障、已发现故障和维修记录，以便评估检测与维修机制。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="3545" y="814" width="422" height="140" as="geometry"/></mxCell><mxCell id="48" value="对比理论与实际
+
+作为一名仿真分析人员，我希望对比理论可靠度与实际仿真故障统计，以便判断模型假设与仿真结果是否一致。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="3545" y="966" width="422" height="140" as="geometry"/></mxCell><mxCell id="49" value="获取 Agent 解释
+
+作为一名仿真分析人员，我希望Agent 用自然语言解释关键指标和异常结果，以便形成可汇报的分析结论。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="3545" y="1118" width="422" height="140" as="geometry"/></mxCell><mxCell id="50" value="保存实验
+
+作为一名仿真分析人员，我希望保存本次实验的模型、参数和结果，以便后续追溯与复现。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="4003" y="350" width="422" height="140" as="geometry"/></mxCell><mxCell id="51" value="" style="rounded=1;arcSize=3;fillColor=#FFFBF2;strokeColor=#E0E8F1;" vertex="1" parent="1"><mxGeometry x="50" y="1278" width="4440" height="788" as="geometry"/></mxCell><mxCell id="52" value="V1.1  增强版本
+增强自然语言理解、
+复杂流程编辑、
+实验管理与比较" style="rounded=0;fillColor=none;strokeColor=none;fontColor=#B45309;align=left;verticalAlign=top;fontStyle=1;fontSize=22;" vertex="1" parent="1"><mxGeometry x="76" y="1296" width="200" height="90" as="geometry"/></mxCell><mxCell id="53" value="维护领域术语
+
+作为一名业务建模人员，我希望维护业务术语和同义词，以便Agent 更准确地理解行业表达。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="339" y="1298" width="422" height="140" as="geometry"/></mxCell><mxCell id="54" value="导入需求文档
+
+作为一名业务建模人员，我希望导入需求文档并让 Agent 提取要点，以便复用已有材料开展建模。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="339" y="1450" width="422" height="140" as="geometry"/></mxCell><mxCell id="55" value="查看建模依据
+
+作为一名业务建模人员，我希望查看每个节点和连接的提取依据，以便核验 Agent 的建模判断。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="797" y="1298" width="422" height="140" as="geometry"/></mxCell><mxCell id="56" value="识别异常与补偿路径
+
+作为一名业务建模人员，我希望让 Agent 识别异常路径和补偿措施，以便流程覆盖更多真实业务情况。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="797" y="1450" width="422" height="140" as="geometry"/></mxCell><mxCell id="57" value="复用流程模板
+
+作为一名业务建模人员，我希望从历史模型或模板开始建模，以便加速相似业务的流程设计。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="797" y="1602" width="422" height="140" as="geometry"/></mxCell><mxCell id="58" value="批量编辑节点
+
+作为一名业务建模人员，我希望批量修改节点属性和执行时间，以便高效维护大型流程。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="1255" y="1298" width="422" height="140" as="geometry"/></mxCell><mxCell id="59" value="撤销、重做与版本对比
+
+作为一名业务建模人员，我希望安全撤销修改并比较模型版本，以便控制编辑风险并保留演进依据。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="1255" y="1450" width="422" height="140" as="geometry"/></mxCell><mxCell id="60" value="按设备类型批量配置
+
+作为一名可靠性工程师，我希望按设备类型批量应用故障率，以便减少重复配置并保持参数一致。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="1713" y="1298" width="422" height="140" as="geometry"/></mxCell><mxCell id="61" value="选择故障分布
+
+作为一名可靠性工程师，我希望配置指数、威布尔等故障分布，以便更贴近真实设备失效规律。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="1713" y="1450" width="422" height="140" as="geometry"/></mxCell><mxCell id="62" value="建立可靠性参数库
+
+作为一名可靠性工程师，我希望沉淀可复用的设备可靠性参数，以便在不同实验间保持一致。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="1713" y="1602" width="422" height="140" as="geometry"/></mxCell><mxCell id="63" value="配置维修资源约束
+
+作为一名可靠性工程师，我希望配置备件、维修人员和维修能力约束，以便分析维修等待对可靠性的影响。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="2171" y="1298" width="422" height="140" as="geometry"/></mxCell><mxCell id="64" value="比较检测策略
+
+作为一名可靠性工程师，我希望配置不同检测节点方案并比较，以便选择更有效的故障检测策略。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="2171" y="1450" width="422" height="140" as="geometry"/></mxCell><mxCell id="65" value="生成参数扫描任务
+
+作为一名仿真分析人员，我希望设置参数范围并批量生成任务，以便系统开展多组对比实验。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="2629" y="1298" width="422" height="140" as="geometry"/></mxCell><mxCell id="66" value="克隆历史任务
+
+作为一名仿真分析人员，我希望从历史任务克隆配置，以便快速创建相似仿真。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="2629" y="1450" width="422" height="140" as="geometry"/></mxCell><mxCell id="67" value="暂停、继续与终止
+
+作为一名仿真分析人员，我希望暂停、继续或终止仿真，以便控制长时间运行任务。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="3087" y="1298" width="422" height="140" as="geometry"/></mxCell><mxCell id="68" value="查看日志与告警
+
+作为一名仿真分析人员，我希望查看运行日志和异常告警，以便诊断仿真问题并定位异常。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="3087" y="1450" width="422" height="140" as="geometry"/></mxCell><mxCell id="69" value="筛选与导出报告
+
+作为一名仿真分析人员，我希望按设备、节点和故障类型筛选并导出报告，以便用于项目汇报和评审。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="3545" y="1298" width="422" height="140" as="geometry"/></mxCell><mxCell id="70" value="图表联动与下钻
+
+作为一名仿真分析人员，我希望从总体指标下钻到设备和节点明细，以便快速定位问题。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="3545" y="1450" width="422" height="140" as="geometry"/></mxCell><mxCell id="71" value="查看历史实验
+
+作为一名仿真分析人员，我希望浏览并检索历史实验，以便找回和复用过去的分析。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="4003" y="1298" width="422" height="140" as="geometry"/></mxCell><mxCell id="72" value="复现实验
+
+作为一名仿真分析人员，我希望用相同模型和随机种子重跑实验，以便验证结果一致性。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="4003" y="1450" width="422" height="140" as="geometry"/></mxCell><mxCell id="73" value="修改参数并派生
+
+作为一名仿真分析人员，我希望复制实验并修改关键参数，以便快速开展对照实验。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="4003" y="1602" width="422" height="140" as="geometry"/></mxCell><mxCell id="74" value="比较实验结果
+
+作为一名仿真分析人员，我希望并排比较多个实验的指标和配置，以便识别实验差异。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="4003" y="1754" width="422" height="140" as="geometry"/></mxCell><mxCell id="75" value="分析参数影响
+
+作为一名仿真分析人员，我希望分析设备数量、故障率、检测策略等参数的影响，以便支撑可靠性改进决策。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="4003" y="1906" width="422" height="140" as="geometry"/></mxCell><mxCell id="76" value="" style="rounded=1;arcSize=3;fillColor=#F3FBF6;strokeColor=#E0E8F1;" vertex="1" parent="1"><mxGeometry x="50" y="2066" width="4440" height="332" as="geometry"/></mxCell><mxCell id="77" value="V1.2  智能版本
+智能解释、优化
+与协同决策" style="rounded=0;fillColor=none;strokeColor=none;fontColor=#15803D;align=left;verticalAlign=top;fontStyle=1;fontSize=22;" vertex="1" parent="1"><mxGeometry x="76" y="2084" width="200" height="90" as="geometry"/></mxCell><mxCell id="78" value="多轮对话式建模
+
+作为一名业务建模人员，我希望通过连续对话逐步补充复杂需求，以便Agent 在上下文中持续完善模型。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="339" y="2086" width="422" height="140" as="geometry"/></mxCell><mxCell id="79" value="语音与文档混合输入
+
+作为一名业务建模人员，我希望用语音、文档和表单混合表达需求，以便适配不同工作习惯和输入场景。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="339" y="2238" width="422" height="140" as="geometry"/></mxCell><mxCell id="80" value="自动补全流程
+
+作为一名业务建模人员，我希望Agent 主动建议缺失步骤、分支和约束，以便发现未被描述的业务环节。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="797" y="2086" width="422" height="140" as="geometry"/></mxCell><mxCell id="81" value="模型质量评估
+
+作为一名业务建模人员，我希望获得完整性、可执行性和可理解性评分，以便判断模型成熟度和可仿真程度。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="797" y="2238" width="422" height="140" as="geometry"/></mxCell><mxCell id="82" value="AI 辅助优化流程
+
+作为一名业务建模人员，我希望Agent 给出简化、并行化和瓶颈优化建议，以便提升流程效率。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="1255" y="2086" width="422" height="140" as="geometry"/></mxCell><mxCell id="83" value="协同编辑与评审
+
+作为一名业务建模人员，我希望邀请团队成员评论和审批模型，以便形成共同确认的流程版本。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="1255" y="2238" width="422" height="140" as="geometry"/></mxCell><mxCell id="84" value="可靠性敏感性分析
+
+作为一名可靠性工程师，我希望识别对系统可靠度影响最大的参数，以便优先改进关键设备。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="1713" y="2086" width="422" height="140" as="geometry"/></mxCell><mxCell id="85" value="参数取值建议
+
+作为一名可靠性工程师，我希望由 Agent 根据历史数据推荐故障率取值，以便减少主观估计误差。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="1713" y="2238" width="422" height="140" as="geometry"/></mxCell><mxCell id="86" value="预防性维修策略
+
+作为一名可靠性工程师，我希望配置计划性维护和更换策略，以便比较预防维修与故障后维修的收益。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="2171" y="2086" width="422" height="140" as="geometry"/></mxCell><mxCell id="87" value="检测与维修联合优化
+
+作为一名可靠性工程师，我希望让 Agent 联合优化检测节点和维修资源，以便在成本与可靠性之间取得平衡。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="2171" y="2238" width="422" height="140" as="geometry"/></mxCell><mxCell id="88" value="目标驱动的实验设计
+
+作为一名仿真分析人员，我希望说明分析目标并由 Agent 设计实验方案，以便减少人工试错。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="2629" y="2086" width="422" height="140" as="geometry"/></mxCell><mxCell id="89" value="仿真资源调度
+
+作为一名仿真分析人员，我希望设置计算资源和任务优先级，以便高效运行大规模实验。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="2629" y="2238" width="422" height="140" as="geometry"/></mxCell><mxCell id="90" value="实时动画追踪
+
+作为一名仿真分析人员，我希望用时间轴和动画观察设备运行过程，以便直观理解故障传播与恢复。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="3087" y="2086" width="422" height="140" as="geometry"/></mxCell><mxCell id="91" value="异常过程智能标注
+
+作为一名仿真分析人员，我希望Agent 自动标注关键故障和长等待事件，以便快速聚焦异常环节。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="3087" y="2238" width="422" height="140" as="geometry"/></mxCell><mxCell id="92" value="根因分析建议
+
+作为一名仿真分析人员，我希望由 Agent 分析可靠性瓶颈的主要原因，以便制定有针对性的改进措施。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="3545" y="2086" width="422" height="140" as="geometry"/></mxCell><mxCell id="93" value="优化建议与方案对比
+
+作为一名仿真分析人员，我希望获得流程和维修策略的优化方案对比，以便选择最优改进路径。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="3545" y="2238" width="422" height="140" as="geometry"/></mxCell><mxCell id="94" value="实验看板与知识沉淀
+
+作为一名仿真分析人员，我希望用看板沉淀实验结论和最佳实践，以便团队复用分析成果。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="4003" y="2086" width="422" height="140" as="geometry"/></mxCell><mxCell id="95" value="决策报告自动生成
+
+作为一名仿真分析人员，我希望由 Agent 自动生成可靠性与参数影响报告，以便支撑管理决策。" style="rounded=1;arcSize=10;fillColor=#FFFFFF;strokeColor=#D7E2EE;fontColor=#243449;align=left;verticalAlign=top;spacing=14;fontSize=12;" vertex="1" parent="1"><mxGeometry x="4003" y="2238" width="422" height="140" as="geometry"/></mxCell></root></mxGraphModel></diagram></mxfile>
