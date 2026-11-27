@@ -24,7 +24,7 @@ from app.evaluation.models import (
     EvaluationResult,
     EvaluationTargets,
 )
-from app.simulation.config import SimulationConfig
+from app.simulation.config import ProjectParameters, SimulationConfig
 from app.simulation.models import SimulationResult
 
 EXPERIMENT_SCHEMA_VERSION = "experiment/1.0"
@@ -49,6 +49,7 @@ class ExperimentRecord(StrictModel):
     reliability_revision: int = Field(ge=1)
     reliability_hash: str
     simulation_config: dict[str, Any]
+    project: ProjectParameters | None = None
     evaluation_targets: dict[str, Any] | None = None
     simulation: SimulationResult
     evaluation: EvaluationResult
@@ -96,6 +97,13 @@ class ExperimentStore:
                     "reliability_hash": evaluation.reliability_binding.hash,
                     "simulation_config": simulation_config.model_dump(
                         mode="json", by_alias=True
+                    ),
+                    "project": (
+                        simulation_config.project.model_dump(
+                            mode="json", by_alias=True
+                        )
+                        if simulation_config.project is not None
+                        else None
                     ),
                     "evaluation_targets": (
                         evaluation_targets.model_dump(mode="json", by_alias=True)
@@ -153,11 +161,24 @@ class ExperimentStore:
                         "created_at": record.created_at.isoformat(),
                         "process_id": record.process_id,
                         "process_name": record.process_name,
+                        "project_name": (
+                            record.project.name
+                            if record.project is not None
+                            else None
+                        ),
                         "process_version": record.process_version,
                         "process_hash": record.process_hash,
                         "reliability_revision": record.reliability_revision,
                         "entity_count": record.simulation.entity_count,
+                        "simulation_start": record.simulation.simulation_start,
                         "simulation_end": record.simulation.simulation_end,
+                        "simulation_duration": record.simulation.simulation_duration,
+                        "simulation_unit": record.simulation.simulation_unit,
+                        "simulation_total_time": (
+                            record.project.simulation_total_time
+                            if record.project is not None
+                            else None
+                        ),
                         "random_seed": record.simulation.random_seed,
                         "target_status": record.evaluation.target_status,
                         "overall_reliability": overall.overall_reliability,

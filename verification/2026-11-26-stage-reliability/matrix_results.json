@@ -1,0 +1,573 @@
+{
+  "config": {
+    "entities": 200,
+    "horizon": 120.0,
+    "seed": 2026,
+    "groups": {
+      "A": {
+        "lambda1": 0.0,
+        "lambda2": 0.0
+      },
+      "B": {
+        "lambda1": 0.001,
+        "lambda2": 0.001
+      },
+      "C": {
+        "lambda1": 0.01,
+        "lambda2": 0.01
+      },
+      "D": {
+        "lambda1": 0.05,
+        "lambda2": 0.05
+      },
+      "E": {
+        "lambda1": 0.01,
+        "lambda2": 0.05
+      },
+      "F": {
+        "lambda1": 0.05,
+        "lambda2": 0.001
+      }
+    }
+  },
+  "groups": {
+    "A": {
+      "lambda1": 0.0,
+      "lambda2": 0.0,
+      "detection_rate": 0.5,
+      "summary": {
+        "total_failure_count": 0,
+        "storage_failure_count": 0,
+        "duty_failure_count": 0,
+        "detected_failure_count": 0,
+        "repaired_failure_count": 0,
+        "ever_failed_entity_count": 0,
+        "overall_reliability": 1.0,
+        "readiness": 1.0,
+        "end_availability": 1.0,
+        "total_available_time": 24000.0,
+        "total_unavailable_time": 0.0,
+        "mean_failure_count_per_entity": 0.0,
+        "mean_repair_count_per_entity": 0.0,
+        "completed_entity_count": 0,
+        "stopped_entity_count": 0,
+        "unfinished_entity_count": 200,
+        "currently_failed_entity_count": 0,
+        "reliability_sample_count": 20000,
+        "event_count": 51000,
+        "runtime_semantic_version": "stepwise-detection/1.0",
+        "reliability_sampling_mode": "stepwise",
+        "tests": {
+          "s_inspect": {
+            "test_count": 200,
+            "had_fault_count": 0,
+            "detected_count": 0,
+            "undetected_count": 0,
+            "detection_frequency": null
+          },
+          "n_first_test": {
+            "test_count": 200,
+            "had_fault_count": 0,
+            "detected_count": 0,
+            "undetected_count": 0,
+            "detection_frequency": null
+          },
+          "n_second_test": {
+            "test_count": 200,
+            "had_fault_count": 0,
+            "detected_count": 0,
+            "undetected_count": 0,
+            "detection_frequency": null
+          },
+          "d_inspect": {
+            "test_count": 2600,
+            "had_fault_count": 0,
+            "detected_count": 0,
+            "undetected_count": 0,
+            "detection_frequency": null
+          }
+        }
+      }
+    },
+    "B": {
+      "lambda1": 0.001,
+      "lambda2": 0.001,
+      "detection_rate": 0.5,
+      "summary": {
+        "total_failure_count": 128,
+        "storage_failure_count": 102,
+        "duty_failure_count": 26,
+        "detected_failure_count": 118,
+        "repaired_failure_count": 118,
+        "ever_failed_entity_count": 96,
+        "overall_reliability": 0.52,
+        "readiness": 0.91975,
+        "end_availability": 0.95,
+        "total_available_time": 22074.0,
+        "total_unavailable_time": 1926.0,
+        "mean_failure_count_per_entity": 0.64,
+        "mean_repair_count_per_entity": 0.59,
+        "completed_entity_count": 0,
+        "stopped_entity_count": 0,
+        "unfinished_entity_count": 200,
+        "currently_failed_entity_count": 10,
+        "reliability_sample_count": 18660,
+        "event_count": 47888,
+        "runtime_semantic_version": "stepwise-detection/1.0",
+        "reliability_sampling_mode": "stepwise",
+        "tests": {
+          "s_inspect": {
+            "test_count": 255,
+            "had_fault_count": 102,
+            "detected_count": 57,
+            "undetected_count": 45,
+            "detection_frequency": 0.5588235294117647
+          },
+          "n_first_test": {
+            "test_count": 221,
+            "had_fault_count": 45,
+            "detected_count": 23,
+            "undetected_count": 22,
+            "detection_frequency": 0.5111111111111111
+          },
+          "n_second_test": {
+            "test_count": 205,
+            "had_fault_count": 22,
+            "detected_count": 7,
+            "undetected_count": 15,
+            "detection_frequency": 0.3181818181818182
+          },
+          "d_inspect": {
+            "test_count": 2300,
+            "had_fault_count": 56,
+            "detected_count": 31,
+            "undetected_count": 25,
+            "detection_frequency": 0.5535714285714286
+          }
+        }
+      }
+    },
+    "C": {
+      "lambda1": 0.01,
+      "lambda2": 0.01,
+      "detection_rate": 0.5,
+      "summary": {
+        "total_failure_count": 568,
+        "storage_failure_count": 360,
+        "duty_failure_count": 208,
+        "detected_failure_count": 517,
+        "repaired_failure_count": 511,
+        "ever_failed_entity_count": 200,
+        "overall_reliability": 0.0,
+        "readiness": 0.556375,
+        "end_availability": 0.715,
+        "total_available_time": 13353.0,
+        "total_unavailable_time": 10647.0,
+        "mean_failure_count_per_entity": 2.84,
+        "mean_repair_count_per_entity": 2.555,
+        "completed_entity_count": 0,
+        "stopped_entity_count": 0,
+        "unfinished_entity_count": 200,
+        "currently_failed_entity_count": 57,
+        "reliability_sample_count": 11727,
+        "event_count": 41758,
+        "runtime_semantic_version": "stepwise-detection/1.0",
+        "reliability_sampling_mode": "stepwise",
+        "tests": {
+          "s_inspect": {
+            "test_count": 345,
+            "had_fault_count": 339,
+            "detected_count": 167,
+            "undetected_count": 172,
+            "detection_frequency": 0.49262536873156343
+          },
+          "n_first_test": {
+            "test_count": 254,
+            "had_fault_count": 172,
+            "detected_count": 76,
+            "undetected_count": 96,
+            "detection_frequency": 0.4418604651162791
+          },
+          "n_second_test": {
+            "test_count": 227,
+            "had_fault_count": 96,
+            "detected_count": 49,
+            "undetected_count": 47,
+            "detection_frequency": 0.5104166666666666
+          },
+          "d_inspect": {
+            "test_count": 1670,
+            "had_fault_count": 439,
+            "detected_count": 225,
+            "undetected_count": 214,
+            "detection_frequency": 0.5125284738041003
+          }
+        }
+      }
+    },
+    "D": {
+      "lambda1": 0.05,
+      "lambda2": 0.05,
+      "detection_rate": 0.5,
+      "summary": {
+        "total_failure_count": 968,
+        "storage_failure_count": 373,
+        "duty_failure_count": 595,
+        "detected_failure_count": 851,
+        "repaired_failure_count": 843,
+        "ever_failed_entity_count": 200,
+        "overall_reliability": 0.0,
+        "readiness": 0.3082083333333333,
+        "end_availability": 0.375,
+        "total_available_time": 7397.0,
+        "total_unavailable_time": 16603.0,
+        "mean_failure_count_per_entity": 4.84,
+        "mean_repair_count_per_entity": 4.215,
+        "completed_entity_count": 0,
+        "stopped_entity_count": 0,
+        "unfinished_entity_count": 200,
+        "currently_failed_entity_count": 125,
+        "reliability_sample_count": 6555,
+        "event_count": 41202,
+        "runtime_semantic_version": "stepwise-detection/1.0",
+        "reliability_sampling_mode": "stepwise",
+        "tests": {
+          "s_inspect": {
+            "test_count": 350,
+            "had_fault_count": 350,
+            "detected_count": 173,
+            "undetected_count": 177,
+            "detection_frequency": 0.4942857142857143
+          },
+          "n_first_test": {
+            "test_count": 254,
+            "had_fault_count": 177,
+            "detected_count": 77,
+            "undetected_count": 100,
+            "detection_frequency": 0.4350282485875706
+          },
+          "n_second_test": {
+            "test_count": 229,
+            "had_fault_count": 100,
+            "detected_count": 52,
+            "undetected_count": 48,
+            "detection_frequency": 0.52
+          },
+          "d_inspect": {
+            "test_count": 1536,
+            "had_fault_count": 1054,
+            "detected_count": 549,
+            "undetected_count": 505,
+            "detection_frequency": 0.5208728652751423
+          }
+        }
+      }
+    },
+    "E": {
+      "lambda1": 0.01,
+      "lambda2": 0.05,
+      "detection_rate": 0.5,
+      "summary": {
+        "total_failure_count": 953,
+        "storage_failure_count": 360,
+        "duty_failure_count": 593,
+        "detected_failure_count": 837,
+        "repaired_failure_count": 825,
+        "ever_failed_entity_count": 200,
+        "overall_reliability": 0.0,
+        "readiness": 0.4136666666666667,
+        "end_availability": 0.36,
+        "total_available_time": 9928.0,
+        "total_unavailable_time": 14072.0,
+        "mean_failure_count_per_entity": 4.765,
+        "mean_repair_count_per_entity": 4.125,
+        "completed_entity_count": 0,
+        "stopped_entity_count": 0,
+        "unfinished_entity_count": 200,
+        "currently_failed_entity_count": 128,
+        "reliability_sample_count": 9042,
+        "event_count": 41506,
+        "runtime_semantic_version": "stepwise-detection/1.0",
+        "reliability_sampling_mode": "stepwise",
+        "tests": {
+          "s_inspect": {
+            "test_count": 345,
+            "had_fault_count": 339,
+            "detected_count": 167,
+            "undetected_count": 172,
+            "detection_frequency": 0.49262536873156343
+          },
+          "n_first_test": {
+            "test_count": 254,
+            "had_fault_count": 172,
+            "detected_count": 76,
+            "undetected_count": 96,
+            "detection_frequency": 0.4418604651162791
+          },
+          "n_second_test": {
+            "test_count": 227,
+            "had_fault_count": 96,
+            "detected_count": 49,
+            "undetected_count": 47,
+            "detection_frequency": 0.5104166666666666
+          },
+          "d_inspect": {
+            "test_count": 1567,
+            "had_fault_count": 1076,
+            "detected_count": 545,
+            "undetected_count": 531,
+            "detection_frequency": 0.5065055762081785
+          }
+        }
+      }
+    },
+    "F": {
+      "lambda1": 0.05,
+      "lambda2": 0.001,
+      "detection_rate": 0.5,
+      "summary": {
+        "total_failure_count": 399,
+        "storage_failure_count": 373,
+        "duty_failure_count": 26,
+        "detected_failure_count": 372,
+        "repaired_failure_count": 372,
+        "ever_failed_entity_count": 200,
+        "overall_reliability": 0.0,
+        "readiness": 0.5159166666666667,
+        "end_availability": 0.865,
+        "total_available_time": 12382.0,
+        "total_unavailable_time": 11618.0,
+        "mean_failure_count_per_entity": 1.995,
+        "mean_repair_count_per_entity": 1.86,
+        "completed_entity_count": 0,
+        "stopped_entity_count": 0,
+        "unfinished_entity_count": 200,
+        "currently_failed_entity_count": 27,
+        "reliability_sample_count": 10456,
+        "event_count": 41476,
+        "runtime_semantic_version": "stepwise-detection/1.0",
+        "reliability_sampling_mode": "stepwise",
+        "tests": {
+          "s_inspect": {
+            "test_count": 350,
+            "had_fault_count": 350,
+            "detected_count": 173,
+            "undetected_count": 177,
+            "detection_frequency": 0.4942857142857143
+          },
+          "n_first_test": {
+            "test_count": 254,
+            "had_fault_count": 177,
+            "detected_count": 77,
+            "undetected_count": 100,
+            "detection_frequency": 0.4350282485875706
+          },
+          "n_second_test": {
+            "test_count": 229,
+            "had_fault_count": 100,
+            "detected_count": 52,
+            "undetected_count": 48,
+            "detection_frequency": 0.52
+          },
+          "d_inspect": {
+            "test_count": 1679,
+            "had_fault_count": 113,
+            "detected_count": 70,
+            "undetected_count": 43,
+            "detection_frequency": 0.6194690265486725
+          }
+        }
+      }
+    }
+  },
+  "multi_seed_trends": {
+    "1": {
+      "A": 0,
+      "B": 56,
+      "C": 223,
+      "D": 386
+    },
+    "7": {
+      "A": 0,
+      "B": 49,
+      "C": 226,
+      "D": 374
+    },
+    "2026": {
+      "A": 0,
+      "B": 47,
+      "C": 236,
+      "D": 380
+    }
+  },
+  "detection": {
+    "0.0": {
+      "total_failure_count": 112,
+      "storage_failure_count": 112,
+      "duty_failure_count": 0,
+      "detected_failure_count": 0,
+      "repaired_failure_count": 0,
+      "ever_failed_entity_count": 112,
+      "overall_reliability": 0.43999999999999995,
+      "readiness": 0.48260416666666667,
+      "end_availability": 0.44,
+      "total_available_time": 23165.0,
+      "total_unavailable_time": 24835.0,
+      "mean_failure_count_per_entity": 0.56,
+      "mean_repair_count_per_entity": 0.0,
+      "completed_entity_count": 0,
+      "stopped_entity_count": 0,
+      "unfinished_entity_count": 200,
+      "currently_failed_entity_count": 112,
+      "reliability_sample_count": 19645,
+      "event_count": 111112,
+      "runtime_semantic_version": "stepwise-detection/1.0",
+      "reliability_sampling_mode": "stepwise",
+      "tests": {
+        "s_inspect": {
+          "test_count": 200,
+          "had_fault_count": 112,
+          "detected_count": 0,
+          "undetected_count": 112,
+          "detection_frequency": 0.0
+        },
+        "n_first_test": {
+          "test_count": 200,
+          "had_fault_count": 112,
+          "detected_count": 0,
+          "undetected_count": 112,
+          "detection_frequency": 0.0
+        },
+        "n_second_test": {
+          "test_count": 200,
+          "had_fault_count": 112,
+          "detected_count": 0,
+          "undetected_count": 112,
+          "detection_frequency": 0.0
+        },
+        "d_inspect": {
+          "test_count": 6600,
+          "had_fault_count": 3696,
+          "detected_count": 0,
+          "undetected_count": 3696,
+          "detection_frequency": 0.0
+        }
+      }
+    },
+    "0.5": {
+      "total_failure_count": 179,
+      "storage_failure_count": 179,
+      "duty_failure_count": 0,
+      "detected_failure_count": 179,
+      "repaired_failure_count": 179,
+      "ever_failed_entity_count": 112,
+      "overall_reliability": 0.43999999999999995,
+      "readiness": 0.9308333333333333,
+      "end_availability": 1.0,
+      "total_available_time": 44680.0,
+      "total_unavailable_time": 3320.0,
+      "mean_failure_count_per_entity": 0.895,
+      "mean_repair_count_per_entity": 0.895,
+      "completed_entity_count": 0,
+      "stopped_entity_count": 0,
+      "unfinished_entity_count": 200,
+      "currently_failed_entity_count": 0,
+      "reliability_sample_count": 37685,
+      "event_count": 105046,
+      "runtime_semantic_version": "stepwise-detection/1.0",
+      "reliability_sampling_mode": "stepwise",
+      "tests": {
+        "s_inspect": {
+          "test_count": 304,
+          "had_fault_count": 179,
+          "detected_count": 104,
+          "undetected_count": 75,
+          "detection_frequency": 0.5810055865921788
+        },
+        "n_first_test": {
+          "test_count": 233,
+          "had_fault_count": 75,
+          "detected_count": 33,
+          "undetected_count": 42,
+          "detection_frequency": 0.44
+        },
+        "n_second_test": {
+          "test_count": 221,
+          "had_fault_count": 42,
+          "detected_count": 21,
+          "undetected_count": 21,
+          "detection_frequency": 0.5
+        },
+        "d_inspect": {
+          "test_count": 6018,
+          "had_fault_count": 51,
+          "detected_count": 21,
+          "undetected_count": 30,
+          "detection_frequency": 0.4117647058823529
+        }
+      }
+    },
+    "1.0": {
+      "total_failure_count": 244,
+      "storage_failure_count": 244,
+      "duty_failure_count": 0,
+      "detected_failure_count": 244,
+      "repaired_failure_count": 244,
+      "ever_failed_entity_count": 112,
+      "overall_reliability": 0.43999999999999995,
+      "readiness": 0.9259791666666667,
+      "end_availability": 1.0,
+      "total_available_time": 44447.0,
+      "total_unavailable_time": 3553.0,
+      "mean_failure_count_per_entity": 1.22,
+      "mean_repair_count_per_entity": 1.22,
+      "completed_entity_count": 0,
+      "stopped_entity_count": 0,
+      "unfinished_entity_count": 200,
+      "currently_failed_entity_count": 0,
+      "reliability_sample_count": 37757,
+      "event_count": 95840,
+      "runtime_semantic_version": "stepwise-detection/1.0",
+      "reliability_sampling_mode": "stepwise",
+      "tests": {
+        "s_inspect": {
+          "test_count": 443,
+          "had_fault_count": 244,
+          "detected_count": 244,
+          "undetected_count": 0,
+          "detection_frequency": 1.0
+        },
+        "n_first_test": {
+          "test_count": 199,
+          "had_fault_count": 0,
+          "detected_count": 0,
+          "undetected_count": 0,
+          "detection_frequency": null
+        },
+        "n_second_test": {
+          "test_count": 199,
+          "had_fault_count": 0,
+          "detected_count": 0,
+          "undetected_count": 0,
+          "detection_frequency": null
+        },
+        "d_inspect": {
+          "test_count": 5297,
+          "had_fault_count": 0,
+          "detected_count": 0,
+          "undetected_count": 0,
+          "detection_frequency": null
+        }
+      }
+    }
+  },
+  "theory_comparison": {
+    "entities": 400,
+    "lambda": 0.001,
+    "storage_days": 30,
+    "empirical_storage_failure_fraction": 0.36,
+    "stepwise_product_theory": 0.3718648948103591,
+    "standard_exponential_theory": 0.029554466451491845,
+    "note": "图片算法在每个时间步比较 p(t) 与 R(t)=exp(-lambda*t)，因此 n 步后的无故障概率是各步 R(t) 的乘积，对应 1-exp(-lambda*n(n+1)/2)，而不是单次 exp(-lambda*n)。"
+  }
+}

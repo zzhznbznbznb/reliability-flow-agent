@@ -1,0 +1,821 @@
+{
+  "store_schema_version": "reliability-store/1.0",
+  "process_id": "proc_1a73e77f2006",
+  "revisions": [
+    {
+      "schema_version": "reliability-ir/1.1",
+      "process_version": 2,
+      "process_hash": "sha256:7542da916a3700e7fb264df103302d0566e874e9a63746d7014c2bf6367b106d",
+      "nodes": [
+        {
+          "node_id": "n_storage",
+          "module_type": "stage",
+          "participates": true,
+          "distribution": "exponential",
+          "lambda": 0.002,
+          "lambda_unit": "per_day",
+          "stage_task_id": "s_store"
+        },
+        {
+          "node_id": "n_transport",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_first_test",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_repair",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_short_transport",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_load_ship",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_second_test",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_exit_duty",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_disembark",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_shore_repair",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "s_store",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "s_inspect",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "s_repair",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "d_duty",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "d_inspect",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "d_repair",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        }
+      ],
+      "process_id": "proc_1a73e77f2006",
+      "reliability_id": "rel_e24d70393c10",
+      "revision": 1,
+      "created_at": "2026-11-26T15:46:55.109538Z"
+    },
+    {
+      "schema_version": "reliability-ir/1.1",
+      "process_version": 2,
+      "process_hash": "sha256:7542da916a3700e7fb264df103302d0566e874e9a63746d7014c2bf6367b106d",
+      "nodes": [
+        {
+          "node_id": "n_storage",
+          "module_type": "stage",
+          "participates": true,
+          "distribution": "exponential",
+          "lambda": 0.002,
+          "lambda_unit": "per_day",
+          "stage_task_id": "s_store"
+        },
+        {
+          "node_id": "n_transport",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_first_test",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_repair",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_short_transport",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_load_ship",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_second_test",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_exit_duty",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_disembark",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_shore_repair",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_duty",
+          "module_type": "stage",
+          "participates": true,
+          "distribution": "exponential",
+          "lambda": 0.005,
+          "lambda_unit": "per_day",
+          "stage_task_id": "d_duty"
+        },
+        {
+          "node_id": "s_store",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "s_inspect",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "s_repair",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "d_duty",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "d_inspect",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "d_repair",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        }
+      ],
+      "process_id": "proc_1a73e77f2006",
+      "reliability_id": "rel_343015b4bee4",
+      "revision": 2,
+      "created_at": "2026-11-26T15:46:55.486008Z"
+    },
+    {
+      "schema_version": "reliability-ir/1.1",
+      "process_version": 2,
+      "process_hash": "sha256:7542da916a3700e7fb264df103302d0566e874e9a63746d7014c2bf6367b106d",
+      "nodes": [
+        {
+          "node_id": "n_storage",
+          "module_type": "stage",
+          "participates": true,
+          "distribution": "exponential",
+          "lambda": 0.002,
+          "lambda_unit": "per_day",
+          "stage_task_id": "s_store"
+        },
+        {
+          "node_id": "n_transport",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_first_test",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_repair",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_short_transport",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_load_ship",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_second_test",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_exit_duty",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_disembark",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_shore_repair",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_duty",
+          "module_type": "stage",
+          "participates": true,
+          "distribution": "exponential",
+          "lambda": 0.005,
+          "lambda_unit": "per_day",
+          "stage_task_id": "d_duty"
+        },
+        {
+          "node_id": "s_store",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "s_inspect",
+          "module_type": "test",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day",
+          "detection_rate": 0.8,
+          "test_time": 1.0
+        },
+        {
+          "node_id": "s_repair",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "d_duty",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "d_inspect",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "d_repair",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        }
+      ],
+      "process_id": "proc_1a73e77f2006",
+      "reliability_id": "rel_6fb8794fd1f7",
+      "revision": 3,
+      "created_at": "2026-11-26T15:47:06.656507Z"
+    },
+    {
+      "schema_version": "reliability-ir/1.1",
+      "process_version": 2,
+      "process_hash": "sha256:7542da916a3700e7fb264df103302d0566e874e9a63746d7014c2bf6367b106d",
+      "nodes": [
+        {
+          "node_id": "n_storage",
+          "module_type": "stage",
+          "participates": true,
+          "distribution": "exponential",
+          "lambda": 0.002,
+          "lambda_unit": "per_day",
+          "stage_task_id": "s_store"
+        },
+        {
+          "node_id": "n_transport",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_first_test",
+          "module_type": "test",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day",
+          "detection_rate": 0.8,
+          "test_time": 1.0
+        },
+        {
+          "node_id": "n_repair",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_short_transport",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_load_ship",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_second_test",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_exit_duty",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_disembark",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_shore_repair",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_duty",
+          "module_type": "stage",
+          "participates": true,
+          "distribution": "exponential",
+          "lambda": 0.005,
+          "lambda_unit": "per_day",
+          "stage_task_id": "d_duty"
+        },
+        {
+          "node_id": "s_store",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "s_inspect",
+          "module_type": "test",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day",
+          "detection_rate": 0.8,
+          "test_time": 1.0
+        },
+        {
+          "node_id": "s_repair",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "d_duty",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "d_inspect",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "d_repair",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        }
+      ],
+      "process_id": "proc_1a73e77f2006",
+      "reliability_id": "rel_9a7e2b3aac62",
+      "revision": 4,
+      "created_at": "2026-11-26T15:47:12.392704Z"
+    },
+    {
+      "schema_version": "reliability-ir/1.1",
+      "process_version": 2,
+      "process_hash": "sha256:7542da916a3700e7fb264df103302d0566e874e9a63746d7014c2bf6367b106d",
+      "nodes": [
+        {
+          "node_id": "n_storage",
+          "module_type": "stage",
+          "participates": true,
+          "distribution": "exponential",
+          "lambda": 0.002,
+          "lambda_unit": "per_day",
+          "stage_task_id": "s_store"
+        },
+        {
+          "node_id": "n_transport",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_first_test",
+          "module_type": "test",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day",
+          "detection_rate": 0.8,
+          "test_time": 1.0
+        },
+        {
+          "node_id": "n_repair",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_short_transport",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_load_ship",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_second_test",
+          "module_type": "test",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day",
+          "detection_rate": 0.8,
+          "test_time": 1.0
+        },
+        {
+          "node_id": "n_exit_duty",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_disembark",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_shore_repair",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_duty",
+          "module_type": "stage",
+          "participates": true,
+          "distribution": "exponential",
+          "lambda": 0.005,
+          "lambda_unit": "per_day",
+          "stage_task_id": "d_duty"
+        },
+        {
+          "node_id": "s_store",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "s_inspect",
+          "module_type": "test",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day",
+          "detection_rate": 0.8,
+          "test_time": 1.0
+        },
+        {
+          "node_id": "s_repair",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "d_duty",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "d_inspect",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "d_repair",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        }
+      ],
+      "process_id": "proc_1a73e77f2006",
+      "reliability_id": "rel_a95f46b2dc65",
+      "revision": 5,
+      "created_at": "2026-11-26T15:47:18.131474Z"
+    },
+    {
+      "schema_version": "reliability-ir/1.1",
+      "process_version": 2,
+      "process_hash": "sha256:7542da916a3700e7fb264df103302d0566e874e9a63746d7014c2bf6367b106d",
+      "nodes": [
+        {
+          "node_id": "n_storage",
+          "module_type": "stage",
+          "participates": true,
+          "distribution": "exponential",
+          "lambda": 0.002,
+          "lambda_unit": "per_day",
+          "stage_task_id": "s_store"
+        },
+        {
+          "node_id": "n_transport",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_first_test",
+          "module_type": "test",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day",
+          "detection_rate": 0.8,
+          "test_time": 1.0
+        },
+        {
+          "node_id": "n_repair",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_short_transport",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_load_ship",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_second_test",
+          "module_type": "test",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day",
+          "detection_rate": 0.8,
+          "test_time": 1.0
+        },
+        {
+          "node_id": "n_exit_duty",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_disembark",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_shore_repair",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "n_duty",
+          "module_type": "stage",
+          "participates": true,
+          "distribution": "exponential",
+          "lambda": 0.005,
+          "lambda_unit": "per_day",
+          "stage_task_id": "d_duty"
+        },
+        {
+          "node_id": "s_store",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "s_inspect",
+          "module_type": "test",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day",
+          "detection_rate": 0.8,
+          "test_time": 1.0
+        },
+        {
+          "node_id": "s_repair",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "d_duty",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        },
+        {
+          "node_id": "d_inspect",
+          "module_type": "test",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day",
+          "detection_rate": 0.8,
+          "test_time": 1.0
+        },
+        {
+          "node_id": "d_repair",
+          "module_type": "activity",
+          "participates": false,
+          "distribution": "exponential",
+          "lambda_unit": "per_day"
+        }
+      ],
+      "process_id": "proc_1a73e77f2006",
+      "reliability_id": "rel_bb45aca93aa0",
+      "revision": 6,
+      "created_at": "2026-11-26T15:47:18.687902Z"
+    }
+  ]
+}

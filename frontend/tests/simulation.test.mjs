@@ -30,7 +30,8 @@ test("target status labels and tones are stable", () => {
   assert.equal(targetStatusTone("achieved"), "good");
   assert.equal(targetStatusTone("not_achieved"), "bad");
   assert.equal(targetStatusTone("unevaluable"), "warn");
-  assert.equal(targetMetricLabel("overall_reliability"), "整体可靠性");
+  assert.equal(targetMetricLabel("overall_reliability"), "装备使用可靠度");
+  assert.equal(targetMetricLabel("readiness"), "战备完好度");
 });
 
 test("optional target parsing accepts blank, zero and one", () => {

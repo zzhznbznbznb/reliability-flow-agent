@@ -8,10 +8,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import Field
 
 from app.api.deps import get_process_store, get_reliability_store
-from app.domain.process_ir import StrictModel
 from app.processes.store import ProcessStore
 from app.reliability.store import ReliabilityStore
-from app.simulation.config import FailurePolicy, SimulationConfig
+from app.simulation.config import SimulationConfig
 from app.simulation.engine import run_simulation
 from app.simulation.errors import (
     SimulationRuntimeError,
@@ -21,12 +20,8 @@ from app.simulation.errors import (
 router = APIRouter(prefix="/api/processes", tags=["simulation"])
 
 
-class SimulationRequest(StrictModel):
+class SimulationRequest(SimulationConfig):
     process_version: int | None = Field(default=None, ge=1)
-    entity_count: int = Field(ge=1)
-    simulation_end: float = Field(gt=0)
-    random_seed: int = Field(default=0, ge=0, le=2**63 - 1)
-    failure_policy: FailurePolicy = "require_failure_exit"
 
 
 def _validation_detail(error: SimulationValidationError) -> dict[str, Any]:

@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from app.diagram.layout import layout_process
+from app.diagram.layout import layout_nested_process, layout_process
 from app.diagram.svg import render_process_svg
 from app.domain.process_ir import ProcessSpec
 from app.domain.validation import validate_process
@@ -63,3 +63,24 @@ def test_auto_layout_when_positions_are_missing() -> None:
     assert layout.width > 0
     assert layout.height > 0
     assert len(layout.routes) == 2
+
+
+def test_nested_svg_contains_containers_and_internal_nodes() -> None:
+    spec = _example("equipment_support_nested_flow.json")
+    layout = layout_nested_process(spec)
+    assert layout.boxes["n_storage"].node.type == "subprocess"
+    assert layout.boxes["n_duty"].node.type == "subprocess"
+    assert "s_store" in layout.boxes
+    assert "s_repair" in layout.boxes
+    assert "d_duty" in layout.boxes
+    assert "d_repair" in layout.boxes
+    route_ids = {route.edge.id for route in layout.routes}
+    assert "e_s_dec_repair" in route_ids
+    assert "e_s_repair_store" in route_ids
+    assert "e_d_dec_repair" in route_ids
+    assert "e_d_repair_duty" in route_ids
+    svg = render_process_svg(spec)
+    assert "node-subprocess" in svg
+    assert 'data-node-id="s_store"' in svg
+    assert 'data-node-id="d_duty"' in svg
+    assert 'data-edge-id="e_s_dec_repair"' in svg

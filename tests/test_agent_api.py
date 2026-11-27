@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import json
 import time
 from dataclasses import replace
 
@@ -13,7 +14,11 @@ from app.experiments.store import ExperimentStore
 from app.main import create_app
 from app.processes.store import ProcessStore
 from app.reliability.store import ReliabilityStore
-from tests.helpers import failure_process_dict, minimal_process_dict
+from tests.helpers import (
+    failure_process_dict,
+    minimal_process_dict,
+    project_payload,
+)
 
 
 class ApiFakeClient:
@@ -175,6 +180,9 @@ def test_simulation_result_endpoint_publishes_real_stored_experiment(tmp_path) -
                 "simulation_end": 5,
                 "random_seed": 3,
                 "failure_policy": "require_failure_exit",
+                "project": project_payload(
+                    missile_count=2, simulation_total_time=5
+                ),
             },
         )
         assert experiment.status_code == 200, experiment.text
@@ -214,3 +222,99 @@ def test_sse_frame_contains_id_event_and_json_data() -> None:
     assert "event: assistant_delta\n" in frame
     assert '"delta":"hi"' in frame
     assert frame.endswith("\n\n")
+
+
+def test_requirement_analysis_endpoint_validates_structure(tmp_path) -> None:
+    settings = replace(
+        get_settings(),
+        agent_session_dir=tmp_path / "agent_sessions",
+        agent_timeout_seconds=5.0,
+        agent_idle_timeout_seconds=60.0,
+    )
+    manager = AgentSessionManager(
+        settings, client_factory=lambda **kwargs: ApiFakeClient(**kwargs)
+    )
+    app = _app(tmp_path, manager)
+    analysis = {
+        "summary": "两步流程",
+        "steps": [
+            {"id": "start", "name": "开始", "kind": "start"},
+            {"id": "work", "name": "工作", "kind": "task", "duration": 1},
+            {"id": "end", "name": "结束", "kind": "end"},
+        ],
+        "branches": [
+            {
+                "id": "start_work",
+                "from_step": "start",
+                "to_step": "work",
+                "kind": "normal",
+            },
+            {
+                "id": "work_end",
+                "from_step": "work",
+                "to_step": "end",
+                "kind": "normal",
+            },
+        ],
+        "ambiguities": [],
+    }
+    with TestClient(app) as client:
+        health = client.get("/api/agent/health").json()
+        assert "analyze_requirements" in health["allowed_tools"]
+        response = client.post(
+            "/api/agent/requirements/analyze", json=analysis
+        )
+        assert response.status_code == 200, response.text
+        body = response.json()
+        assert body["valid"] is True
+        assert body["step_count"] == 3
+        assert body["branch_count"] == 2
+        assert body["blocking_count"] == 0
+
+        broken = dict(analysis)
+        broken["branches"] = [
+            {
+                "id": "bad_branch",
+                "from_step": "start",
+                "to_step": "ghost",
+                "kind": "normal",
+            }
+        ]
+        invalid = client.post("/api/agent/requirements/analyze", json=broken)
+        assert invalid.status_code == 422
+
+        bad_semantics = {
+            **analysis,
+            "steps": [dict(step) for step in analysis["steps"]],
+        }
+        bad_semantics["steps"][1]["kind"] = "decision"
+        semantic = client.post(
+            "/api/agent/requirements/analyze", json=bad_semantics
+        )
+        assert semantic.status_code == 200
+        semantic_body = semantic.json()
+        assert semantic_body["valid"] is False
+        assert "requirement_decision_has_duration" in {
+            issue["code"] for issue in semantic_body["issues"]
+        }
+
+
+def test_sse_frame_preserves_large_event_payload() -> None:
+    large_text = "长文本" * 50000
+    frame = _sse(
+        {
+            "seq": 9,
+            "session_id": "ags_000000000000",
+            "task_id": "task_000000000000",
+            "type": "process_ir",
+            "timestamp": "2026-11-26T00:00:00+00:00",
+            "data": {"spec": {"description": large_text}},
+        }
+    )
+    assert len(frame) > len(large_text)
+    assert large_text in frame
+    data_line = next(
+        line for line in frame.splitlines() if line.startswith("data: ")
+    )
+    parsed = json.loads(data_line.removeprefix("data: "))
+    assert parsed["data"]["spec"]["description"] == large_text

@@ -15,6 +15,13 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Any, Awaitable, Callable
 
+from pydantic import ValidationError
+
+from app.agent.process_candidate import apply_coverage, validate_candidate
+from app.agent.requirements import (
+    RequirementAnalysis,
+    validate_requirement_analysis,
+)
 from app.agent.rpc_client import (
     ALLOWED_AGENT_TOOLS,
     PiRpcClient,
@@ -68,6 +75,13 @@ class AgentTask:
     pending_tool_args: dict[str, Any] = field(default_factory=dict)
     process_ir: dict[str, Any] | None = None
     process_validation: dict[str, Any] | None = None
+    requirement_analysis: dict[str, Any] | None = None
+    requirement_analysis_valid: bool | None = None
+    requirement_analysis_issues: list[dict[str, Any]] = field(
+        default_factory=list
+    )
+    requirement_coverage: dict[str, Any] | None = None
+    requires_requirement_analysis: bool = False
     reliability_ir: dict[str, Any] | None = None
     reliability_validation: dict[str, Any] | None = None
     reliability_process_id: str | None = None
@@ -85,6 +99,8 @@ class AgentTask:
             "finished_at": _iso(self.finished_at) if self.finished_at else None,
             "error": self.error,
             "has_process_ir": self.process_ir is not None,
+            "has_requirement_analysis": self.requirement_analysis is not None,
+            "requires_requirement_analysis": self.requires_requirement_analysis,
             "has_reliability_ir": self.reliability_ir is not None,
         }
 
@@ -139,6 +155,14 @@ def _tool_args_summary(tool_name: str, args: Any) -> dict[str, Any]:
                 "process_name": spec.get("name"),
                 "node_count": len(spec.get("nodes") or []),
                 "edge_count": len(spec.get("edges") or []),
+            }
+    if tool_name == "analyze_requirements":
+        analysis = args.get("analysis")
+        if isinstance(analysis, dict):
+            return {
+                "step_count": len(analysis.get("steps") or []),
+                "branch_count": len(analysis.get("branches") or []),
+                "ambiguity_count": len(analysis.get("ambiguities") or []),
             }
     if tool_name == "validate_reliability_model":
         spec = args.get("spec")
@@ -205,6 +229,10 @@ class AgentSession:
         self.messages: list[dict[str, Any]] = []
         self.candidate_process_ir: dict[str, Any] | None = None
         self.process_validation: dict[str, Any] | None = None
+        self.requirement_analysis: dict[str, Any] | None = None
+        self.requirement_analysis_valid: bool | None = None
+        self.requirement_analysis_issues: list[dict[str, Any]] = []
+        self.requirement_coverage: dict[str, Any] | None = None
         self.candidate_reliability_ir: dict[str, Any] | None = None
         self.reliability_validation: dict[str, Any] | None = None
         self.reliability_process_id: str | None = None
@@ -277,6 +305,7 @@ class AgentSession:
             task_id=_new_id("task"),
             prompt=message,
             context=context,
+            requires_requirement_analysis=len(message.strip()) >= 200,
         )
         task.status = "running"
         task.started_at = _utc_now()
@@ -521,28 +550,191 @@ class AgentSession:
                     },
                     task_id=task.task_id,
                 )
-                if tool_name == "validate_process_model" and isinstance(args, dict):
-                    spec = args.get("spec")
-                    if isinstance(spec, dict):
-                        validation = details if isinstance(details, dict) else None
-                        task.process_ir = spec
-                        task.process_validation = validation
-                        self.candidate_process_ir = spec
-                        self.process_validation = validation
-                        if validation is not None:
+                if tool_name == "analyze_requirements" and isinstance(args, dict):
+                    analysis_raw = args.get("analysis")
+                    if isinstance(analysis_raw, dict):
+                        try:
+                            analysis = RequirementAnalysis.model_validate(
+                                analysis_raw
+                            )
+                        except ValidationError as error:
                             self.emit(
-                                "validation_result",
+                                "error",
                                 {
-                                    "model": "process_ir",
-                                    "validation": validation,
+                                    "message": "需求分析结构不合法",
+                                    "code": "requirement_analysis_invalid",
+                                    "issues": [
+                                        {
+                                            "field": ".".join(
+                                                str(part)
+                                                for part in item.get("loc", ())
+                                            ),
+                                            "message": item.get("msg"),
+                                        }
+                                        for item in error.errors()
+                                    ],
                                 },
                                 task_id=task.task_id,
                             )
+                        else:
+                            analysis_result = validate_requirement_analysis(
+                                analysis
+                            )
+                            payload = analysis.model_dump(mode="json")
+                            issue_payload = [
+                                issue.model_dump(mode="json")
+                                for issue in analysis_result.issues
+                            ]
+                            task.requirement_analysis = payload
+                            task.requirement_analysis_valid = (
+                                analysis_result.valid
+                            )
+                            task.requirement_analysis_issues = issue_payload
+                            task.requirement_coverage = None
+                            self.requirement_analysis = payload
+                            self.requirement_analysis_valid = (
+                                analysis_result.valid
+                            )
+                            self.requirement_analysis_issues = issue_payload
+                            self.requirement_coverage = None
+                            self.emit(
+                                "requirement_analysis",
+                                {
+                                    "analysis": payload,
+                                    "valid": analysis_result.valid,
+                                    "validation": {
+                                        "valid": analysis_result.valid,
+                                        "issues": issue_payload,
+                                    },
+                                    "step_count": len(analysis.steps),
+                                    "branch_count": len(analysis.branches),
+                                    "ambiguity_count": len(
+                                        analysis.ambiguities
+                                    ),
+                                    "blocking_count": len(
+                                        analysis.blocking_ambiguities
+                                    ),
+                                },
+                                task_id=task.task_id,
+                            )
+                            if not analysis_result.valid:
+                                self.emit(
+                                    "error",
+                                    {
+                                        "message": (
+                                            "需求分析与 Process IR 结构不一致，"
+                                            "请修正需求分析后重新提交，"
+                                            "不要直接生成流程。"
+                                        ),
+                                        "code": "requirement_analysis_invalid",
+                                        "issues": issue_payload,
+                                    },
+                                    task_id=task.task_id,
+                                )
+                            if analysis.blocking_ambiguities:
+                                self.emit(
+                                    "clarification",
+                                    {
+                                        "message": (
+                                            "需求中存在必须先澄清的问题，"
+                                            "Agent 不会在澄清前生成流程。"
+                                        ),
+                                        "questions": [
+                                            item.model_dump(mode="json")
+                                            for item in analysis.blocking_ambiguities
+                                        ],
+                                    },
+                                    task_id=task.task_id,
+                                )
+                if tool_name == "validate_process_model" and isinstance(args, dict):
+                    spec = args.get("spec")
+                    if isinstance(spec, dict):
+                        validation, parsed = validate_candidate(spec)
+                        analysis = None
+                        if task.requirement_analysis_valid is True and (
+                            task.requirement_analysis is not None
+                        ):
+                            try:
+                                analysis = RequirementAnalysis.model_validate(
+                                    task.requirement_analysis
+                                )
+                            except ValidationError:
+                                analysis = None
+                        if task.requirement_analysis_valid is False:
+                            issues = list(validation.get("issues") or [])
+                            for issue in task.requirement_analysis_issues:
+                                issues.append(
+                                    {
+                                        "severity": issue.get(
+                                            "severity", "error"
+                                        ),
+                                        "code": issue.get(
+                                            "code",
+                                            "requirement_analysis_invalid",
+                                        ),
+                                        "message": issue.get("message", ""),
+                                        "node_id": None,
+                                        "edge_id": None,
+                                        "step_id": issue.get("step_id"),
+                                        "branch_id": issue.get("branch_id"),
+                                        "field": "requirement_analysis",
+                                    }
+                                )
+                            validation = dict(validation)
+                            validation["issues"] = issues
+                            validation["valid"] = False
+                            validation["requirement_analysis_valid"] = False
+                        if (
+                            task.requires_requirement_analysis
+                            and task.requirement_analysis is None
+                        ):
+                            issues = list(validation.get("issues") or [])
+                            issues.append(
+                                {
+                                    "severity": "error",
+                                    "code": "requirement_analysis_missing",
+                                    "message": (
+                                        "长文本需求必须先提交完整的 "
+                                        "analyze_requirements 结果，"
+                                        "再生成 Process IR"
+                                    ),
+                                    "node_id": None,
+                                    "edge_id": None,
+                                    "step_id": None,
+                                    "branch_id": None,
+                                    "field": "requirement_analysis",
+                                }
+                            )
+                            validation = dict(validation)
+                            validation["issues"] = issues
+                            validation["valid"] = False
+                        validation, coverage = apply_coverage(
+                            validation, analysis, parsed
+                        )
+                        task.process_ir = spec
+                        task.process_validation = validation
+                        task.requirement_coverage = (
+                            coverage.model_dump(mode="json")
+                            if coverage is not None
+                            else None
+                        )
+                        self.candidate_process_ir = spec
+                        self.process_validation = validation
+                        self.requirement_coverage = task.requirement_coverage
+                        self.emit(
+                            "validation_result",
+                            {
+                                "model": "process_ir",
+                                "validation": validation,
+                            },
+                            task_id=task.task_id,
+                        )
                         self.emit(
                             "process_ir",
                             {
                                 "spec": spec,
                                 "validation": validation,
+                                "requirement_coverage": task.requirement_coverage,
                                 "base_process_id": (
                                     task.context or {}
                                     .get("current_process", {})
@@ -624,7 +816,7 @@ class AgentSession:
                     "error",
                     {
                         "message": str(message),
-                        "code": event_type,
+                        "code": str(event.get("code") or event_type),
                         "tool": event.get("event"),
                     },
                     task_id=task.task_id if task else None,
@@ -653,6 +845,10 @@ class AgentSession:
             "messages": list(self.messages),
             "candidate_process_ir": self.candidate_process_ir,
             "process_validation": self.process_validation,
+            "requirement_analysis": self.requirement_analysis,
+            "requirement_analysis_valid": self.requirement_analysis_valid,
+            "requirement_analysis_issues": self.requirement_analysis_issues,
+            "requirement_coverage": self.requirement_coverage,
             "candidate_reliability_ir": self.candidate_reliability_ir,
             "reliability_validation": self.reliability_validation,
             "reliability_process_id": self.reliability_process_id,

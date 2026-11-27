@@ -220,3 +220,16 @@ Phase 1 只定义和验证引用，设备完好状态语义在评价阶段使用
 - `lambda_unit`
 
 出现这些字段会返回 Schema 校验错误。
+
+## 嵌套流程块（process-ir/1.1）
+
+嵌套块使用 `type: "subprocess"` 节点和内联 `subflow`：
+
+- `subflow` 拥有自己的 `start_node_id`、`end_node_ids`、`nodes`、`edges` 和 `guards`。
+- 所有节点和连接 ID 在整个 ProcessDocument 内全局唯一。
+- 父连接只能连接父层节点或 subprocess 容器；子流程连接只能连接同一子流程内部节点。
+- 父连接通过 `subflow_exit` 指定从哪个子流程 end 返回。
+- 多出口子流程必须为每个 end 提供父连接映射。
+- `subprocess` 节点不能设置 `duration` 或 `outcomes`；内部 task 的 duration 推进仿真时间。
+- 展开/收起属于前端状态，不进入 IR，也不参与内容哈希。
+- `process-ir/1.0` 单层流程继续兼容；包含 subprocess 的模型使用 `process-ir/1.1`。

@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "node --test tests/reliability.test.mjs tests/simulation.test.mjs"
+    "test": "node --test tests/reliability.test.mjs tests/simulation.test.mjs tests/nested.test.mjs tests/project.test.mjs"
   },
   "dependencies": {
     "@dagrejs/dagre": "^3.1.3",

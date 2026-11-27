@@ -1,0 +1,165 @@
+RF
+Reliability Flow Agent
+通用流程建模与设备可靠性仿真 · Phase 4B
+离线仿真可用
+LLM 未启用
+Process IR 单源
+AI
+流程建模 Agent
+Agent 空闲
+AGENT
+欢迎使用流程建模助手。直接描述业务需求，我会通过真实 Pi Agent 生成 Process IR，并调用后端校验。
+AGENT
+例如：创建一个装备保障流程，包含任务准备、执行任务、任务结束，依次执行。
+AGENT
+已创建草稿「未命名流程」。保存后才会生成正式流程版本。
+你
+请根据装备保障业务描述生成 Process IR。只有“贮存”和“值班”是嵌套流程块，其他环节都是普通节点。贮存嵌套块内部：贮存开始 -> 贮存30天 -> 贮存检测1天 -> 是否故障判断；如果故障，则贮存维修2天后返回贮存；如果无故障，则正常结束贮存子流程并返回父流程进入运输。运输2天，随后进入阵地/测试场1天。第一次测试1天 -> 是否故障判断；如果故障，则维修2天并返回第一次测试；如果无故障，则短途运输1天 -> 装舰1天 -> 第二次测试1天。第二次测试1天 -> 是否故障判断；如果故障，则出值班1天 -> 下舰1天 -> 岸上维修3天 -> 结束；如果无故障，则进入值班嵌套块。值班嵌套块内部：值班开始 -> 值班5天 -> 值班检测1天 -> 是否故障判断；如果故障，则值班维修2天后返回值班；如果无故障，则正常结束值班子流程并返回父流程结束。所有检测/测试故障概率未给出，请标记为待配置，不要当作已确认值。
+读取 Process IR Schema
+已完成
+读取已保存流程
+执行失败
+分析长文本需求
+已完成
+REQUIREMENT ANALYSIS
+长文本需求结构化结果
+分析可用于建模
+
+装备保障流程：贮存(嵌套块) -> 运输 -> 阵地/测试场 -> 第一次测试(故障则维修回测) -> 短途运输 -> 装舰 -> 第二次测试(故障则出值班/下舰/岸上维修/结束；无故障进入值班嵌套块)。贮存块内: 贮存30天 -> 贮存检测 -> 是否故障(故障则贮存维修后返回贮存；无故障正常结束子流程)。值班块内: 值班5天 -> 值班检测 -> 是否故障(故障则值班维修后返回值班；无故障正常结束子流程)。检测/测试故障概率待配置。
+
+29 步骤 · 29 关系 · 待澄清 6 项（阻塞 0 项）
+
+后端校验通过
+requirement_branch_condition_not_allowed normal ?? e_storage_repair_loop ??? condition
+requirement_branch_condition_not_allowed default ?? e_storage_ok_end ??? condition
+requirement_branch_condition_not_allowed normal ?? e_duty_repair_loop ??? condition
+requirement_branch_condition_not_allowed default ?? e_duty_ok_end ??? condition
+requirement_branch_condition_not_allowed normal ?? e_repair1_loop_test1 ??? condition
+requirement_branch_condition_not_allowed default ?? e_test1_ok_short ??? condition
+requirement_branch_condition_not_allowed default ?? e_test2_ok_duty ??? condition
+amb_loop_target_storage “贮存维修2天后返回贮存”的返回目标，本次建模取为返回“贮存30天”步骤（即重新开始一轮贮存），请确认是否应为返回“贮存检测”步骤。
+amb_loop_target_duty “值班维修2天后返回值班”的返回目标，本次建模取为返回“值班5天”步骤（即重新开始一轮值班），请确认是否应为返回“值班检测”步骤。
+amb_fault_prob_storage 贮存检测的故障概率未给出，需在可靠性配置中作为待配置参数填写。
+amb_fault_prob_test1 第一次测试的故障概率未给出，需在可靠性配置中作为待配置参数填写。
+amb_fault_prob_test2 第二次测试的故障概率未给出，需在可靠性配置中作为待配置参数填写。
+amb_fault_prob_duty 值班检测的故障概率未给出，需在可靠性配置中作为待配置参数填写。
+校验 Process IR
+已完成 · 装备保障流程（贮存-运输-测试-装舰-值班） · 17 节点
+PROCESS IR PROPOSAL
+装备保障流程（贮存-运输-测试-装舰-值班）
+可应用
+
+17 个节点 · 17 条连接 · 需求覆盖 29/29 步骤、29/29 关系
+
+后端校验通过
+b78da0719b22
+应用为画布草稿
+不会自动保存；应用后请检查并手动保存。
+校验 Process IR
+已完成 · 装备保障流程（贮存-运输-测试-装舰-值班） · 17 节点
+读取项目能力
+已完成
+读取 Reliability IR Schema
+已完成
+校验 Process IR
+执行失败 · probe · 3 节点
+校验 Process IR
+已完成 · probe · 3 节点
+校验 Process IR
+已完成 · probe2 · 3 节点
+校验 Process IR
+已完成 · 装备保障流程（贮存-运输-测试-装舰-值班） · 17 节点
+AGENT
+校验通过（`valid: true`，无 issues）。
+
+## Process IR 提案（schema_version: process-ir/1.1）
+- content_hash: `sha256:b78da0719b22a73e22d9cecc17547a59a098343d39b0ba54dc26e7d38e0e2113`
+- 根节点 17 个 + 2 个嵌套块（贮存 6 节点 / 值班 6 节点），共 29 个节点、29 条连接，与需求分析图一一对应。
+
+**根流程**
+`start → sub_storage(贮存, subflow_exit=storage_end) → 运输(2d) → 阵地/测试场(1d) → 第一次测试(1d) → dec_test1_fault`
+- 故障(conditional) → 维修(2d) → 回环到第一次测试
+- 无故障(default) → 短途运输(1d) → 装舰(1d) → 第二次测试(1d) → dec_test2_fault
+- 故障(conditional) → 出值勤(1d) → 下舰(1d) → 岸上维修(3d) → `end_shore_repair`
+- 无故障(default) → 值班(子流程, subflow_exit=duty_end) → `end`
+
+**贮存块**：贮存开始 → 贮存30天 → 贮存检测(1d) → dec_storage_fault（故障→贮存维修2d→回环至贮存30天；无故障→贮存结束）
+**值班块**：值班开始 → 值班5天 → 值班检测(1d) → dec_duty_fault（故障→值班维修2d→回环至值班5天；无故障→值班结束）
+
+所有判断点均为 `decision` 且 `duration=null`，检测/测试本体仍为 task。
+
+## 需要你确认/注意的点
+1. **“出值班”节点被改名为“出值勤”**：后端装备保障领域规则禁止根级 task 名称含“值班”（会要求改成 subprocess，与“只有贮存、值班是嵌套块”的要求冲突），故改用同义名并在 description 中保留原称。如需保留原名称，需要放宽该领域规则。
+2. **条件字段受限**：后端仅接受 `failure_count` / `repair_count` 作为条件字段，因此“故障”分支写成 `failure_count > 0`，“无故障”走 default 分支。
+3. **待配置（非阻塞歧义）**：贮存检测、第一次测试、第二次测试、值班检测的故障概率均为待配置，未在本提案中填入任何数值。
+4. **回环目标（非阻塞歧义）**：按“返回贮存/返回值班”建模为回到贮存30天 / 值班5天；若应回到检测步，请告知，我改边后再校验。
+
+本会话仅提案，未保存任何模型或可靠性配置。
+创建一个装备保障流程，包含任务准备、执行任务、任务结束，依次执行。
+解释当前流程的结构和风险点。
+检查当前流程，并告诉我需要补充哪些信息。
+Enter 发送，Shift+Enter 换行
+发送
+流程库
+0
+新建流程
+导入 JSON
+
+还没有已保存流程。
+
+未命名流程
+未保存
+未保存草稿 · 保存后生成正式 Process IR 版本
+·
+校验通过
+无版本
+刷新
+添加
++ 任务
++ 判断
++ 开始
++ 结束
++ 嵌套块
+校验
+自动布局
+适应屏幕
+展开全部
+收起全部
+仿真评估
+导入 JSON
+导出 JSON
+保存新版本
+START
+start
+开始
+流程起点
+TASK
+task_1
+业务流程节点
+持续 1 天
+END
+end
+结束
+流程终点
+校验通过
+展开查看校验问题
+PROCESS INSPECTOR
+未命名流程
+
+未保存草稿
+
+流程名称
+流程说明
+单设备最大节点访问次数
+
+用于运行时防止循环无限执行。
+
+开始 / 结束节点
+开始：开始
+结束：结束
+状态目录 status_catalog
+应用流程信息
+版本历史
+0 个版本
+
+尚未保存任何版本。

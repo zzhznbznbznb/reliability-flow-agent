@@ -68,6 +68,8 @@ class Settings:
     agent_timeout_seconds: float
     agent_idle_timeout_seconds: float
     agent_max_sessions: int
+    agent_rpc_max_message_bytes: int
+    agent_rpc_read_chunk_bytes: int
 
 
 @lru_cache(maxsize=1)
@@ -109,4 +111,14 @@ def get_settings() -> Settings:
             "RFA_AGENT_IDLE_TIMEOUT_SECONDS", 1800.0
         ),
         agent_max_sessions=_env_int("RFA_AGENT_MAX_SESSIONS", 8),
+        agent_rpc_max_message_bytes=max(
+            1,
+            _env_int(
+                "RFA_AGENT_RPC_MAX_MESSAGE_BYTES", 16 * 1024 * 1024
+            ),
+        ),
+        agent_rpc_read_chunk_bytes=max(
+            1,
+            _env_int("RFA_AGENT_RPC_READ_CHUNK_BYTES", 64 * 1024),
+        ),
     )

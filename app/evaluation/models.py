@@ -35,6 +35,7 @@ class EvaluationConfig(StrictModel):
 class EvaluationTargets(StrictModel):
     overall_reliability_min: float | None = Field(default=None, ge=0, le=1)
     end_availability_min: float | None = Field(default=None, ge=0, le=1)
+    readiness_min: float | None = Field(default=None, ge=0, le=1)
 
 
 class EvaluationWarning(StrictModel):
@@ -80,8 +81,14 @@ class PerEntityNodeMetrics(StrictModel):
 class NodeMetrics(StrictModel):
     node_id: str
     node_name: str
+    scope_path: list[str] = Field(default_factory=list)
     lambda_per_day: float = Field(alias="lambda", ge=0)
-    lambda_unit: Literal["per_day"] = "per_day"
+    lambda_unit: Literal[
+        "per_hour", "per_day", "per_month", "per_year"
+    ] = "per_day"
+    module_type: Literal["activity", "stage"] = "activity"
+    stage_task_id: str | None = None
+    detection_rate: float | None = Field(default=None, ge=0, le=1)
     planned_duration: float | None = None
     visit_count: int = Field(ge=0)
     sample_count: int = Field(ge=0)
@@ -122,6 +129,8 @@ class EntityMetrics(StrictModel):
     completed: bool
     stopped: bool
     stopped_reason: str | None = None
+    available_time: float = Field(default=0.0, ge=0)
+    unavailable_time: float = Field(default=0.0, ge=0)
     node_metrics: list[PerEntityNodeMetrics] = Field(default_factory=list)
 
 
@@ -149,10 +158,29 @@ class OverallMetrics(StrictModel):
     mean_failure_count_per_entity: float = Field(ge=0)
     mean_repair_count_per_entity: float = Field(ge=0)
     status_distribution: dict[str, int] = Field(default_factory=dict)
+    total_available_time: float = Field(default=0.0, ge=0)
+    total_unavailable_time: float = Field(default=0.0, ge=0)
+    readiness: float | None = Field(default=None, ge=0, le=1)
+    mean_entity_availability: float | None = Field(default=None, ge=0, le=1)
+
+
+class TestMetrics(StrictModel):
+    node_id: str
+    node_name: str
+    scope_path: list[str] = Field(default_factory=list)
+    detection_rate: float = Field(ge=0, le=1)
+    test_count: int = Field(ge=0)
+    had_fault_count: int = Field(ge=0)
+    detected_count: int = Field(ge=0)
+    undetected_count: int = Field(ge=0)
+    detection_frequency: float | None = Field(default=None, ge=0, le=1)
+    test_time: float | None = Field(default=None, ge=0)
 
 
 class TargetResult(StrictModel):
-    metric: Literal["overall_reliability", "end_availability"]
+    metric: Literal[
+        "overall_reliability", "end_availability", "readiness"
+    ]
     configured: bool
     actual: float | None = None
     target: float | None = None
@@ -171,6 +199,7 @@ class EvaluationResult(StrictModel):
     is_small_sample: bool
     overall: OverallMetrics
     nodes: list[NodeMetrics] = Field(default_factory=list)
+    tests: list[TestMetrics] = Field(default_factory=list)
     entities: list[EntityMetrics] = Field(default_factory=list)
     targets: list[TargetResult] = Field(default_factory=list)
     target_status: TargetStatus
@@ -193,5 +222,6 @@ __all__ = [
     "ProcessBinding",
     "ReliabilityBinding",
     "TargetResult",
+    "TestMetrics",
     "TargetStatus",
 ]

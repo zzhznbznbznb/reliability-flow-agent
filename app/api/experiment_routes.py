@@ -7,6 +7,7 @@ the complete result as an experiment record.
 
 from __future__ import annotations
 
+import logging
 from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -27,8 +28,10 @@ from app.simulation.errors import (
     SimulationRuntimeError,
     SimulationValidationError,
 )
+from app.simulation.readiness import check_simulation_readiness
 
 router = APIRouter(tags=["experiments"])
+logger = logging.getLogger(__name__)
 
 
 def _validation_detail(error: SimulationValidationError) -> dict[str, Any]:
@@ -70,6 +73,66 @@ def run_experiment(
     )
     if reliability is None:
         raise _reliability_not_bound(process_id, process)
+    if request.project is None:
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "code": "missing_project_parameters",
+                "valid": False,
+                "message": "正式仿真必须填写完整项目参数",
+                "issues": [
+                    {
+                        "severity": "error",
+                        "code": "missing_project_parameter",
+                        "message": f"缺少项目参数: {field}",
+                        "field": field,
+                    }
+                    for field in (
+                        "name",
+                        "description",
+                        "reliability_target",
+                        "readiness_target",
+                        "simulation_unit",
+                        "missile_count",
+                        "simulation_total_time",
+                    )
+                ],
+            },
+        )
+    if request.project.simulation_total_time is None:
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "code": "missing_project_parameters",
+                "valid": False,
+                "message": "正式仿真必须填写仿真总时间",
+                "issues": [
+                    {
+                        "severity": "error",
+                        "code": "missing_project_parameter",
+                        "message": "缺少项目参数: simulation_total_time",
+                        "field": "simulation_total_time",
+                    }
+                ],
+            },
+        )
+
+    readiness_issues = check_simulation_readiness(
+        process, reliability, request.simulation_unit
+    )
+    if readiness_issues:
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "code": "simulation_parameters_missing",
+                "valid": False,
+                "message": "仿真前参数检查未通过",
+                "issues": [
+                    issue.model_dump(mode="json")
+                    for issue in readiness_issues
+                ],
+            },
+        )
 
     config = SimulationConfig.model_validate(
         request.model_dump(
@@ -103,6 +166,9 @@ def run_experiment(
             },
         ) from error
     except Exception as error:
+        logger.exception(
+            "Experiment evaluation failed for process %s", process_id
+        )
         raise HTTPException(
             status_code=500,
             detail={

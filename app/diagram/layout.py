@@ -5,6 +5,7 @@ from __future__ import annotations
 import heapq
 import textwrap
 from dataclasses import dataclass, field
+from types import SimpleNamespace
 
 from app.domain.process_ir import ProcessEdge, ProcessNode, ProcessSpec
 from app.domain.validation import condition_to_text
@@ -299,6 +300,102 @@ def layout_process(spec: ProcessSpec) -> DiagramLayout:
         height=height,
         layer_count=len(ordered_layers),
         back_edge_ids=back_edges,
+    )
+
+
+SUB_HEADER = 54
+SUB_PADDING = 18
+
+
+def layout_nested_process(spec: ProcessSpec) -> DiagramLayout:
+    """Simple hierarchical layout: each scope flows left-to-right in a row.
+
+    Nested blocks are containers; their child nodes are real boxes placed inside
+    the container. This is deliberately separate from the flat layered layout so
+    existing single-level diagrams keep their current output.
+    """
+
+    boxes: dict[str, NodeBox] = {}
+    routes: list[EdgeRoute] = []
+
+    def scope_spec(scope, name: str) -> ProcessSpec:
+        return ProcessSpec(
+            schema_version=spec.schema_version,
+            name=name,
+            status_catalog=spec.status_catalog,
+            start_node_id=getattr(scope, "start_node_id", ""),
+            end_node_ids=getattr(scope, "end_node_ids", []),
+            nodes=scope.nodes,
+            edges=scope.edges,
+            guards=getattr(scope, "guards", spec.guards),
+        )
+
+    def place_scope(scope, x0: float, y0: float, depth: int) -> tuple[float, float]:
+        cursor_x = x0
+        scope_boxes: list[NodeBox] = []
+        for node in scope.nodes:
+            if node.type == "subprocess" and node.subflow is not None:
+                child_width, child_height = place_scope(
+                    node.subflow,
+                    x0 + SUB_PADDING,
+                    y0 + SUB_HEADER + SUB_PADDING,
+                    depth + 1,
+                )
+                width = max(260.0, child_width + SUB_PADDING * 2)
+                height = max(
+                    120.0, SUB_HEADER + child_height + SUB_PADDING * 2
+                )
+            else:
+                width, height = _node_size(node)
+            lines = wrap_node_name(node.name, 12 if node.type != "decision" else 13)
+            box = NodeBox(
+                node=node,
+                x=cursor_x,
+                y=y0,
+                width=width,
+                height=height,
+                layer=depth,
+                lines=lines,
+            )
+            boxes[node.id] = box
+            scope_boxes.append(box)
+            cursor_x += width + H_GAP
+
+        edges_spec = scope_spec(scope, f"{spec.name}/{depth}")
+        back_edges = _find_back_edges(edges_spec)
+        base_bottom = max(
+            (box.bottom for box in scope_boxes), default=y0 + 120
+        )
+        routes.extend(
+            _build_routes(
+                SimpleNamespace(edges=scope.edges),
+                boxes,
+                back_edges,
+                base_bottom,
+            )
+        )
+        width = max(260.0, cursor_x - H_GAP - x0)
+        height = max(120.0, base_bottom - y0)
+        return width, height
+
+    place_scope(spec, LEFT_MARGIN, TOP_MARGIN, 0)
+    width = max(
+        320.0,
+        max((box.right for box in boxes.values()), default=LEFT_MARGIN)
+        + RIGHT_MARGIN,
+    )
+    height = max(
+        260.0,
+        max((box.bottom for box in boxes.values()), default=TOP_MARGIN)
+        + BOTTOM_MARGIN,
+    )
+    return DiagramLayout(
+        boxes=boxes,
+        routes=routes,
+        width=width,
+        height=height,
+        layer_count=max((box.layer for box in boxes.values()), default=0) + 1,
+        back_edge_ids={route.edge.id for route in routes if route.is_back},
     )
 
 

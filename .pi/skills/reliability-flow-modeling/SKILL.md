@@ -10,6 +10,60 @@ Process IR model. Reliability IR is separate; the project's Python Runtime is
 the authoritative simulation engine, and Evaluation reports results from that
 runtime.
 
+## Long requirement extraction protocol
+
+A long request can contain many activities, branches, exception paths and loops.
+Do not jump straight from prose to Process IR. Use this two-stage workflow:
+
+1. **Extract a complete requirement graph.** Call `analyze_requirements` before
+   `validate_process_model` when the request contains more than three business
+   steps, a full business narrative, or any branch/loop/exception path.
+2. Enumerate every explicitly named business activity as a `task`, every
+   explicit judgement point as a `decision`, and the structural start/end as
+   `start`/`end`. Preserve the user's order.
+3. Use the exact Process IR node id that you will later use as `RequirementStep.id`.
+   Do not rename a step between analysis and Process IR.
+4. The analysis must already be a Process IR blueprint:
+   - A business activity with a duration is a `task`.
+   - A judgement point is a separate `decision` with `duration=null`.
+   - Do not mark a timed detection or test as a `decision`. Model it as a
+     `task` plus a separate `decision` step when a branch is needed.
+   - If you add a structural decision node in the Process IR, add it to the
+     analysis too. Do not silently insert nodes only in the final IR.
+5. List every explicit ordering as a `normal` branch, every stated predicate as
+   `conditional`, every fallback as `default`, every fault/abnormal route as
+   `failure`, and every return/back edge as a branch with `loop=true`.
+   - `decision` can only use `conditional` and `default` exits.
+   - Every `decision` needs at least one `conditional` and one `default` exit.
+   - Every `task` with conditional exits needs a `default` exit.
+   - A single task exit must be `normal`; multiple task exits use
+     `conditional + default` or `normal + failure`.
+   - Every `conditional` branch must have a non-empty condition description.
+6. Put every missing task duration, missing predicate, missing fallback or
+   unclear target into `ambiguities`. Set `blocks_generation=true` when you
+   cannot build a complete graph without the user's answer. Never use `0` or `1`
+   as a placeholder for an unknown duration or probability.
+   - If a conditional or default target is not explicitly stated, it is a
+     missing relation, not an invitation to reuse a repair or another branch.
+     List it as a blocking ambiguity and ask the user. For example, do not
+     assume that a failed second test reuses the first test's repair path.
+7. If there are blocking ambiguities, ask one consolidated question listing all
+   missing facts. Do not call `validate_process_model` and do not invent values.
+8. Otherwise build the Process IR from the exact analyzed step and branch ids.
+   Every analyzed step must become a node; every analyzed branch must become an
+   edge. The backend rejects candidates that drop analyzed steps, miss analyzed
+   branches, add unanalyzed task/decision nodes, or leave blocking ambiguities.
+9. `analyze_requirements` now validates the analysis as a Process IR blueprint.
+   If it returns `valid=false`, fix the analysis and resubmit it. Do not proceed
+   to `validate_process_model` until the analysis is valid.
+10. If `validate_process_model` returns any `requirement_*` coverage issue,
+    reconcile the analysis and the IR. If you inserted a decision node, add it
+    to the analysis and split the affected branch. Never delete the requirement
+    or merely loosen the IR to silence the issue.
+11. Never shorten a long requirement to a few representative nodes. A candidate
+    is incomplete until every named activity and every stated relation is
+    represented.
+
 ## Current Process IR contract
 
 Use the existing `process-ir/1.0` structure. A complete model has these
@@ -94,42 +148,49 @@ specify it, ask instead of fabricating it.
 
 ## Natural language to Process IR
 
-1. Extract the explicitly named process steps and preserve their user-given
+1. For a long narrative, first follow the Long requirement extraction protocol
+   and keep the returned step/branch ids unchanged while building the model.
+2. Extract the explicitly named process steps and preserve their user-given
    order. Map each described activity to a `task`; add `start`, `end`, or
    `decision` nodes only as required by the described flow and the IR contract.
-2. Record each explicit duration as a numeric `task.duration` in natural days.
+3. Record each explicit duration as a numeric `task.duration` in natural days.
    Ask for a missing task duration rather than guessing it. Convert another
    unit only when the user's unit is clear, and explain the conversion.
-3. Translate stated sequential relationships into `normal` edges. For each
+4. Translate stated sequential relationships into `normal` edges. For each
    branch, identify the decision point, each stated predicate, its destination,
    and a fallback. Ask if the predicate, its data source, or the fallback is
    unclear. Do not invent business outcomes, probabilities, attributes, or
    effects.
-4. `start_node_id` and `end_node_ids` describe the graph's structural start and
+5. `start_node_id` and `end_node_ids` describe the graph's structural start and
    ends; they are not fields for custom business start/end conditions. Ask
    when a user-described start or completion rule cannot be represented
    unambiguously using the stated nodes and edges.
-5. Do not fabricate missing business parameters. If one or more task durations
+6. Do not fabricate missing business parameters. If one or more task durations
    are missing, ask one consolidated question that lists every task whose
    duration is needed. Do not silently default to `0` or `1` day, and do not
    submit a candidate Process IR that is known to be missing a required
    duration. The same rule applies to branch predicates, fallback behavior,
    outcomes, effects, and reliability parameters.
-6. Before calling the validator, check that IDs and references agree, all
+7. Before calling the validator, check that IDs and references agree, all
    edges use supported fields and kinds, all tasks have durations, the start
    and end references match their node types, and the graph can reach an end.
    The Skill's schema contract above is authoritative: do not use the
    validator to discover the schema or probe candidate fields.
-7. Submit the complete proposed object as `spec` to
+8. Submit the complete proposed object as `spec` to
    `validate_process_model` once it is ready. In the web Agent, the host
    captures this validated `spec` as the candidate Process IR for the user to
    review. Never submit an empty object, partial model, placeholder, or
    speculative/unsupported fields. Do not call a save, update, Runtime, or
    Evaluation tool during this Process IR generation phase.
-8. Treat the real response as authoritative:
+9. Treat the real response as authoritative:
    - A 200 response with `valid: false` is a semantic validation result. Read
      its `issues` and correct only errors that can be resolved without
      inventing user requirements.
+   - A coverage issue such as `requirement_step_missing`,
+     `requirement_branch_missing`, `requirement_node_not_analyzed` or
+     `requirement_ambiguity_unresolved` means the model and the requirement
+     graph disagree. Fix the Process IR or ask the user; never delete the
+     requirement to silence the issue.
    - A 422 response is a Schema/input error. Read its returned `issues` and
      correct the object shape or field values when the intended meaning is
      clear.
@@ -137,10 +198,9 @@ specify it, ask instead of fabricating it.
    - After a specific correction, call `validate_process_model` again with the
      complete corrected object. Never report success if the tool failed or the
      returned `valid` is not `true`.
-9. Once validation succeeds, present the process structure, complete Process
-   IR JSON, returned `content_hash`, and any warning-severity issues. The
-   validation response contains `valid`, `content_hash`, and `issues`; do not
-   invent a separate `warnings` field.
+10. Once validation succeeds, present the process structure, complete Process
+    IR JSON, returned `content_hash`, coverage counts and any warning-severity
+    issues. Do not invent a separate `warnings` field.
 
 ## Web session context and existing models
 
@@ -230,3 +290,41 @@ expose a simulation tool.
 Skill instructions guide model behavior; they are not an authorization or
 security boundary. Tool access must be restricted by the host, and side-effect
 permissions must be enforced by the backend.
+
+## Nested process blocks
+
+A named business phase that contains its own internal steps, judgement,
+completion condition or loop is a `subprocess` block, not a flat task. This is a
+structural rule, not a rule based on names such as 贮存 or 值班.
+
+1. Add the block as a step with `kind="subprocess"`, `duration=null`, and a
+   globally unique id. Any Process IR containing a subprocess must use
+   `schema_version="process-ir/1.1"`.
+2. Add the internal `start`, task/decision and `end` steps with
+   `parent_id=<block step id>`.
+3. Keep all internal connections between child steps. A parent branch from the
+   subprocess step to a parent target uses `exit_step_id=<child end id>`.
+4. A decision still needs conditional + default. A child end is the normal or
+   abnormal exit of the block; its parent edge chooses the return path.
+5. A block can have multiple child ends; every child end must be mapped by a
+   parent branch when there is more than one end.
+6. Never flatten child steps into the parent scope. Never replace a block with a
+   single task duration.
+7. If it is unclear whether a phrase is a block or a task, ask the user.
+
+### Equipment-support domain defaults
+
+For the current equipment-support case only, these two phases default to
+nested blocks unless the user explicitly says they are single tasks:
+
+- 贮存: internal start -> 贮存 task -> 检测 task -> 是否故障 decision.
+  Fault = yes -> 维修 task -> return to 贮存; fault = no -> normal child end
+  -> parent transport.
+- 值班: internal start -> 值班 task -> 检测 task -> 是否故障 decision.
+  Fault = yes -> 维修 task -> return to 值班; fault = no -> normal child end
+  -> parent end.
+
+All other equipment-support phases such as 运输, 测试, 短途运输, 装舰, 出值班,
+下舰 and 岸上维修 remain ordinary nodes unless the user explicitly asks for a
+nested block. This is a domain skill rule, not a Runtime hardcode. Generic
+semantic recognition of other composite blocks remains available.

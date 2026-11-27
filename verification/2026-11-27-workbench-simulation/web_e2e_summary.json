@@ -1,0 +1,160 @@
+{
+  "assertions": [
+    {
+      "name": "页面不再出现“流程工作台”文字",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "原工作台标题块已移除",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "项目参数区存在仿真总时间",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "收起参数后画布明显扩大",
+      "ok": true,
+      "detail": "560.640625 -> 856"
+    },
+    {
+      "name": "画布宽度保持可用",
+      "ok": true,
+      "detail": "1228"
+    },
+    {
+      "name": "非法仿真总时间显示字段错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "非法仿真总时间阻止运行并提示原因",
+      "ok": true,
+      "detail": "还不能运行仿真：仿真总时间"
+    },
+    {
+      "name": "合法仿真总时间消除字段错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "外层任务持续时间在画布中更新",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "嵌套子流程内部任务持续时间可编辑",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "保存后的 Process IR 保留外层任务时间",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "保存后的 Process IR 保留嵌套任务时间",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "重新加载后外层时间仍为 2.5",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "重新加载后嵌套任务时间仍为 31.5",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "界面显示本次真实仿真结果",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "结果显示仿真总时间 120 天",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "结果显示项目名称与可用/不可用统计",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "结果显示真实运行事件摘要",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "实验记录已持久化",
+      "ok": true,
+      "detail": "1"
+    },
+    {
+      "name": "实验结果保留仿真总时间",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Runtime 使用仿真总时间作为终止时间",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "实验结果绑定最新 Process 版本",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "运行失败时显示可理解错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "运行前校验失败不会新增实验记录",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "1366x768 窗口下画布仍可用",
+      "ok": true,
+      "detail": "714 x 413"
+    },
+    {
+      "name": "1366x768 窗口下无页面横向溢出",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "screenshots": [
+    "01_layout_and_results.png",
+    "02_compact_1366x768.png"
+  ],
+  "process_id": "proc_b658df78da6a",
+  "initial_version": 1,
+  "saved_version": 2,
+  "experiment": {
+    "result_id": "exp_24e5c10d6f74",
+    "process_version": 2,
+    "project": {
+      "name": "验收项目：贮存值班保障",
+      "description": "验证仿真总时间和流程时间编辑真实进入 Runtime",
+      "reliability_target": 0.6,
+      "readiness_target": 0.6,
+      "simulation_unit": "day",
+      "missile_count": 6,
+      "simulation_total_time": 120.0
+    },
+    "simulation_duration": 120.0,
+    "simulation_unit": "day",
+    "simulation_end": 120.0,
+    "overall_reliability": 0.33333333333333337,
+    "readiness": 0.89375
+  },
+  "ok": true
+}

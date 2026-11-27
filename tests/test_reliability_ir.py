@@ -27,10 +27,14 @@ def test_reliability_node_schema_defaults_to_exponential_per_day() -> None:
     payload = config.model_dump(mode="json", by_alias=True)
     assert payload == {
         "node_id": "work",
+        "module_type": "activity",
         "participates": True,
         "distribution": "exponential",
         "lambda": 0.02,
         "lambda_unit": "per_day",
+        "detection_rate": None,
+        "test_time": None,
+        "stage_task_id": None,
     }
 
 
@@ -81,9 +85,11 @@ def test_only_exponential_distribution_is_supported() -> None:
         _config(distribution="weibull")
 
 
-def test_only_per_day_unit_is_supported() -> None:
+def test_supported_lambda_units_are_validated() -> None:
+    for unit in ("per_hour", "per_day", "per_month", "per_year"):
+        assert _config(lambda_unit=unit).lambda_unit == unit
     with pytest.raises(ValidationError):
-        _config(lambda_unit="per_hour")
+        _config(lambda_unit="per_second")
 
 
 def test_unknown_reliability_field_is_rejected() -> None:

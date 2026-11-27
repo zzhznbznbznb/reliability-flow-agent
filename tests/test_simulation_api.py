@@ -73,8 +73,14 @@ def test_simulation_api_runs_real_events_and_repairs(client: TestClient) -> None
     assert body["total_failure_count"] == 2
     assert body["reliability_sample_count"] == 2
     assert body["event_count"] == len(body["events"])
+    assert body["runtime_semantic_version"] == "time-to-failure/1.0"
+    assert body["failure_sampling"] == "time_to_failure"
     assert body["reliability_samples"][0]["lambda"] == 1e9
-    assert body["reliability_samples"][0]["exposure_time"] == 1.0
+    sample = body["reliability_samples"][0]
+    assert sample["failure_occurred"] is True
+    assert 0.0 <= sample["exposure_time"] < 1.0
+    assert sample["failure_time"] == sample["time"]
+    assert sample["exposure_time"] == sample["time"]
     entity = body["entities"][0]
     assert entity["failure_count"] == 1
     assert entity["repair_count"] == 1
@@ -174,3 +180,50 @@ def test_simulation_unknown_process_and_version_return_404(
         client, process["process_id"], process_version=99
     )
     assert missing_version.status_code == 404
+
+
+def test_simulation_api_accepts_start_and_duration_window(
+    client: TestClient,
+) -> None:
+    process = _create_process(client)
+    _save_reliability(client, process, _failure_nodes(lam=0.2))
+    response = client.post(
+        f"/api/processes/{process['process_id']}/simulate",
+        json={
+            "entity_count": 2,
+            "simulation_start": 5,
+            "simulation_duration": 5,
+            "random_seed": 6,
+            "failure_sampling": "time_to_failure",
+        },
+    )
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert body["simulation_start"] == 5
+    assert body["simulation_end"] == 10
+    assert body["simulation_duration"] == 5
+    assert min(event["time"] for event in body["events"]) >= 5
+    assert max(event["time"] for event in body["events"]) <= 10
+
+
+def test_simulation_api_rejects_missing_or_conflicting_window(
+    client: TestClient,
+) -> None:
+    process = _create_process(client)
+    _save_reliability(client, process, _failure_nodes(lam=0.2))
+    missing = client.post(
+        f"/api/processes/{process['process_id']}/simulate",
+        json={"entity_count": 1, "random_seed": 1},
+    )
+    assert missing.status_code == 422
+    conflicting = client.post(
+        f"/api/processes/{process['process_id']}/simulate",
+        json={
+            "entity_count": 1,
+            "simulation_start": 0,
+            "simulation_end": 10,
+            "simulation_duration": 5,
+            "random_seed": 1,
+        },
+    )
+    assert conflicting.status_code == 422

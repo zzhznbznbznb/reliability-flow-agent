@@ -1,0 +1,403 @@
+{
+  "ambiguities": [
+    {
+      "blocks_generation": false,
+      "id": "a_duration",
+      "options": [
+        "已确认：本轮不设 duration，不使用 0/1 占位，后续仿真配置阶段补充",
+        "其他"
+      ],
+      "question": "已确认：本轮仅做结构建模，所有节点不设 duration（task 也留空）。需求分析层会持续报 requirement_task_missing_duration，属规则冲突，本轮接受不修复。"
+    },
+    {
+      "blocks_generation": false,
+      "id": "a_reach_duty",
+      "options": [
+        "已确认：接受不可达 s_end，不增加任务期满/返港等节点",
+        "其他"
+      ],
+      "question": "已确认：值班子流程为持续循环型过程，仅故障出口，正常仅在子流程内部循环，因此 n_duty_phase / n_duty_repair 不可达 s_end。属已确认业务语义，本轮接受不修复。"
+    }
+  ],
+  "branches": [
+    {
+      "from_step": "s_start",
+      "id": "b_start_storage",
+      "kind": "normal",
+      "to_step": "n_storage_phase"
+    },
+    {
+      "from_step": "st_start",
+      "id": "b_st_start_store",
+      "kind": "normal",
+      "to_step": "st_store"
+    },
+    {
+      "from_step": "st_store",
+      "id": "b_st_store_check",
+      "kind": "normal",
+      "to_step": "st_check"
+    },
+    {
+      "from_step": "st_check",
+      "id": "b_st_check_judge",
+      "kind": "normal",
+      "to_step": "st_fault_judge"
+    },
+    {
+      "condition": "检测正常（无故障）",
+      "from_step": "st_fault_judge",
+      "id": "b_st_judge_normal",
+      "kind": "conditional",
+      "to_step": "st_normal_end"
+    },
+    {
+      "from_step": "st_fault_judge",
+      "id": "b_st_judge_fault",
+      "kind": "default",
+      "to_step": "st_fault_end"
+    },
+    {
+      "exit_step_id": "st_normal_end",
+      "from_step": "n_storage_phase",
+      "id": "b_storage_normal_transport",
+      "kind": "normal",
+      "to_step": "n_transport"
+    },
+    {
+      "exit_step_id": "st_fault_end",
+      "from_step": "n_storage_phase",
+      "id": "b_storage_fault_repair",
+      "kind": "failure",
+      "to_step": "n_storage_repair"
+    },
+    {
+      "from_step": "n_storage_repair",
+      "id": "b_storage_repair_loop",
+      "kind": "normal",
+      "loop": true,
+      "to_step": "n_storage_phase"
+    },
+    {
+      "from_step": "n_transport",
+      "id": "b_transport_test1",
+      "kind": "normal",
+      "to_step": "n_test1"
+    },
+    {
+      "from_step": "n_test1",
+      "id": "b_test1_judge",
+      "kind": "normal",
+      "to_step": "n_test1_judge"
+    },
+    {
+      "condition": "第一次测试正常",
+      "from_step": "n_test1_judge",
+      "id": "b_test1_ok_short_haul",
+      "kind": "conditional",
+      "to_step": "n_short_haul"
+    },
+    {
+      "from_step": "n_test1_judge",
+      "id": "b_test1_ng_repair",
+      "kind": "default",
+      "to_step": "n_test1_repair"
+    },
+    {
+      "from_step": "n_test1_repair",
+      "id": "b_test1_repair_spare",
+      "kind": "normal",
+      "to_step": "n_spare_replace"
+    },
+    {
+      "from_step": "n_spare_replace",
+      "id": "b_spare_back_test1",
+      "kind": "normal",
+      "loop": true,
+      "to_step": "n_test1"
+    },
+    {
+      "from_step": "n_short_haul",
+      "id": "b_short_haul_ship_load",
+      "kind": "normal",
+      "to_step": "n_ship_load"
+    },
+    {
+      "from_step": "n_ship_load",
+      "id": "b_ship_load_test2",
+      "kind": "normal",
+      "to_step": "n_test2"
+    },
+    {
+      "from_step": "n_test2",
+      "id": "b_test2_judge",
+      "kind": "normal",
+      "to_step": "n_test2_judge"
+    },
+    {
+      "condition": "第二次测试正常",
+      "from_step": "n_test2_judge",
+      "id": "b_test2_ok_duty",
+      "kind": "conditional",
+      "to_step": "n_duty_phase"
+    },
+    {
+      "from_step": "n_test2_judge",
+      "id": "b_test2_ng_leave",
+      "kind": "default",
+      "to_step": "n_leave_mission"
+    },
+    {
+      "from_step": "n_leave_mission",
+      "id": "b_leave_debark",
+      "kind": "normal",
+      "to_step": "n_debark"
+    },
+    {
+      "from_step": "n_debark",
+      "id": "b_debark_shore",
+      "kind": "normal",
+      "to_step": "n_shore_repair"
+    },
+    {
+      "from_step": "n_shore_repair",
+      "id": "b_shore_end",
+      "kind": "normal",
+      "to_step": "s_end"
+    },
+    {
+      "from_step": "du_start",
+      "id": "b_du_start_duty",
+      "kind": "normal",
+      "to_step": "du_duty"
+    },
+    {
+      "from_step": "du_duty",
+      "id": "b_du_duty_check",
+      "kind": "normal",
+      "to_step": "du_check"
+    },
+    {
+      "from_step": "du_check",
+      "id": "b_du_check_judge",
+      "kind": "normal",
+      "to_step": "du_fault_judge"
+    },
+    {
+      "condition": "检测正常（继续下一轮值班）",
+      "from_step": "du_fault_judge",
+      "id": "b_du_judge_normal_loop",
+      "kind": "conditional",
+      "loop": true,
+      "to_step": "du_duty"
+    },
+    {
+      "from_step": "du_fault_judge",
+      "id": "b_du_judge_fault",
+      "kind": "default",
+      "to_step": "du_fault_end"
+    },
+    {
+      "exit_step_id": "du_fault_end",
+      "from_step": "n_duty_phase",
+      "id": "b_duty_fault_repair",
+      "kind": "failure",
+      "to_step": "n_duty_repair"
+    },
+    {
+      "from_step": "n_duty_repair",
+      "id": "b_duty_repair_loop",
+      "kind": "normal",
+      "loop": true,
+      "to_step": "n_duty_phase"
+    }
+  ],
+  "steps": [
+    {
+      "description": "父流程起点",
+      "id": "s_start",
+      "kind": "start",
+      "name": "开始"
+    },
+    {
+      "description": "subprocess：内部为贮存→状态检测→故障判断；正常出口回父流程进入运输，故障出口回父流程由贮存维修处置",
+      "id": "n_storage_phase",
+      "kind": "subprocess",
+      "name": "贮存阶段"
+    },
+    {
+      "description": "子流程内部起点",
+      "id": "st_start",
+      "kind": "start",
+      "name": "贮存开始",
+      "parent_id": "n_storage_phase"
+    },
+    {
+      "description": "子流程内部：贮存",
+      "id": "st_store",
+      "kind": "task",
+      "name": "贮存",
+      "parent_id": "n_storage_phase"
+    },
+    {
+      "description": "子流程内部：状态检测",
+      "id": "st_check",
+      "kind": "task",
+      "name": "状态检测",
+      "parent_id": "n_storage_phase"
+    },
+    {
+      "description": "子流程内部判断：正常（conditional）=检测无故障，走正常出口；故障（default 兜底）=检测发现故障，走故障出口。无时长",
+      "id": "st_fault_judge",
+      "kind": "decision",
+      "name": "故障判断（正常/故障）",
+      "parent_id": "n_storage_phase"
+    },
+    {
+      "description": "贮存正常出口：检测正常时从子流程正常返回父流程",
+      "id": "st_normal_end",
+      "kind": "end",
+      "name": "贮存正常出口",
+      "parent_id": "n_storage_phase"
+    },
+    {
+      "description": "贮存故障出口：检测发现故障时从子流程故障返回父流程",
+      "id": "st_fault_end",
+      "kind": "end",
+      "name": "贮存故障出口",
+      "parent_id": "n_storage_phase"
+    },
+    {
+      "description": "外层业务活动：父流程执行贮存维修，完成后重新调用贮存子流程",
+      "id": "n_storage_repair",
+      "kind": "task",
+      "name": "贮存维修"
+    },
+    {
+      "description": "外层业务活动：运输到指定阵地",
+      "id": "n_transport",
+      "kind": "task",
+      "name": "运输"
+    },
+    {
+      "description": "外层业务活动：到达阵地后第一次测试（测试活动本身，不是判断点）",
+      "id": "n_test1",
+      "kind": "task",
+      "name": "第一次测试"
+    },
+    {
+      "description": "第一次测试判断：正常（conditional）=测试正常→短途运输→装舰→第二次测试；故障（default 兜底）=测试异常→维修→备件更换→重新进行第一次测试。与第二次测试判断独立。无时长",
+      "id": "n_test1_judge",
+      "kind": "decision",
+      "name": "第一次测试结果判断（正常/异常）"
+    },
+    {
+      "description": "外层业务活动：第一次测试异常后的维修",
+      "id": "n_test1_repair",
+      "kind": "task",
+      "name": "维修"
+    },
+    {
+      "description": "外层业务活动：第一次测试异常后的备件更换",
+      "id": "n_spare_replace",
+      "kind": "task",
+      "name": "备件更换"
+    },
+    {
+      "description": "外层业务活动：第一次测试正常后的短途运输",
+      "id": "n_short_haul",
+      "kind": "task",
+      "name": "短途运输"
+    },
+    {
+      "description": "外层业务活动：短途运输后装舰",
+      "id": "n_ship_load",
+      "kind": "task",
+      "name": "装舰"
+    },
+    {
+      "description": "外层业务活动：装舰后第二次测试",
+      "id": "n_test2",
+      "kind": "task",
+      "name": "第二次测试"
+    },
+    {
+      "description": "第二次测试判断：正常（conditional）=测试正常→进入值班子流程；故障（default 兜底）=测试异常→退出任务→下舰→岸上维修→结束。与第一次测试判断独立。无时长",
+      "id": "n_test2_judge",
+      "kind": "decision",
+      "name": "第二次测试结果判断（正常/异常）"
+    },
+    {
+      "description": "subprocess：内部为值班→状态检测→故障判断；正常仅在子流程内部循环，故障出口回父流程由值班维修处置；无正常出口",
+      "id": "n_duty_phase",
+      "kind": "subprocess",
+      "name": "值班阶段"
+    },
+    {
+      "description": "子流程内部起点",
+      "id": "du_start",
+      "kind": "start",
+      "name": "值班开始",
+      "parent_id": "n_duty_phase"
+    },
+    {
+      "description": "子流程内部：值班",
+      "id": "du_duty",
+      "kind": "task",
+      "name": "值班",
+      "parent_id": "n_duty_phase"
+    },
+    {
+      "description": "子流程内部：状态检测",
+      "id": "du_check",
+      "kind": "task",
+      "name": "状态检测",
+      "parent_id": "n_duty_phase"
+    },
+    {
+      "description": "子流程内部判断：正常（conditional）=检测无故障，继续下一轮值班（内部循环）；故障（default 兜底）=检测发现故障，走故障出口返回父流程。无时长",
+      "id": "du_fault_judge",
+      "kind": "decision",
+      "name": "故障判断（正常/故障）",
+      "parent_id": "n_duty_phase"
+    },
+    {
+      "description": "值班故障出口：检测发现故障时从子流程故障返回父流程（子流程无正常出口）",
+      "id": "du_fault_end",
+      "kind": "end",
+      "name": "值班故障出口",
+      "parent_id": "n_duty_phase"
+    },
+    {
+      "description": "外层业务活动：父流程执行值班维修，完成后重新调用值班子流程",
+      "id": "n_duty_repair",
+      "kind": "task",
+      "name": "值班维修"
+    },
+    {
+      "description": "外层业务活动：第二次测试异常后退出任务（独立节点，与下舰/岸上维修不同）",
+      "id": "n_leave_mission",
+      "kind": "task",
+      "name": "退出任务"
+    },
+    {
+      "description": "外层业务活动：退出任务后下舰",
+      "id": "n_debark",
+      "kind": "task",
+      "name": "下舰"
+    },
+    {
+      "description": "外层业务活动：下舰后岸上维修，完成后流程结束",
+      "id": "n_shore_repair",
+      "kind": "task",
+      "name": "岸上维修"
+    },
+    {
+      "description": "父流程终点",
+      "id": "s_end",
+      "kind": "end",
+      "name": "结束"
+    }
+  ],
+  "summary": "已确认语义的结构化需求：贮存阶段与值班阶段为可展开 subprocess。贮存正常出口(st_normal_end)回父流程→运输；贮存故障出口(st_fault_end)回父流程→贮存维修→重新调用贮存阶段。第一次测试判断 conditional(正常)→短途运输→装舰→第二次测试，default(故障)→维修→备件更换→重测第一次。第二次测试判断 conditional(正常)→值班阶段，default(故障)→退出任务→下舰→岸上维修→结束。值班子流程 conditional(正常)内部循环回值班节点，default(故障)经 du_fault_end 回父流程→值班维修→重新调用值班阶段；值班子流程无正常出口、不增加任务期满/返港等条件。所有节点不设 duration，不新增需求外活动。"
+}

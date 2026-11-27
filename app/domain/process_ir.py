@@ -20,7 +20,7 @@ ATTRIBUTE_PATTERN = r"^[A-Za-z][A-Za-z0-9_.-]{0,63}$"
 PROCESS_ID_PATTERN = r"^proc_[a-f0-9]{12}$"
 CONTENT_HASH_PATTERN = r"^sha256:[a-f0-9]{64}$"
 
-NodeType = Literal["start", "task", "decision", "end"]
+NodeType = Literal["start", "task", "decision", "end", "subprocess"]
 EdgeKind = Literal["normal", "conditional", "default", "failure"]
 ConditionOp = Literal[
     "eq",
@@ -161,6 +161,20 @@ class ProcessNode(StrictModel):
     on_enter: list[Effect] = Field(default_factory=list)
     on_complete: list[Effect] = Field(default_factory=list)
     outcomes: list[NodeOutcome] = Field(default_factory=list)
+    subflow: "ProcessSubflow | None" = None
+
+    @model_validator(mode="after")
+    def _validate_subflow_shape(self) -> "ProcessNode":
+        if self.type == "subprocess":
+            if self.subflow is None:
+                raise ValueError("subprocess 节点必须包含 subflow")
+            if self.duration is not None:
+                raise ValueError("subprocess 节点不能设置 duration")
+            if self.outcomes:
+                raise ValueError("subprocess 节点不能设置 outcomes")
+        elif self.subflow is not None:
+            raise ValueError("只有 subprocess 节点可以设置 subflow")
+        return self
 
 
 class ProcessEdge(StrictModel):
@@ -173,14 +187,23 @@ class ProcessEdge(StrictModel):
     label: str = Field(default="", max_length=200)
     priority: int = Field(default=0, ge=-1000, le=1000)
     condition: Condition | None = None
+    subflow_exit: str | None = Field(default=None, pattern=ID_PATTERN)
 
 
 class ProcessGuards(StrictModel):
     max_node_visits: int = Field(default=10000, ge=1, le=1_000_000)
 
 
+class ProcessSubflow(StrictModel):
+    start_node_id: str = Field(default="", max_length=64)
+    end_node_ids: list[str] = Field(default_factory=list)
+    nodes: list[ProcessNode] = Field(default_factory=list)
+    edges: list[ProcessEdge] = Field(default_factory=list)
+    guards: ProcessGuards = Field(default_factory=ProcessGuards)
+
+
 class ProcessSpec(StrictModel):
-    schema_version: Literal["process-ir/1.0"] = SCHEMA_VERSION
+    schema_version: Literal["process-ir/1.0", "process-ir/1.1"] = SCHEMA_VERSION
     name: str = Field(min_length=1, max_length=200)
     description: str = Field(default="", max_length=5000)
     status_catalog: list[StatusDefinition] = Field(default_factory=list)
@@ -199,6 +222,8 @@ class ProcessDocument(ProcessSpec):
 
 
 Condition.model_rebuild()
+ProcessNode.model_rebuild()
+ProcessSubflow.model_rebuild()
 
 
 def is_finite_number(value: Any) -> bool:

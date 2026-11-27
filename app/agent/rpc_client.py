@@ -40,6 +40,7 @@ ALLOWED_AGENT_TOOLS = (
     "list_process_models",
     "get_process_model",
     "get_reliability_config",
+    "analyze_requirements",
     "validate_process_model",
     "validate_reliability_model",
 )
@@ -47,12 +48,29 @@ ALLOWED_AGENT_TOOLS = (
 AGENT_APPEND_SYSTEM_PROMPT = (
     "You are the reliability-flow-agent modeling assistant running behind a "
     "web application. Load and follow the reliability-flow-modeling skill. "
-    "Use only the provided extension tools. Produce proposal-only Process IR "
-    "or Reliability IR candidates and validate them through the provided backend "
-    "tools. Never save, overwrite, simulate, evaluate, or claim a validation or "
-    "simulation result without a real tool call. Ask the user when required "
-    "business or reliability parameters are missing. You cannot read or write "
-    "files, run shell commands, or call unrelated tools in this session."
+    "For long multi-step requirements, first extract and submit a complete "
+    "structured requirement graph with analyze_requirements, then build the "
+    "Process IR from that exact graph and validate it. The requirement graph "
+    "must already match Process IR structure: timed activities are tasks, "
+    "judgement points are separate duration=null decisions, decisions use "
+    "conditional plus default exits, and structural decision nodes must be "
+    "present in the analysis. A named phase with internal steps must be a "
+    "subprocess block with parent_id children, child start/end, internal "
+    "branches, and parent-branch exit_step_id mappings; do not flatten it into "
+    "a task. If analyze_requirements returns valid=false, "
+    "fix the analysis before generating. If validation reports any "
+    "requirement_* coverage issue, reconcile the analysis and the IR instead "
+    "of merely patching the IR. Never drop a named business step, branch, "
+    "exception path, or loop. If a required relation or parameter is "
+    "ambiguous, list it as a blocking ambiguity and ask the user instead of "
+    "inventing it. In particular, never assume that a missing abnormal target "
+    "reuses another stage's repair or fallback branch. Use only the provided "
+    "extension tools. Produce "
+    "proposal-only Process IR or Reliability IR candidates and validate them "
+    "through the provided backend tools. Never save, overwrite, simulate, "
+    "evaluate, or claim a validation or simulation result without a real tool "
+    "call. You cannot read or write files, run shell commands, or call "
+    "unrelated tools in this session."
 )
 
 
@@ -167,6 +185,8 @@ class PiRpcClient:
         on_stderr: StderrHandler | None = None,
         on_exit: ExitHandler | None = None,
         request_timeout: float = 30.0,
+        max_message_bytes: int | None = None,
+        read_chunk_bytes: int | None = None,
     ) -> None:
         self.settings = settings
         self.session_id = session_id
@@ -174,6 +194,18 @@ class PiRpcClient:
         self.on_stderr = on_stderr
         self.on_exit = on_exit
         self.request_timeout = request_timeout
+        self.max_message_bytes = max(
+            1,
+            max_message_bytes
+            if max_message_bytes is not None
+            else settings.agent_rpc_max_message_bytes,
+        )
+        self.read_chunk_bytes = max(
+            1,
+            read_chunk_bytes
+            if read_chunk_bytes is not None
+            else settings.agent_rpc_read_chunk_bytes,
+        )
         self.process: asyncio.subprocess.Process | None = None
         self._pending: dict[str, asyncio.Future[dict[str, Any]]] = {}
         self._request_counter = 0
@@ -357,38 +389,92 @@ class PiRpcClient:
         self._stderr_task = None
         self._wait_task = None
 
+    async def _emit_protocol_error(
+        self,
+        message: str,
+        *,
+        code: str = "protocol_error",
+        **details: Any,
+    ) -> None:
+        await self._call_event(
+            {
+                "type": "protocol_error",
+                "code": code,
+                "message": message,
+                **details,
+            }
+        )
+
+    async def _message_too_large(self, size: int) -> None:
+        message = (
+            f"Pi RPC 单条 JSONL 消息达到 {size} 字节，超过上限 "
+            f"{self.max_message_bytes} 字节；消息未被截断。"
+            "请检查过长的工具结果，或通过 "
+            "RFA_AGENT_RPC_MAX_MESSAGE_BYTES 调整上限。"
+        )
+        await self._emit_protocol_error(
+            message,
+            code="rpc_message_too_large",
+            received_bytes=size,
+            limit_bytes=self.max_message_bytes,
+        )
+        process = self.process
+        terminate = getattr(process, "terminate", None)
+        if callable(terminate):
+            try:
+                terminate()
+            except Exception:
+                pass
+
+    async def _consume_stdout_line(self, raw: bytes) -> bool:
+        if len(raw) > self.max_message_bytes:
+            await self._message_too_large(len(raw))
+            return False
+        text = raw.decode("utf-8", errors="replace").strip()
+        if not text:
+            return True
+        try:
+            payload = json.loads(text)
+        except json.JSONDecodeError:
+            await self._emit_protocol_error(
+                "Pi RPC 返回了非 JSON 行。",
+                code="rpc_json_invalid",
+                line=text[:500],
+            )
+            return True
+        await self._handle_message(payload)
+        return True
+
     async def _read_stdout(self) -> None:
         process = self.process
         if process is None or process.stdout is None:
             return
+        buffer = bytearray()
         try:
             while True:
-                line = await process.stdout.readline()
-                if not line:
+                chunk = await process.stdout.read(self.read_chunk_bytes)
+                if not chunk:
                     break
-                text = line.decode("utf-8", errors="replace").strip()
-                if not text:
-                    continue
-                try:
-                    payload = json.loads(text)
-                except json.JSONDecodeError:
-                    await self._call_event(
-                        {
-                            "type": "protocol_error",
-                            "message": "Pi RPC 返回了非 JSON 行。",
-                            "line": text[:500],
-                        }
-                    )
-                    continue
-                await self._handle_message(payload)
+                buffer.extend(chunk)
+                while True:
+                    newline = buffer.find(b"\n")
+                    if newline < 0:
+                        break
+                    raw = bytes(buffer[:newline])
+                    del buffer[:newline + 1]
+                    if not await self._consume_stdout_line(raw):
+                        return
+                if len(buffer) > self.max_message_bytes:
+                    await self._message_too_large(len(buffer))
+                    return
+            if buffer:
+                await self._consume_stdout_line(bytes(buffer))
         except asyncio.CancelledError:
             raise
         except Exception as exc:  # pragma: no cover - defensive
-            await self._call_event(
-                {
-                    "type": "protocol_error",
-                    "message": f"读取 Pi RPC 输出失败: {exc}",
-                }
+            await self._emit_protocol_error(
+                f"读取 Pi RPC 输出失败: {exc}",
+                code="rpc_stdout_error",
             )
 
     async def _handle_message(self, payload: dict[str, Any]) -> None:

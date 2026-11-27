@@ -1,0 +1,582 @@
+{
+  "description": "装备保障业务流程：贮存嵌套块 -> 运输 -> 阵地/测试场 -> 第一次测试（故障维修后返回测试） -> 短途运输 -> 装舰 -> 第二次测试（故障则出值班/下舰/岸上维修后结束，无故障进入值班嵌套块）。贮存、值班为嵌套流程块。各检测/测试故障概率未给出，待配置。",
+  "edges": [
+    {
+      "from": "start",
+      "id": "e_start_storage",
+      "kind": "normal",
+      "label": "",
+      "to": "sub_storage"
+    },
+    {
+      "from": "sub_storage",
+      "id": "e_storage_transport",
+      "kind": "normal",
+      "label": "贮存无故障后返回父流程进入运输",
+      "subflow_exit": "storage_end",
+      "to": "task_transport"
+    },
+    {
+      "from": "task_transport",
+      "id": "e_transport_position",
+      "kind": "normal",
+      "label": "",
+      "to": "task_position"
+    },
+    {
+      "from": "task_position",
+      "id": "e_position_test1",
+      "kind": "normal",
+      "label": "",
+      "to": "task_test1"
+    },
+    {
+      "from": "task_test1",
+      "id": "e_test1_dec",
+      "kind": "normal",
+      "label": "",
+      "to": "dec_test1_fault"
+    },
+    {
+      "condition": {
+        "field": "failure_count",
+        "op": "gt",
+        "value": 0
+      },
+      "from": "dec_test1_fault",
+      "id": "e_test1_fault_repair",
+      "kind": "conditional",
+      "label": "故障",
+      "to": "task_repair1"
+    },
+    {
+      "from": "task_repair1",
+      "id": "e_repair1_loop_test1",
+      "kind": "normal",
+      "label": "维修完成后返回第一次测试",
+      "priority": 1,
+      "to": "task_test1"
+    },
+    {
+      "from": "dec_test1_fault",
+      "id": "e_test1_ok_short",
+      "kind": "default",
+      "label": "无故障",
+      "to": "task_short_transport"
+    },
+    {
+      "from": "task_short_transport",
+      "id": "e_short_load",
+      "kind": "normal",
+      "label": "",
+      "to": "task_load_ship"
+    },
+    {
+      "from": "task_load_ship",
+      "id": "e_load_test2",
+      "kind": "normal",
+      "label": "",
+      "to": "task_test2"
+    },
+    {
+      "from": "task_test2",
+      "id": "e_test2_dec",
+      "kind": "normal",
+      "label": "",
+      "to": "dec_test2_fault"
+    },
+    {
+      "condition": {
+        "field": "failure_count",
+        "op": "gt",
+        "value": 0
+      },
+      "from": "dec_test2_fault",
+      "id": "e_test2_fault_offduty",
+      "kind": "conditional",
+      "label": "故障",
+      "to": "task_off_duty_depart"
+    },
+    {
+      "from": "task_off_duty_depart",
+      "id": "e_offduty_unload",
+      "kind": "normal",
+      "label": "",
+      "to": "task_unload_ship"
+    },
+    {
+      "from": "task_unload_ship",
+      "id": "e_unload_shorerepair",
+      "kind": "normal",
+      "label": "",
+      "to": "task_shore_repair"
+    },
+    {
+      "from": "task_shore_repair",
+      "id": "e_shorerepair_end",
+      "kind": "normal",
+      "label": "",
+      "to": "end_shore_repair"
+    },
+    {
+      "from": "dec_test2_fault",
+      "id": "e_test2_ok_duty",
+      "kind": "default",
+      "label": "无故障，进入值班",
+      "to": "sub_duty"
+    },
+    {
+      "from": "sub_duty",
+      "id": "e_duty_end",
+      "kind": "normal",
+      "label": "值班无故障后返回父流程结束",
+      "subflow_exit": "duty_end",
+      "to": "end"
+    }
+  ],
+  "end_node_ids": [
+    "end",
+    "end_shore_repair"
+  ],
+  "guards": {
+    "max_node_visits": 100000
+  },
+  "name": "装备保障流程（贮存-运输-测试-装舰-值班）",
+  "nodes": [
+    {
+      "description": "",
+      "id": "start",
+      "name": "开始",
+      "position": {
+        "x": 50,
+        "y": 300
+      },
+      "type": "start"
+    },
+    {
+      "description": "贮存嵌套流程块：贮存30天 -> 贮存检测 -> 是否故障，故障则贮存维修2天后返回贮存，无故障正常结束贮存子流程。",
+      "id": "sub_storage",
+      "name": "贮存",
+      "position": {
+        "x": 200,
+        "y": 300
+      },
+      "subflow": {
+        "edges": [
+          {
+            "from": "storage_start",
+            "id": "e_storage_start_30",
+            "kind": "normal",
+            "label": "",
+            "to": "task_storage_30"
+          },
+          {
+            "from": "task_storage_30",
+            "id": "e_storage_30_inspect",
+            "kind": "normal",
+            "label": "",
+            "to": "task_storage_inspect"
+          },
+          {
+            "from": "task_storage_inspect",
+            "id": "e_storage_inspect_dec",
+            "kind": "normal",
+            "label": "",
+            "to": "dec_storage_fault"
+          },
+          {
+            "condition": {
+              "field": "failure_count",
+              "op": "gt",
+              "value": 0
+            },
+            "from": "dec_storage_fault",
+            "id": "e_storage_fault_repair",
+            "kind": "conditional",
+            "label": "故障",
+            "to": "task_storage_repair"
+          },
+          {
+            "from": "task_storage_repair",
+            "id": "e_storage_repair_loop",
+            "kind": "normal",
+            "label": "维修完成后返回贮存",
+            "priority": 1,
+            "to": "task_storage_30"
+          },
+          {
+            "from": "dec_storage_fault",
+            "id": "e_storage_ok_end",
+            "kind": "default",
+            "label": "无故障",
+            "to": "storage_end"
+          }
+        ],
+        "end_node_ids": [
+          "storage_end"
+        ],
+        "guards": {
+          "max_node_visits": 100000
+        },
+        "nodes": [
+          {
+            "description": "",
+            "id": "storage_start",
+            "name": "贮存开始",
+            "position": {
+              "x": 40,
+              "y": 40
+            },
+            "type": "start"
+          },
+          {
+            "description": "",
+            "duration": 30,
+            "id": "task_storage_30",
+            "name": "贮存30天",
+            "position": {
+              "x": 200,
+              "y": 40
+            },
+            "type": "task"
+          },
+          {
+            "description": "",
+            "duration": 1,
+            "id": "task_storage_inspect",
+            "name": "贮存检测",
+            "position": {
+              "x": 380,
+              "y": 40
+            },
+            "type": "task"
+          },
+          {
+            "description": "判断点，持续时间空。故障概率待配置。",
+            "duration": null,
+            "id": "dec_storage_fault",
+            "name": "贮存是否故障",
+            "position": {
+              "x": 560,
+              "y": 40
+            },
+            "type": "decision"
+          },
+          {
+            "description": "维修2天后返回贮存",
+            "duration": 2,
+            "id": "task_storage_repair",
+            "name": "贮存维修",
+            "position": {
+              "x": 740,
+              "y": 160
+            },
+            "type": "task"
+          },
+          {
+            "description": "无故障，正常结束贮存子流程",
+            "id": "storage_end",
+            "name": "贮存结束",
+            "position": {
+              "x": 740,
+              "y": 40
+            },
+            "type": "end"
+          }
+        ],
+        "start_node_id": "storage_start"
+      },
+      "type": "subprocess"
+    },
+    {
+      "description": "",
+      "duration": 2,
+      "id": "task_transport",
+      "name": "运输",
+      "position": {
+        "x": 420,
+        "y": 300
+      },
+      "type": "task"
+    },
+    {
+      "description": "",
+      "duration": 1,
+      "id": "task_position",
+      "name": "进入阵地/测试场",
+      "position": {
+        "x": 600,
+        "y": 300
+      },
+      "type": "task"
+    },
+    {
+      "description": "",
+      "duration": 1,
+      "id": "task_test1",
+      "name": "第一次测试",
+      "position": {
+        "x": 780,
+        "y": 300
+      },
+      "type": "task"
+    },
+    {
+      "description": "判断点，持续时间空。故障概率待配置。",
+      "duration": null,
+      "id": "dec_test1_fault",
+      "name": "第一次测试是否故障",
+      "position": {
+        "x": 960,
+        "y": 300
+      },
+      "type": "decision"
+    },
+    {
+      "description": "维修2天后返回第一次测试",
+      "duration": 2,
+      "id": "task_repair1",
+      "name": "维修",
+      "position": {
+        "x": 1140,
+        "y": 420
+      },
+      "type": "task"
+    },
+    {
+      "description": "",
+      "duration": 1,
+      "id": "task_short_transport",
+      "name": "短途运输",
+      "position": {
+        "x": 1140,
+        "y": 180
+      },
+      "type": "task"
+    },
+    {
+      "description": "",
+      "duration": 1,
+      "id": "task_load_ship",
+      "name": "装舰",
+      "position": {
+        "x": 1320,
+        "y": 180
+      },
+      "type": "task"
+    },
+    {
+      "description": "",
+      "duration": 1,
+      "id": "task_test2",
+      "name": "第二次测试",
+      "position": {
+        "x": 1500,
+        "y": 180
+      },
+      "type": "task"
+    },
+    {
+      "description": "判断点，持续时间空。故障概率待配置。",
+      "duration": null,
+      "id": "dec_test2_fault",
+      "name": "第二次测试是否故障",
+      "position": {
+        "x": 1680,
+        "y": 180
+      },
+      "type": "decision"
+    },
+    {
+      "description": "对应需求中的“出值班”，即结束值班待命状态，持续1天。",
+      "duration": 1,
+      "id": "task_off_duty_depart",
+      "name": "出值勤",
+      "position": {
+        "x": 1860,
+        "y": 340
+      },
+      "type": "task"
+    },
+    {
+      "description": "",
+      "duration": 1,
+      "id": "task_unload_ship",
+      "name": "下舰",
+      "position": {
+        "x": 2040,
+        "y": 340
+      },
+      "type": "task"
+    },
+    {
+      "description": "",
+      "duration": 3,
+      "id": "task_shore_repair",
+      "name": "岸上维修",
+      "position": {
+        "x": 2220,
+        "y": 340
+      },
+      "type": "task"
+    },
+    {
+      "description": "第二次测试故障分支经出值班、下舰、岸上维修后结束",
+      "id": "end_shore_repair",
+      "name": "结束",
+      "position": {
+        "x": 2400,
+        "y": 340
+      },
+      "type": "end"
+    },
+    {
+      "description": "值班嵌套流程块：值班5天 -> 值班检测 -> 是否故障，故障则值班维修2天后返回值班，无故障正常结束值班子流程。",
+      "id": "sub_duty",
+      "name": "值班",
+      "position": {
+        "x": 1860,
+        "y": 60
+      },
+      "subflow": {
+        "edges": [
+          {
+            "from": "duty_start",
+            "id": "e_duty_start_5",
+            "kind": "normal",
+            "label": "",
+            "to": "task_duty_5"
+          },
+          {
+            "from": "task_duty_5",
+            "id": "e_duty_5_inspect",
+            "kind": "normal",
+            "label": "",
+            "to": "task_duty_inspect"
+          },
+          {
+            "from": "task_duty_inspect",
+            "id": "e_duty_inspect_dec",
+            "kind": "normal",
+            "label": "",
+            "to": "dec_duty_fault"
+          },
+          {
+            "condition": {
+              "field": "failure_count",
+              "op": "gt",
+              "value": 0
+            },
+            "from": "dec_duty_fault",
+            "id": "e_duty_fault_repair",
+            "kind": "conditional",
+            "label": "故障",
+            "to": "task_duty_repair"
+          },
+          {
+            "from": "task_duty_repair",
+            "id": "e_duty_repair_loop",
+            "kind": "normal",
+            "label": "维修完成后返回值班",
+            "priority": 1,
+            "to": "task_duty_5"
+          },
+          {
+            "from": "dec_duty_fault",
+            "id": "e_duty_ok_end",
+            "kind": "default",
+            "label": "无故障",
+            "to": "duty_end"
+          }
+        ],
+        "end_node_ids": [
+          "duty_end"
+        ],
+        "guards": {
+          "max_node_visits": 100000
+        },
+        "nodes": [
+          {
+            "description": "",
+            "id": "duty_start",
+            "name": "值班开始",
+            "position": {
+              "x": 40,
+              "y": 40
+            },
+            "type": "start"
+          },
+          {
+            "description": "",
+            "duration": 5,
+            "id": "task_duty_5",
+            "name": "值班5天",
+            "position": {
+              "x": 200,
+              "y": 40
+            },
+            "type": "task"
+          },
+          {
+            "description": "",
+            "duration": 1,
+            "id": "task_duty_inspect",
+            "name": "值班检测",
+            "position": {
+              "x": 380,
+              "y": 40
+            },
+            "type": "task"
+          },
+          {
+            "description": "判断点，持续时间空。故障概率待配置。",
+            "duration": null,
+            "id": "dec_duty_fault",
+            "name": "值班是否故障",
+            "position": {
+              "x": 560,
+              "y": 40
+            },
+            "type": "decision"
+          },
+          {
+            "description": "维修2天后返回值班",
+            "duration": 2,
+            "id": "task_duty_repair",
+            "name": "值班维修",
+            "position": {
+              "x": 740,
+              "y": 160
+            },
+            "type": "task"
+          },
+          {
+            "description": "无故障，正常结束值班子流程",
+            "id": "duty_end",
+            "name": "值班结束",
+            "position": {
+              "x": 740,
+              "y": 40
+            },
+            "type": "end"
+          }
+        ],
+        "start_node_id": "duty_start"
+      },
+      "type": "subprocess"
+    },
+    {
+      "description": "值班子流程正常结束后返回父流程结束",
+      "id": "end",
+      "name": "结束",
+      "position": {
+        "x": 2040,
+        "y": 60
+      },
+      "type": "end"
+    }
+  ],
+  "schema_version": "process-ir/1.1",
+  "start_node_id": "start",
+  "status_catalog": []
+}

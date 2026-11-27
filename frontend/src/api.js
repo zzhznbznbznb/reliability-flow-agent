@@ -64,6 +64,11 @@ export const api = {
       method: "POST",
       body: JSON.stringify(spec),
     }),
+  previewSvg: (spec) =>
+    request("/api/processes/preview.svg", {
+      method: "POST",
+      body: JSON.stringify(spec),
+    }),
   getReliability: (processId, version = null) =>
     request(
       `/api/processes/${encodeURIComponent(processId)}/reliability${

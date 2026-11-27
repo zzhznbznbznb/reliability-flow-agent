@@ -1,0 +1,1692 @@
+{
+  "store_schema_version": "process-store/1.0",
+  "process_id": "proc_b658df78da6a",
+  "versions": [
+    {
+      "schema_version": "process-ir/1.1",
+      "name": "装备保障可靠性仿真流程",
+      "description": "贮存与值班两个嵌套阶段配置指数故障率；检测/测试节点使用故障检测率 Ft；普通活动只配置持续时间。值班阶段持续循环，由仿真终止时间结束。",
+      "status_catalog": [
+        {
+          "id": "operational",
+          "name": "可用",
+          "counts_as_available": true
+        },
+        {
+          "id": "under_repair",
+          "name": "维修中",
+          "counts_as_available": false
+        }
+      ],
+      "start_node_id": "n_start",
+      "end_node_ids": [
+        "n_end"
+      ],
+      "nodes": [
+        {
+          "id": "n_start",
+          "type": "start",
+          "name": "开始",
+          "description": "",
+          "position": null,
+          "duration": null,
+          "status_on_enter": "operational",
+          "status_on_complete": null,
+          "on_enter": [],
+          "on_complete": [],
+          "outcomes": [],
+          "subflow": null
+        },
+        {
+          "id": "n_storage",
+          "type": "subprocess",
+          "name": "贮存阶段",
+          "description": "嵌套阶段：贮存计时 -> 贮存检测 -> 是否故障；检测到故障则维修并重新开始贮存计时，否则正常退出。",
+          "position": null,
+          "duration": null,
+          "status_on_enter": null,
+          "status_on_complete": null,
+          "on_enter": [],
+          "on_complete": [],
+          "outcomes": [],
+          "subflow": {
+            "start_node_id": "s_start",
+            "end_node_ids": [
+              "s_done"
+            ],
+            "nodes": [
+              {
+                "id": "s_start",
+                "type": "start",
+                "name": "贮存开始",
+                "description": "",
+                "position": null,
+                "duration": null,
+                "status_on_enter": "operational",
+                "status_on_complete": null,
+                "on_enter": [],
+                "on_complete": [],
+                "outcomes": [],
+                "subflow": null
+              },
+              {
+                "id": "s_store",
+                "type": "task",
+                "name": "贮存",
+                "description": "阶段累计时间从本次进入贮存任务开始重新计算。",
+                "position": null,
+                "duration": 30.0,
+                "status_on_enter": "operational",
+                "status_on_complete": null,
+                "on_enter": [],
+                "on_complete": [],
+                "outcomes": [],
+                "subflow": null
+              },
+              {
+                "id": "s_inspect",
+                "type": "task",
+                "name": "贮存检测",
+                "description": "测试模块，使用故障检测率 Ft；不配置故障率 λ。",
+                "position": null,
+                "duration": 1.0,
+                "status_on_enter": "operational",
+                "status_on_complete": null,
+                "on_enter": [],
+                "on_complete": [],
+                "outcomes": [],
+                "subflow": null
+              },
+              {
+                "id": "s_dec",
+                "type": "decision",
+                "name": "贮存检测是否发现故障",
+                "description": "",
+                "position": null,
+                "duration": null,
+                "status_on_enter": null,
+                "status_on_complete": null,
+                "on_enter": [],
+                "on_complete": [],
+                "outcomes": [],
+                "subflow": null
+              },
+              {
+                "id": "s_repair",
+                "type": "task",
+                "name": "贮存维修",
+                "description": "",
+                "position": null,
+                "duration": 2.0,
+                "status_on_enter": "under_repair",
+                "status_on_complete": "operational",
+                "on_enter": [],
+                "on_complete": [
+                  {
+                    "op": "set_state",
+                    "name": "currently_failed",
+                    "value": false,
+                    "by": 1.0
+                  }
+                ],
+                "outcomes": [],
+                "subflow": null
+              },
+              {
+                "id": "s_done",
+                "type": "end",
+                "name": "贮存正常完成",
+                "description": "",
+                "position": null,
+                "duration": null,
+                "status_on_enter": "operational",
+                "status_on_complete": null,
+                "on_enter": [],
+                "on_complete": [],
+                "outcomes": [],
+                "subflow": null
+              }
+            ],
+            "edges": [
+              {
+                "id": "e_s_start_store",
+                "from": "s_start",
+                "to": "s_store",
+                "kind": "normal",
+                "label": "",
+                "priority": 0,
+                "condition": null,
+                "subflow_exit": null
+              },
+              {
+                "id": "e_s_store_inspect",
+                "from": "s_store",
+                "to": "s_inspect",
+                "kind": "normal",
+                "label": "",
+                "priority": 0,
+                "condition": null,
+                "subflow_exit": null
+              },
+              {
+                "id": "e_s_inspect_dec",
+                "from": "s_inspect",
+                "to": "s_dec",
+                "kind": "normal",
+                "label": "",
+                "priority": 0,
+                "condition": null,
+                "subflow_exit": null
+              },
+              {
+                "id": "e_s_dec_repair",
+                "from": "s_dec",
+                "to": "s_repair",
+                "kind": "conditional",
+                "label": "检测到故障，维修后重新贮存",
+                "priority": 10,
+                "condition": {
+                  "op": "eq",
+                  "field": "test_detected",
+                  "value": true,
+                  "conditions": null
+                },
+                "subflow_exit": null
+              },
+              {
+                "id": "e_s_dec_done",
+                "from": "s_dec",
+                "to": "s_done",
+                "kind": "default",
+                "label": "未发现故障，正常退出",
+                "priority": 0,
+                "condition": null,
+                "subflow_exit": null
+              },
+              {
+                "id": "e_s_repair_store",
+                "from": "s_repair",
+                "to": "s_store",
+                "kind": "normal",
+                "label": "维修后重新开始贮存计时",
+                "priority": 0,
+                "condition": null,
+                "subflow_exit": null
+              }
+            ],
+            "guards": {
+              "max_node_visits": 10000
+            }
+          }
+        },
+        {
+          "id": "n_transport",
+          "type": "task",
+          "name": "运输",
+          "description": "",
+          "position": null,
+          "duration": 2.0,
+          "status_on_enter": "operational",
+          "status_on_complete": null,
+          "on_enter": [],
+          "on_complete": [],
+          "outcomes": [],
+          "subflow": null
+        },
+        {
+          "id": "n_first_test",
+          "type": "task",
+          "name": "第一次测试",
+          "description": "测试模块，使用故障检测率 Ft；不配置故障率 λ。",
+          "position": null,
+          "duration": 1.0,
+          "status_on_enter": "operational",
+          "status_on_complete": null,
+          "on_enter": [],
+          "on_complete": [],
+          "outcomes": [],
+          "subflow": null
+        },
+        {
+          "id": "n_dec_first_test",
+          "type": "decision",
+          "name": "第一次测试是否发现故障",
+          "description": "",
+          "position": null,
+          "duration": null,
+          "status_on_enter": null,
+          "status_on_complete": null,
+          "on_enter": [],
+          "on_complete": [],
+          "outcomes": [],
+          "subflow": null
+        },
+        {
+          "id": "n_repair",
+          "type": "task",
+          "name": "维修",
+          "description": "",
+          "position": null,
+          "duration": 2.0,
+          "status_on_enter": "under_repair",
+          "status_on_complete": "operational",
+          "on_enter": [],
+          "on_complete": [
+            {
+              "op": "set_state",
+              "name": "currently_failed",
+              "value": false,
+              "by": 1.0
+            }
+          ],
+          "outcomes": [],
+          "subflow": null
+        },
+        {
+          "id": "n_short_transport",
+          "type": "task",
+          "name": "第二次运输",
+          "description": "",
+          "position": null,
+          "duration": 1.0,
+          "status_on_enter": "operational",
+          "status_on_complete": null,
+          "on_enter": [],
+          "on_complete": [],
+          "outcomes": [],
+          "subflow": null
+        },
+        {
+          "id": "n_load_ship",
+          "type": "task",
+          "name": "装舰",
+          "description": "",
+          "position": null,
+          "duration": 1.0,
+          "status_on_enter": "operational",
+          "status_on_complete": null,
+          "on_enter": [],
+          "on_complete": [],
+          "outcomes": [],
+          "subflow": null
+        },
+        {
+          "id": "n_second_test",
+          "type": "task",
+          "name": "第二次测试",
+          "description": "测试模块，使用故障检测率 Ft；不配置故障率 λ。",
+          "position": null,
+          "duration": 1.0,
+          "status_on_enter": "operational",
+          "status_on_complete": null,
+          "on_enter": [],
+          "on_complete": [],
+          "outcomes": [],
+          "subflow": null
+        },
+        {
+          "id": "n_dec_second_test",
+          "type": "decision",
+          "name": "第二次测试是否发现故障",
+          "description": "",
+          "position": null,
+          "duration": null,
+          "status_on_enter": null,
+          "status_on_complete": null,
+          "on_enter": [],
+          "on_complete": [],
+          "outcomes": [],
+          "subflow": null
+        },
+        {
+          "id": "n_exit_duty",
+          "type": "task",
+          "name": "下舰准备",
+          "description": "",
+          "position": null,
+          "duration": 1.0,
+          "status_on_enter": "operational",
+          "status_on_complete": null,
+          "on_enter": [],
+          "on_complete": [],
+          "outcomes": [],
+          "subflow": null
+        },
+        {
+          "id": "n_disembark",
+          "type": "task",
+          "name": "下舰",
+          "description": "",
+          "position": null,
+          "duration": 1.0,
+          "status_on_enter": "operational",
+          "status_on_complete": null,
+          "on_enter": [],
+          "on_complete": [],
+          "outcomes": [],
+          "subflow": null
+        },
+        {
+          "id": "n_shore_repair",
+          "type": "task",
+          "name": "岸上维修",
+          "description": "",
+          "position": null,
+          "duration": 3.0,
+          "status_on_enter": "under_repair",
+          "status_on_complete": "operational",
+          "on_enter": [],
+          "on_complete": [
+            {
+              "op": "set_state",
+              "name": "currently_failed",
+              "value": false,
+              "by": 1.0
+            }
+          ],
+          "outcomes": [],
+          "subflow": null
+        },
+        {
+          "id": "n_duty",
+          "type": "subprocess",
+          "name": "值班阶段",
+          "description": "嵌套阶段：值班计时 -> 值班检测 -> 是否故障；检测到故障则维修并返回值班，正常则继续下一轮值班。",
+          "position": null,
+          "duration": null,
+          "status_on_enter": null,
+          "status_on_complete": null,
+          "on_enter": [],
+          "on_complete": [],
+          "outcomes": [],
+          "subflow": {
+            "start_node_id": "d_start",
+            "end_node_ids": [
+              "d_done"
+            ],
+            "nodes": [
+              {
+                "id": "d_start",
+                "type": "start",
+                "name": "值班开始",
+                "description": "",
+                "position": null,
+                "duration": null,
+                "status_on_enter": "operational",
+                "status_on_complete": null,
+                "on_enter": [],
+                "on_complete": [],
+                "outcomes": [],
+                "subflow": null
+              },
+              {
+                "id": "d_duty",
+                "type": "task",
+                "name": "值班",
+                "description": "阶段累计时间从本次进入值班任务开始重新计算。",
+                "position": null,
+                "duration": 5.0,
+                "status_on_enter": "operational",
+                "status_on_complete": null,
+                "on_enter": [],
+                "on_complete": [],
+                "outcomes": [],
+                "subflow": null
+              },
+              {
+                "id": "d_inspect",
+                "type": "task",
+                "name": "值班检测",
+                "description": "测试模块，使用故障检测率 Ft；不配置故障率 λ。",
+                "position": null,
+                "duration": 1.0,
+                "status_on_enter": "operational",
+                "status_on_complete": null,
+                "on_enter": [],
+                "on_complete": [],
+                "outcomes": [],
+                "subflow": null
+              },
+              {
+                "id": "d_dec",
+                "type": "decision",
+                "name": "值班检测是否发现故障",
+                "description": "",
+                "position": null,
+                "duration": null,
+                "status_on_enter": null,
+                "status_on_complete": null,
+                "on_enter": [],
+                "on_complete": [],
+                "outcomes": [],
+                "subflow": null
+              },
+              {
+                "id": "d_repair",
+                "type": "task",
+                "name": "值班维修",
+                "description": "",
+                "position": null,
+                "duration": 2.0,
+                "status_on_enter": "under_repair",
+                "status_on_complete": "operational",
+                "on_enter": [],
+                "on_complete": [
+                  {
+                    "op": "set_state",
+                    "name": "currently_failed",
+                    "value": false,
+                    "by": 1.0
+                  }
+                ],
+                "outcomes": [],
+                "subflow": null
+              },
+              {
+                "id": "d_loop",
+                "type": "decision",
+                "name": "继续下一轮值班",
+                "description": "",
+                "position": null,
+                "duration": null,
+                "status_on_enter": null,
+                "status_on_complete": null,
+                "on_enter": [],
+                "on_complete": [],
+                "outcomes": [],
+                "subflow": null
+              },
+              {
+                "id": "d_done",
+                "type": "end",
+                "name": "值班结构出口",
+                "description": "",
+                "position": null,
+                "duration": null,
+                "status_on_enter": "operational",
+                "status_on_complete": null,
+                "on_enter": [],
+                "on_complete": [],
+                "outcomes": [],
+                "subflow": null
+              }
+            ],
+            "edges": [
+              {
+                "id": "e_d_start_duty",
+                "from": "d_start",
+                "to": "d_duty",
+                "kind": "normal",
+                "label": "",
+                "priority": 0,
+                "condition": null,
+                "subflow_exit": null
+              },
+              {
+                "id": "e_d_duty_inspect",
+                "from": "d_duty",
+                "to": "d_inspect",
+                "kind": "normal",
+                "label": "",
+                "priority": 0,
+                "condition": null,
+                "subflow_exit": null
+              },
+              {
+                "id": "e_d_inspect_dec",
+                "from": "d_inspect",
+                "to": "d_dec",
+                "kind": "normal",
+                "label": "",
+                "priority": 0,
+                "condition": null,
+                "subflow_exit": null
+              },
+              {
+                "id": "e_d_dec_repair",
+                "from": "d_dec",
+                "to": "d_repair",
+                "kind": "conditional",
+                "label": "检测到故障，维修后返回值班",
+                "priority": 10,
+                "condition": {
+                  "op": "eq",
+                  "field": "test_detected",
+                  "value": true,
+                  "conditions": null
+                },
+                "subflow_exit": null
+              },
+              {
+                "id": "e_d_dec_loop",
+                "from": "d_dec",
+                "to": "d_loop",
+                "kind": "default",
+                "label": "未发现故障，继续下一轮",
+                "priority": 0,
+                "condition": null,
+                "subflow_exit": null
+              },
+              {
+                "id": "e_d_repair_duty",
+                "from": "d_repair",
+                "to": "d_duty",
+                "kind": "normal",
+                "label": "",
+                "priority": 0,
+                "condition": null,
+                "subflow_exit": null
+              },
+              {
+                "id": "e_d_loop_duty",
+                "from": "d_loop",
+                "to": "d_duty",
+                "kind": "conditional",
+                "label": "继续值班",
+                "priority": 10,
+                "condition": {
+                  "op": "lt",
+                  "field": "node_visits.d_duty",
+                  "value": 1000000,
+                  "conditions": null
+                },
+                "subflow_exit": null
+              },
+              {
+                "id": "e_d_loop_done",
+                "from": "d_loop",
+                "to": "d_done",
+                "kind": "default",
+                "label": "结构出口（正常运行不会到达）",
+                "priority": 0,
+                "condition": null,
+                "subflow_exit": null
+              }
+            ],
+            "guards": {
+              "max_node_visits": 1000000
+            }
+          }
+        },
+        {
+          "id": "n_end",
+          "type": "end",
+          "name": "结束",
+          "description": "",
+          "position": null,
+          "duration": null,
+          "status_on_enter": "operational",
+          "status_on_complete": null,
+          "on_enter": [],
+          "on_complete": [],
+          "outcomes": [],
+          "subflow": null
+        }
+      ],
+      "edges": [
+        {
+          "id": "e_start_storage",
+          "from": "n_start",
+          "to": "n_storage",
+          "kind": "normal",
+          "label": "",
+          "priority": 0,
+          "condition": null,
+          "subflow_exit": null
+        },
+        {
+          "id": "e_storage_transport",
+          "from": "n_storage",
+          "to": "n_transport",
+          "kind": "normal",
+          "label": "",
+          "priority": 0,
+          "condition": null,
+          "subflow_exit": "s_done"
+        },
+        {
+          "id": "e_transport_test1",
+          "from": "n_transport",
+          "to": "n_first_test",
+          "kind": "normal",
+          "label": "",
+          "priority": 0,
+          "condition": null,
+          "subflow_exit": null
+        },
+        {
+          "id": "e_test1_dec",
+          "from": "n_first_test",
+          "to": "n_dec_first_test",
+          "kind": "normal",
+          "label": "",
+          "priority": 0,
+          "condition": null,
+          "subflow_exit": null
+        },
+        {
+          "id": "e_test1_repair",
+          "from": "n_dec_first_test",
+          "to": "n_repair",
+          "kind": "conditional",
+          "label": "检测到故障，维修后返回第一次测试",
+          "priority": 10,
+          "condition": {
+            "op": "eq",
+            "field": "test_detected",
+            "value": true,
+            "conditions": null
+          },
+          "subflow_exit": null
+        },
+        {
+          "id": "e_test1_normal",
+          "from": "n_dec_first_test",
+          "to": "n_short_transport",
+          "kind": "default",
+          "label": "未发现故障",
+          "priority": 0,
+          "condition": null,
+          "subflow_exit": null
+        },
+        {
+          "id": "e_repair_test1",
+          "from": "n_repair",
+          "to": "n_first_test",
+          "kind": "normal",
+          "label": "",
+          "priority": 0,
+          "condition": null,
+          "subflow_exit": null
+        },
+        {
+          "id": "e_short_load",
+          "from": "n_short_transport",
+          "to": "n_load_ship",
+          "kind": "normal",
+          "label": "",
+          "priority": 0,
+          "condition": null,
+          "subflow_exit": null
+        },
+        {
+          "id": "e_load_test2",
+          "from": "n_load_ship",
+          "to": "n_second_test",
+          "kind": "normal",
+          "label": "",
+          "priority": 0,
+          "condition": null,
+          "subflow_exit": null
+        },
+        {
+          "id": "e_test2_dec",
+          "from": "n_second_test",
+          "to": "n_dec_second_test",
+          "kind": "normal",
+          "label": "",
+          "priority": 0,
+          "condition": null,
+          "subflow_exit": null
+        },
+        {
+          "id": "e_test2_abnormal",
+          "from": "n_dec_second_test",
+          "to": "n_exit_duty",
+          "kind": "conditional",
+          "label": "检测到故障，下舰维修后返回第二次测试",
+          "priority": 10,
+          "condition": {
+            "op": "eq",
+            "field": "test_detected",
+            "value": true,
+            "conditions": null
+          },
+          "subflow_exit": null
+        },
+        {
+          "id": "e_test2_normal",
+          "from": "n_dec_second_test",
+          "to": "n_duty",
+          "kind": "default",
+          "label": "未发现故障，进入值班",
+          "priority": 0,
+          "condition": null,
+          "subflow_exit": null
+        },
+        {
+          "id": "e_exit_unload",
+          "from": "n_exit_duty",
+          "to": "n_disembark",
+          "kind": "normal",
+          "label": "",
+          "priority": 0,
+          "condition": null,
+          "subflow_exit": null
+        },
+        {
+          "id": "e_unload_shore",
+          "from": "n_disembark",
+          "to": "n_shore_repair",
+          "kind": "normal",
+          "label": "",
+          "priority": 0,
+          "condition": null,
+          "subflow_exit": null
+        },
+        {
+          "id": "e_shore_test2",
+          "from": "n_shore_repair",
+          "to": "n_second_test",
+          "kind": "normal",
+          "label": "",
+          "priority": 0,
+          "condition": null,
+          "subflow_exit": null
+        },
+        {
+          "id": "e_duty_end",
+          "from": "n_duty",
+          "to": "n_end",
+          "kind": "normal",
+          "label": "",
+          "priority": 0,
+          "condition": null,
+          "subflow_exit": "d_done"
+        }
+      ],
+      "guards": {
+        "max_node_visits": 1000000
+      },
+      "process_id": "proc_b658df78da6a",
+      "version": 1,
+      "content_hash": "sha256:c5bd8d7d340959fbd6f3830261585290d29a0b4a41ca4be33e98bb15edfb6ea3",
+      "created_at": "2026-11-27T02:04:36.330615Z"
+    },
+    {
+      "schema_version": "process-ir/1.1",
+      "name": "装备保障可靠性仿真流程",
+      "description": "贮存与值班两个嵌套阶段配置指数故障率；检测/测试节点使用故障检测率 Ft；普通活动只配置持续时间。值班阶段持续循环，由仿真终止时间结束。",
+      "status_catalog": [
+        {
+          "id": "operational",
+          "name": "可用",
+          "counts_as_available": true
+        },
+        {
+          "id": "under_repair",
+          "name": "维修中",
+          "counts_as_available": false
+        }
+      ],
+      "start_node_id": "n_start",
+      "end_node_ids": [
+        "n_end"
+      ],
+      "nodes": [
+        {
+          "id": "n_start",
+          "type": "start",
+          "name": "开始",
+          "description": "",
+          "position": {
+            "x": 60.0,
+            "y": 192.0
+          },
+          "duration": null,
+          "status_on_enter": "operational",
+          "status_on_complete": null,
+          "on_enter": [],
+          "on_complete": [],
+          "outcomes": [],
+          "subflow": null
+        },
+        {
+          "id": "n_storage",
+          "type": "subprocess",
+          "name": "贮存阶段",
+          "description": "嵌套阶段：贮存计时 -> 贮存检测 -> 是否故障；检测到故障则维修并重新开始贮存计时，否则正常退出。",
+          "position": {
+            "x": 386.0,
+            "y": 61.0
+          },
+          "duration": null,
+          "status_on_enter": null,
+          "status_on_complete": null,
+          "on_enter": [],
+          "on_complete": [],
+          "outcomes": [],
+          "subflow": {
+            "start_node_id": "s_start",
+            "end_node_ids": [
+              "s_done"
+            ],
+            "nodes": [
+              {
+                "id": "s_start",
+                "type": "start",
+                "name": "贮存开始",
+                "description": "",
+                "position": {
+                  "x": 0.0,
+                  "y": 82.0
+                },
+                "duration": null,
+                "status_on_enter": "operational",
+                "status_on_complete": null,
+                "on_enter": [],
+                "on_complete": [],
+                "outcomes": [],
+                "subflow": null
+              },
+              {
+                "id": "s_store",
+                "type": "task",
+                "name": "贮存",
+                "description": "阶段累计时间从本次进入贮存任务开始重新计算。",
+                "position": {
+                  "x": 280.0,
+                  "y": 69.0
+                },
+                "duration": 31.5,
+                "status_on_enter": "operational",
+                "status_on_complete": null,
+                "on_enter": [],
+                "on_complete": [],
+                "outcomes": [],
+                "subflow": null
+              },
+              {
+                "id": "s_inspect",
+                "type": "task",
+                "name": "贮存检测",
+                "description": "测试模块，使用故障检测率 Ft；不配置故障率 λ。",
+                "position": {
+                  "x": 598.0,
+                  "y": 125.0
+                },
+                "duration": 1.0,
+                "status_on_enter": "operational",
+                "status_on_complete": null,
+                "on_enter": [],
+                "on_complete": [],
+                "outcomes": [],
+                "subflow": null
+              },
+              {
+                "id": "s_dec",
+                "type": "decision",
+                "name": "贮存检测是否发现故障",
+                "description": "",
+                "position": {
+                  "x": 916.0,
+                  "y": 109.0
+                },
+                "duration": null,
+                "status_on_enter": null,
+                "status_on_complete": null,
+                "on_enter": [],
+                "on_complete": [],
+                "outcomes": [],
+                "subflow": null
+              },
+              {
+                "id": "s_repair",
+                "type": "task",
+                "name": "贮存维修",
+                "description": "",
+                "position": {
+                  "x": 1244.0,
+                  "y": 0.0
+                },
+                "duration": 2.0,
+                "status_on_enter": "under_repair",
+                "status_on_complete": "operational",
+                "on_enter": [],
+                "on_complete": [
+                  {
+                    "op": "set_state",
+                    "name": "currently_failed",
+                    "value": false,
+                    "by": 1.0
+                  }
+                ],
+                "outcomes": [],
+                "subflow": null
+              },
+              {
+                "id": "s_done",
+                "type": "end",
+                "name": "贮存正常完成",
+                "description": "",
+                "position": {
+                  "x": 1263.0,
+                  "y": 150.0
+                },
+                "duration": null,
+                "status_on_enter": "operational",
+                "status_on_complete": null,
+                "on_enter": [],
+                "on_complete": [],
+                "outcomes": [],
+                "subflow": null
+              }
+            ],
+            "edges": [
+              {
+                "id": "e_s_start_store",
+                "from": "s_start",
+                "to": "s_store",
+                "kind": "normal",
+                "label": "",
+                "priority": 0,
+                "condition": null,
+                "subflow_exit": null
+              },
+              {
+                "id": "e_s_store_inspect",
+                "from": "s_store",
+                "to": "s_inspect",
+                "kind": "normal",
+                "label": "",
+                "priority": 0,
+                "condition": null,
+                "subflow_exit": null
+              },
+              {
+                "id": "e_s_inspect_dec",
+                "from": "s_inspect",
+                "to": "s_dec",
+                "kind": "normal",
+                "label": "",
+                "priority": 0,
+                "condition": null,
+                "subflow_exit": null
+              },
+              {
+                "id": "e_s_dec_repair",
+                "from": "s_dec",
+                "to": "s_repair",
+                "kind": "conditional",
+                "label": "检测到故障，维修后重新贮存",
+                "priority": 10,
+                "condition": {
+                  "op": "eq",
+                  "field": "test_detected",
+                  "value": true,
+                  "conditions": null
+                },
+                "subflow_exit": null
+              },
+              {
+                "id": "e_s_dec_done",
+                "from": "s_dec",
+                "to": "s_done",
+                "kind": "default",
+                "label": "未发现故障，正常退出",
+                "priority": 0,
+                "condition": null,
+                "subflow_exit": null
+              },
+              {
+                "id": "e_s_repair_store",
+                "from": "s_repair",
+                "to": "s_store",
+                "kind": "normal",
+                "label": "维修后重新开始贮存计时",
+                "priority": 0,
+                "condition": null,
+                "subflow_exit": null
+              }
+            ],
+            "guards": {
+              "max_node_visits": 10000
+            }
+          }
+        },
+        {
+          "id": "n_transport",
+          "type": "task",
+          "name": "运输",
+          "description": "",
+          "position": {
+            "x": 2030.0,
+            "y": 179.0
+          },
+          "duration": 2.5,
+          "status_on_enter": "operational",
+          "status_on_complete": null,
+          "on_enter": [],
+          "on_complete": [],
+          "outcomes": [],
+          "subflow": null
+        },
+        {
+          "id": "n_first_test",
+          "type": "task",
+          "name": "第一次测试",
+          "description": "测试模块，使用故障检测率 Ft；不配置故障率 λ。",
+          "position": {
+            "x": 2394.0,
+            "y": 179.0
+          },
+          "duration": 1.0,
+          "status_on_enter": "operational",
+          "status_on_complete": null,
+          "on_enter": [],
+          "on_complete": [],
+          "outcomes": [],
+          "subflow": null
+        },
+        {
+          "id": "n_dec_first_test",
+          "type": "decision",
+          "name": "第一次测试是否发现故障",
+          "description": "",
+          "position": {
+            "x": 2758.0,
+            "y": 236.0
+          },
+          "duration": null,
+          "status_on_enter": null,
+          "status_on_complete": null,
+          "on_enter": [],
+          "on_complete": [],
+          "outcomes": [],
+          "subflow": null
+        },
+        {
+          "id": "n_repair",
+          "type": "task",
+          "name": "维修",
+          "description": "",
+          "position": {
+            "x": 3132.0,
+            "y": 89.0
+          },
+          "duration": 2.0,
+          "status_on_enter": "under_repair",
+          "status_on_complete": "operational",
+          "on_enter": [],
+          "on_complete": [
+            {
+              "op": "set_state",
+              "name": "currently_failed",
+              "value": false,
+              "by": 1.0
+            }
+          ],
+          "outcomes": [],
+          "subflow": null
+        },
+        {
+          "id": "n_short_transport",
+          "type": "task",
+          "name": "第二次运输",
+          "description": "",
+          "position": {
+            "x": 3132.0,
+            "y": 269.0
+          },
+          "duration": 1.0,
+          "status_on_enter": "operational",
+          "status_on_complete": null,
+          "on_enter": [],
+          "on_complete": [],
+          "outcomes": [],
+          "subflow": null
+        },
+        {
+          "id": "n_load_ship",
+          "type": "task",
+          "name": "装舰",
+          "description": "",
+          "position": {
+            "x": 3496.0,
+            "y": 269.0
+          },
+          "duration": 1.0,
+          "status_on_enter": "operational",
+          "status_on_complete": null,
+          "on_enter": [],
+          "on_complete": [],
+          "outcomes": [],
+          "subflow": null
+        },
+        {
+          "id": "n_second_test",
+          "type": "task",
+          "name": "第二次测试",
+          "description": "测试模块，使用故障检测率 Ft；不配置故障率 λ。",
+          "position": {
+            "x": 3860.0,
+            "y": 269.0
+          },
+          "duration": 1.0,
+          "status_on_enter": "operational",
+          "status_on_complete": null,
+          "on_enter": [],
+          "on_complete": [],
+          "outcomes": [],
+          "subflow": null
+        },
+        {
+          "id": "n_dec_second_test",
+          "type": "decision",
+          "name": "第二次测试是否发现故障",
+          "description": "",
+          "position": {
+            "x": 4224.0,
+            "y": 392.0
+          },
+          "duration": null,
+          "status_on_enter": null,
+          "status_on_complete": null,
+          "on_enter": [],
+          "on_complete": [],
+          "outcomes": [],
+          "subflow": null
+        },
+        {
+          "id": "n_exit_duty",
+          "type": "task",
+          "name": "下舰准备",
+          "description": "",
+          "position": {
+            "x": 5383.0,
+            "y": 584.0
+          },
+          "duration": 1.0,
+          "status_on_enter": "operational",
+          "status_on_complete": null,
+          "on_enter": [],
+          "on_complete": [],
+          "outcomes": [],
+          "subflow": null
+        },
+        {
+          "id": "n_disembark",
+          "type": "task",
+          "name": "下舰",
+          "description": "",
+          "position": {
+            "x": 6532.0,
+            "y": 584.0
+          },
+          "duration": 1.0,
+          "status_on_enter": "operational",
+          "status_on_complete": null,
+          "on_enter": [],
+          "on_complete": [],
+          "outcomes": [],
+          "subflow": null
+        },
+        {
+          "id": "n_shore_repair",
+          "type": "task",
+          "name": "岸上维修",
+          "description": "",
+          "position": {
+            "x": 6896.0,
+            "y": 269.0
+          },
+          "duration": 3.0,
+          "status_on_enter": "under_repair",
+          "status_on_complete": "operational",
+          "on_enter": [],
+          "on_complete": [
+            {
+              "op": "set_state",
+              "name": "currently_failed",
+              "value": false,
+              "by": 1.0
+            }
+          ],
+          "outcomes": [],
+          "subflow": null
+        },
+        {
+          "id": "n_duty",
+          "type": "subprocess",
+          "name": "值班阶段",
+          "description": "嵌套阶段：值班计时 -> 值班检测 -> 是否故障；检测到故障则维修并返回值班，正常则继续下一轮值班。",
+          "position": {
+            "x": 4598.0,
+            "y": 60.0
+          },
+          "duration": null,
+          "status_on_enter": null,
+          "status_on_complete": null,
+          "on_enter": [],
+          "on_complete": [],
+          "outcomes": [],
+          "subflow": {
+            "start_node_id": "d_start",
+            "end_node_ids": [
+              "d_done"
+            ],
+            "nodes": [
+              {
+                "id": "d_start",
+                "type": "start",
+                "name": "值班开始",
+                "description": "",
+                "position": {
+                  "x": 0.0,
+                  "y": 100.0
+                },
+                "duration": null,
+                "status_on_enter": "operational",
+                "status_on_complete": null,
+                "on_enter": [],
+                "on_complete": [],
+                "outcomes": [],
+                "subflow": null
+              },
+              {
+                "id": "d_duty",
+                "type": "task",
+                "name": "值班",
+                "description": "阶段累计时间从本次进入值班任务开始重新计算。",
+                "position": {
+                  "x": 280.0,
+                  "y": 87.0
+                },
+                "duration": 5.0,
+                "status_on_enter": "operational",
+                "status_on_complete": null,
+                "on_enter": [],
+                "on_complete": [],
+                "outcomes": [],
+                "subflow": null
+              },
+              {
+                "id": "d_inspect",
+                "type": "task",
+                "name": "值班检测",
+                "description": "测试模块，使用故障检测率 Ft；不配置故障率 λ。",
+                "position": {
+                  "x": 598.0,
+                  "y": 234.0
+                },
+                "duration": 1.0,
+                "status_on_enter": "operational",
+                "status_on_complete": null,
+                "on_enter": [],
+                "on_complete": [],
+                "outcomes": [],
+                "subflow": null
+              },
+              {
+                "id": "d_dec",
+                "type": "decision",
+                "name": "值班检测是否发现故障",
+                "description": "",
+                "position": {
+                  "x": 916.0,
+                  "y": 218.0
+                },
+                "duration": null,
+                "status_on_enter": null,
+                "status_on_complete": null,
+                "on_enter": [],
+                "on_complete": [],
+                "outcomes": [],
+                "subflow": null
+              },
+              {
+                "id": "d_repair",
+                "type": "task",
+                "name": "值班维修",
+                "description": "",
+                "position": {
+                  "x": 1249.0,
+                  "y": 182.0
+                },
+                "duration": 2.0,
+                "status_on_enter": "under_repair",
+                "status_on_complete": "operational",
+                "on_enter": [],
+                "on_complete": [
+                  {
+                    "op": "set_state",
+                    "name": "currently_failed",
+                    "value": false,
+                    "by": 1.0
+                  }
+                ],
+                "outcomes": [],
+                "subflow": null
+              },
+              {
+                "id": "d_loop",
+                "type": "decision",
+                "name": "继续下一轮值班",
+                "description": "",
+                "position": {
+                  "x": 1244.0,
+                  "y": 0.0
+                },
+                "duration": null,
+                "status_on_enter": null,
+                "status_on_complete": null,
+                "on_enter": [],
+                "on_complete": [],
+                "outcomes": [],
+                "subflow": null
+              },
+              {
+                "id": "d_done",
+                "type": "end",
+                "name": "值班结构出口",
+                "description": "",
+                "position": {
+                  "x": 1572.0,
+                  "y": 29.0
+                },
+                "duration": null,
+                "status_on_enter": "operational",
+                "status_on_complete": null,
+                "on_enter": [],
+                "on_complete": [],
+                "outcomes": [],
+                "subflow": null
+              }
+            ],
+            "edges": [
+              {
+                "id": "e_d_start_duty",
+                "from": "d_start",
+                "to": "d_duty",
+                "kind": "normal",
+                "label": "",
+                "priority": 0,
+                "condition": null,
+                "subflow_exit": null
+              },
+              {
+                "id": "e_d_duty_inspect",
+                "from": "d_duty",
+                "to": "d_inspect",
+                "kind": "normal",
+                "label": "",
+                "priority": 0,
+                "condition": null,
+                "subflow_exit": null
+              },
+              {
+                "id": "e_d_inspect_dec",
+                "from": "d_inspect",
+                "to": "d_dec",
+                "kind": "normal",
+                "label": "",
+                "priority": 0,
+                "condition": null,
+                "subflow_exit": null
+              },
+              {
+                "id": "e_d_dec_repair",
+                "from": "d_dec",
+                "to": "d_repair",
+                "kind": "conditional",
+                "label": "检测到故障，维修后返回值班",
+                "priority": 10,
+                "condition": {
+                  "op": "eq",
+                  "field": "test_detected",
+                  "value": true,
+                  "conditions": null
+                },
+                "subflow_exit": null
+              },
+              {
+                "id": "e_d_dec_loop",
+                "from": "d_dec",
+                "to": "d_loop",
+                "kind": "default",
+                "label": "未发现故障，继续下一轮",
+                "priority": 0,
+                "condition": null,
+                "subflow_exit": null
+              },
+              {
+                "id": "e_d_repair_duty",
+                "from": "d_repair",
+                "to": "d_duty",
+                "kind": "normal",
+                "label": "",
+                "priority": 0,
+                "condition": null,
+                "subflow_exit": null
+              },
+              {
+                "id": "e_d_loop_duty",
+                "from": "d_loop",
+                "to": "d_duty",
+                "kind": "conditional",
+                "label": "继续值班",
+                "priority": 10,
+                "condition": {
+                  "op": "lt",
+                  "field": "node_visits.d_duty",
+                  "value": 1000000,
+                  "conditions": null
+                },
+                "subflow_exit": null
+              },
+              {
+                "id": "e_d_loop_done",
+                "from": "d_loop",
+                "to": "d_done",
+                "kind": "default",
+                "label": "结构出口（正常运行不会到达）",
+                "priority": 0,
+                "condition": null,
+                "subflow_exit": null
+              }
+            ],
+            "guards": {
+              "max_node_visits": 1000000
+            }
+          }
+        },
+        {
+          "id": "n_end",
+          "type": "end",
+          "name": "结束",
+          "description": "",
+          "position": {
+            "x": 6551.0,
+            "y": 245.0
+          },
+          "duration": null,
+          "status_on_enter": "operational",
+          "status_on_complete": null,
+          "on_enter": [],
+          "on_complete": [],
+          "outcomes": [],
+          "subflow": null
+        }
+      ],
+      "edges": [
+        {
+          "id": "e_start_storage",
+          "from": "n_start",
+          "to": "n_storage",
+          "kind": "normal",
+          "label": "",
+          "priority": 0,
+          "condition": null,
+          "subflow_exit": null
+        },
+        {
+          "id": "e_storage_transport",
+          "from": "n_storage",
+          "to": "n_transport",
+          "kind": "normal",
+          "label": "",
+          "priority": 0,
+          "condition": null,
+          "subflow_exit": "s_done"
+        },
+        {
+          "id": "e_transport_test1",
+          "from": "n_transport",
+          "to": "n_first_test",
+          "kind": "normal",
+          "label": "",
+          "priority": 0,
+          "condition": null,
+          "subflow_exit": null
+        },
+        {
+          "id": "e_test1_dec",
+          "from": "n_first_test",
+          "to": "n_dec_first_test",
+          "kind": "normal",
+          "label": "",
+          "priority": 0,
+          "condition": null,
+          "subflow_exit": null
+        },
+        {
+          "id": "e_test1_repair",
+          "from": "n_dec_first_test",
+          "to": "n_repair",
+          "kind": "conditional",
+          "label": "检测到故障，维修后返回第一次测试",
+          "priority": 10,
+          "condition": {
+            "op": "eq",
+            "field": "test_detected",
+            "value": true,
+            "conditions": null
+          },
+          "subflow_exit": null
+        },
+        {
+          "id": "e_test1_normal",
+          "from": "n_dec_first_test",
+          "to": "n_short_transport",
+          "kind": "default",
+          "label": "未发现故障",
+          "priority": 0,
+          "condition": null,
+          "subflow_exit": null
+        },
+        {
+          "id": "e_repair_test1",
+          "from": "n_repair",
+          "to": "n_first_test",
+          "kind": "normal",
+          "label": "",
+          "priority": 0,
+          "condition": null,
+          "subflow_exit": null
+        },
+        {
+          "id": "e_short_load",
+          "from": "n_short_transport",
+          "to": "n_load_ship",
+          "kind": "normal",
+          "label": "",
+          "priority": 0,
+          "condition": null,
+          "subflow_exit": null
+        },
+        {
+          "id": "e_load_test2",
+          "from": "n_load_ship",
+          "to": "n_second_test",
+          "kind": "normal",
+          "label": "",
+          "priority": 0,
+          "condition": null,
+          "subflow_exit": null
+        },
+        {
+          "id": "e_test2_dec",
+          "from": "n_second_test",
+          "to": "n_dec_second_test",
+          "kind": "normal",
+          "label": "",
+          "priority": 0,
+          "condition": null,
+          "subflow_exit": null
+        },
+        {
+          "id": "e_test2_abnormal",
+          "from": "n_dec_second_test",
+          "to": "n_exit_duty",
+          "kind": "conditional",
+          "label": "检测到故障，下舰维修后返回第二次测试",
+          "priority": 10,
+          "condition": {
+            "op": "eq",
+            "field": "test_detected",
+            "value": true,
+            "conditions": null
+          },
+          "subflow_exit": null
+        },
+        {
+          "id": "e_test2_normal",
+          "from": "n_dec_second_test",
+          "to": "n_duty",
+          "kind": "default",
+          "label": "未发现故障，进入值班",
+          "priority": 0,
+          "condition": null,
+          "subflow_exit": null
+        },
+        {
+          "id": "e_exit_unload",
+          "from": "n_exit_duty",
+          "to": "n_disembark",
+          "kind": "normal",
+          "label": "",
+          "priority": 0,
+          "condition": null,
+          "subflow_exit": null
+        },
+        {
+          "id": "e_unload_shore",
+          "from": "n_disembark",
+          "to": "n_shore_repair",
+          "kind": "normal",
+          "label": "",
+          "priority": 0,
+          "condition": null,
+          "subflow_exit": null
+        },
+        {
+          "id": "e_shore_test2",
+          "from": "n_shore_repair",
+          "to": "n_second_test",
+          "kind": "normal",
+          "label": "",
+          "priority": 0,
+          "condition": null,
+          "subflow_exit": null
+        },
+        {
+          "id": "e_duty_end",
+          "from": "n_duty",
+          "to": "n_end",
+          "kind": "normal",
+          "label": "",
+          "priority": 0,
+          "condition": null,
+          "subflow_exit": "d_done"
+        }
+      ],
+      "guards": {
+        "max_node_visits": 1000000
+      },
+      "process_id": "proc_b658df78da6a",
+      "version": 2,
+      "content_hash": "sha256:c17cb9049944c7005a7ceac466c7f1dd54dd060f398f4989ba488795f6682b0c",
+      "created_at": "2026-11-27T02:04:51.279205Z"
+    }
+  ]
+}
