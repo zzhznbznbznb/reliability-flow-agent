@@ -351,6 +351,144 @@ def test_failure_exit_routes_to_repair_and_restores_operational_status() -> None
     assert "failure_routed" in types
     assert "repair_started" in types
     assert "repair_completed" in types
+    assert types.count("repair_started") == 1
+    assert types.count("repair_completed") == 1
+
+
+def test_subflow_failure_exit_records_repair_started_once() -> None:
+    spec = spec_from(
+        {
+            "schema_version": "process-ir/1.1",
+            "name": "子流程故障进入父流程维修",
+            "start_node_id": "start",
+            "end_node_ids": ["end"],
+            "nodes": [
+                {"id": "start", "type": "start", "name": "开始"},
+                {
+                    "id": "block",
+                    "type": "subprocess",
+                    "name": "阶段块",
+                    "subflow": {
+                        "start_node_id": "s_start",
+                        "end_node_ids": ["s_normal", "s_fault"],
+                        "nodes": [
+                            {"id": "s_start", "type": "start", "name": "子开始"},
+                            {
+                                "id": "s_work",
+                                "type": "task",
+                                "name": "阶段任务",
+                                "duration": 1,
+                            },
+                            {"id": "s_normal", "type": "end", "name": "阶段正常"},
+                            {"id": "s_fault", "type": "end", "name": "阶段故障"},
+                        ],
+                        "edges": [
+                            {
+                                "id": "s_e_start",
+                                "from": "s_start",
+                                "to": "s_work",
+                                "kind": "normal",
+                            },
+                            {
+                                "id": "s_e_normal",
+                                "from": "s_work",
+                                "to": "s_normal",
+                                "kind": "normal",
+                            },
+                            {
+                                "id": "s_e_fault",
+                                "from": "s_work",
+                                "to": "s_fault",
+                                "kind": "failure",
+                            },
+                        ],
+                    },
+                },
+                {
+                    "id": "parent_repair",
+                    "type": "task",
+                    "name": "维修",
+                    "duration": 2,
+                    "on_complete": [
+                        {
+                            "op": "set_state",
+                            "name": "currently_failed",
+                            "value": False,
+                        }
+                    ],
+                },
+                {"id": "end", "type": "end", "name": "结束"},
+            ],
+            "edges": [
+                {
+                    "id": "e_start_block",
+                    "from": "start",
+                    "to": "block",
+                    "kind": "normal",
+                },
+                {
+                    "id": "e_block_normal",
+                    "from": "block",
+                    "to": "end",
+                    "kind": "normal",
+                    "subflow_exit": "s_normal",
+                },
+                {
+                    "id": "e_block_fault",
+                    "from": "block",
+                    "to": "parent_repair",
+                    "kind": "failure",
+                    "subflow_exit": "s_fault",
+                },
+                {
+                    "id": "e_repair_end",
+                    "from": "parent_repair",
+                    "to": "end",
+                    "kind": "normal",
+                },
+            ],
+        }
+    )
+    process = document_from_spec(spec)
+    reliability = reliability_document_from_process(
+        process,
+        [
+            {"node_id": "s_work", "participates": True, "lambda": 1e9},
+            {"node_id": "parent_repair", "participates": False},
+        ],
+    )
+    result = _run(
+        process,
+        reliability,
+        SimulationConfig(entity_count=1, simulation_end=10, random_seed=31),
+    )
+    entity = result.entities[0]
+    repair_started = [
+        event
+        for event in entity.history
+        if event.event_type == "repair_started"
+    ]
+    repair_completed = [
+        event
+        for event in entity.history
+        if event.event_type == "repair_completed"
+    ]
+
+    assert len(repair_started) == 1
+    assert len(repair_completed) == 1
+    assert repair_started[0].node_id == "parent_repair"
+    assert repair_completed[0].node_id == "parent_repair"
+    assert math.isclose(
+        repair_completed[0].time - repair_started[0].time,
+        2.0,
+        abs_tol=1e-9,
+    )
+    assert entity.completed is True
+    assert entity.currently_failed is False
+    assert entity.repair_count == 1
+    assert entity.failure_records[0].repair_start_time == repair_started[0].time
+    assert entity.failure_records[0].repair_end_time == repair_completed[0].time
+    assert entity.failure_records[0].repaired is True
 
 
 def test_repair_count_is_not_double_counted_when_explicit_effect_exists() -> None:

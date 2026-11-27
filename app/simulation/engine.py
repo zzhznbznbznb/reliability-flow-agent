@@ -137,6 +137,10 @@ def _first_stage_task(node: ProcessNode) -> ProcessNode | None:
     return tasks[0] if tasks else None
 
 
+def _is_repair_node(node: ProcessNode) -> bool:
+    return "repair" in node.id.lower() or "维修" in node.name
+
+
 class SimulationRuntime:
     def __init__(
         self,
@@ -697,14 +701,9 @@ class SimulationRuntime:
     ) -> None:
         if not entity.repair_pending or entity.repair_start_recorded:
             return
-        is_repair_node = "repair" in node.id.lower() or "维修" in node.name
-        if not is_repair_node:
+        if not _is_repair_node(node):
             return
-        entity.repair_started = True
-        entity.repair_start_recorded = True
-        record = self._open_failure_record(entity)
-        if record is not None:
-            record.repair_start_time = time
+        record = self._mark_repair_start_state(entity, time)
         self._record(
             entity,
             "repair_started",
@@ -715,6 +714,16 @@ class SimulationRuntime:
                 "failure_time": record.failure_time if record else None,
             },
         )
+
+    def _mark_repair_start_state(
+        self, entity: _EntityRuntime, time: float
+    ) -> FailureRecord | None:
+        entity.repair_started = True
+        entity.repair_start_recorded = True
+        record = self._open_failure_record(entity)
+        if record is not None:
+            record.repair_start_time = time
+        return record
 
     def _arm_reliability_for_task(
         self,
@@ -859,6 +868,9 @@ class SimulationRuntime:
                     "edge_id": edge.id,
                 },
             )
+            target_node = self.node_by_id.get(edge.target)
+            if target_node is not None and _is_repair_node(target_node):
+                self._mark_repair_start_state(entity, time)
         self._record(
             entity,
             "edge_taken",
@@ -1640,6 +1652,8 @@ class SimulationRuntime:
                     edge.target,
                     {"source_node_id": node.id, "edge_id": edge.id},
                 )
+                if target_node is not None and _is_repair_node(target_node):
+                    self._mark_repair_start_state(entity, time)
             self._enter_node(entity, edge.target, time)
             return
 
