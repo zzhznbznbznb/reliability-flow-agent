@@ -23,6 +23,7 @@ from app.evaluation.models import (
     ReliabilityBinding,
     TargetResult,
     TargetStatus,
+    TestMetrics,
 )
 from app.simulation.models import (
     EntitySimulationResult,
@@ -30,9 +31,39 @@ from app.simulation.models import (
     SimulationResult,
 )
 
+def _iter_nodes(nodes):
+    for node in nodes:
+        yield node
+        if node.subflow is not None:
+            yield from _iter_nodes(node.subflow.nodes)
+
+
+def _iter_nodes_with_scope(nodes, path=()):
+    for node in nodes:
+        yield node, path
+        if node.subflow is not None:
+            yield from _iter_nodes_with_scope(
+                node.subflow.nodes, path + (node.id,)
+            )
+
+
+def _first_stage_task_id(node) -> str | None:
+    if node.subflow is None:
+        return None
+    for child in node.subflow.nodes:
+        if child.type == "task":
+            return child.id
+        nested = _first_stage_task_id(child)
+        if nested is not None:
+            return nested
+    return None
+
+
 _LIMITATIONS = [
     "单次仿真经验指标，不提供统计置信区间。",
-    "Runtime 使用区间可靠性抽样，不提供精确故障时刻。",
+    "阶段节点按图片算法逐时间步抽取并与累计可靠度 R(t)=exp(-λt) 比较；"
+    "该口径的逐步存活概率是各步 R(t) 的乘积，与单次 exp(-λT) 不完全相同。",
+    "普通活动节点不配置故障率，只按持续时间执行。",
     "不同节点的理论可靠度不会被合并为系统整体理论可靠度。",
     "维修周期依赖事件顺序重建，当前 Runtime 没有唯一维修周期 ID。",
 ]
@@ -63,6 +94,10 @@ def compute_reliability_hash(reliability: ReliabilityDocument) -> str:
                 "node_id": config.node_id,
                 "participates": bool(config.participates),
                 "distribution": config.distribution,
+                "module_type": getattr(config, "module_type", "activity"),
+                "stage_task_id": getattr(config, "stage_task_id", None),
+                "detection_rate": getattr(config, "detection_rate", None),
+                "test_time": getattr(config, "test_time", None),
                 "lambda": (
                     None
                     if config.lambda_per_day is None
@@ -95,7 +130,9 @@ class _ActualReconstruction:
 
 def _reconstruct_actual_elapsed(
     entity: EntitySimulationResult,
+    ignored_node_ids: set[str] | None = None,
 ) -> _ActualReconstruction:
+    ignored = ignored_node_ids or set()
     reconstruction = _ActualReconstruction()
     open_node: str | None = None
     last_sample_exposure: float | None = None
@@ -114,6 +151,8 @@ def _reconstruct_actual_elapsed(
     for event in entity.history:
         event_type = event.event_type
         node_id = event.node_id
+        if node_id in ignored:
+            continue
         if event_type == "node_entered" and node_id is not None:
             reconstruction.totals.setdefault(node_id, 0.0)
             reconstruction.complete.setdefault(node_id, True)
@@ -198,6 +237,8 @@ def _reconstruct_actual_elapsed(
             )
 
     for node_id, visits in entity.node_visits.items():
+        if node_id in ignored:
+            continue
         if visits <= 0:
             continue
         reconstruction.totals.setdefault(node_id, 0.0)
@@ -327,6 +368,11 @@ def evaluate_simulation(
     config = evaluation_config or EvaluationConfig()
     target_config = targets or EvaluationTargets()
     warnings: list[EvaluationWarning] = []
+    process_node_map = {node.id: node for node in _iter_nodes(process.nodes)}
+    process_node_scope = {
+        node.id: list(path)
+        for node, path in _iter_nodes_with_scope(process.nodes)
+    }
 
     def warn(
         code: str,
@@ -392,8 +438,15 @@ def evaluate_simulation(
         )
 
     status_map = {status.id: status for status in process.status_catalog}
+    subprocess_ids = {
+        node_id
+        for node_id, node in process_node_map.items()
+        if node.type == "subprocess"
+    }
     reconstructed = {
-        entity.entity_id: _reconstruct_actual_elapsed(entity)
+        entity.entity_id: _reconstruct_actual_elapsed(
+            entity, ignored_node_ids=subprocess_ids
+        )
         for entity in entities
     }
     for entity in entities:
@@ -506,6 +559,30 @@ def evaluate_simulation(
             },
         )
 
+    horizon = max(0.0, result.simulation_end - result.simulation_start)
+    horizon_total = horizon * n_total
+    total_available_time = sum(
+        entity.available_time for entity in entities
+    )
+    total_unavailable_time = sum(
+        entity.unavailable_time for entity in entities
+    )
+    readiness = (
+        total_available_time / horizon_total
+        if horizon_total > 0
+        else None
+    )
+    mean_entity_availability = (
+        sum(
+            entity.available_time / horizon
+            for entity in entities
+            if horizon > 0
+        )
+        / n_total
+        if horizon > 0
+        else None
+    )
+
     overall = OverallMetrics(
         entity_count=n_total,
         ever_failed_entity_count=ever_failed_count,
@@ -538,6 +615,10 @@ def evaluate_simulation(
         mean_failure_count_per_entity=sample_failure_count / n_total,
         mean_repair_count_per_entity=total_repair_count / n_total,
         status_distribution=status_distribution,
+        total_available_time=total_available_time,
+        total_unavailable_time=total_unavailable_time,
+        readiness=readiness,
+        mean_entity_availability=mean_entity_availability,
     )
 
     samples_by_node: dict[str, list[ReliabilitySample]] = {}
@@ -565,14 +646,12 @@ def evaluate_simulation(
             config_item
             for config_item in reliability.nodes
             if config_item.participates
+            and getattr(config_item, "module_type", "activity") != "test"
         ),
         key=lambda item: item.node_id,
     )
     for config_item in participating:
-        process_node = next(
-            (node for node in process.nodes if node.id == config_item.node_id),
-            None,
-        )
+        process_node = process_node_map.get(config_item.node_id)
         if process_node is None:
             warn(
                 "reliability_unknown_node",
@@ -581,11 +660,40 @@ def evaluate_simulation(
                 node_id=config_item.node_id,
             )
             continue
-        if process_node.type != "task":
+        module_type = getattr(config_item, "module_type", "activity")
+        stage_task_id: str | None = None
+        evaluation_node_id = config_item.node_id
+        planned_duration = process_node.duration
+        if module_type == "stage":
+            if process_node.type != "subprocess":
+                warn(
+                    "reliability_invalid_node_type",
+                    "node",
+                    "阶段故障率只能配置在 subprocess 节点上。",
+                    node_id=config_item.node_id,
+                )
+                continue
+            stage_task_id = getattr(config_item, "stage_task_id", None)
+            if stage_task_id is None:
+                stage_task_id = _first_stage_task_id(process_node)
+            if stage_task_id is None:
+                warn(
+                    "reliability_missing_stage_task",
+                    "node",
+                    "阶段节点没有可评价的内部活动节点。",
+                    node_id=config_item.node_id,
+                )
+                continue
+            stage_task = process_node_map.get(stage_task_id)
+            evaluation_node_id = stage_task_id
+            planned_duration = (
+                stage_task.duration if stage_task is not None else None
+            )
+        elif process_node.type != "task":
             warn(
                 "reliability_invalid_node_type",
                 "node",
-                "只有 task 节点可以参与可靠性评价。",
+                "只有 task 节点可以配置活动级可靠性。",
                 node_id=config_item.node_id,
             )
             continue
@@ -611,6 +719,8 @@ def evaluate_simulation(
         exposure_by_entity: dict[str, float] = {}
         sample_count_by_entity: dict[str, int] = {}
         failure_by_entity: dict[str, int] = {}
+        stepwise_product_by_entity: dict[str, float] = {}
+        stepwise_product = 1.0
         for sample in samples:
             exposure_by_entity[sample.entity_id] = (
                 exposure_by_entity.get(sample.entity_id, 0.0)
@@ -623,13 +733,19 @@ def evaluate_simulation(
                 failure_by_entity.get(sample.entity_id, 0)
                 + (1 if sample.failure_occurred else 0)
             )
+            if sample.sampling_mode == "stepwise":
+                stepwise_product *= sample.reliability_probability
+                stepwise_product_by_entity[sample.entity_id] = (
+                    stepwise_product_by_entity.get(sample.entity_id, 1.0)
+                    * sample.reliability_probability
+                )
 
         total_exposure = sum(exposure_by_entity.values())
         unique_exposed = sum(
             1 for value in exposure_by_entity.values() if value > 0
         )
         visit_count = sum(
-            entity.node_visits.get(config_item.node_id, 0)
+            entity.node_visits.get(evaluation_node_id, 0)
             for entity in entities
         )
         failure_count = sum(failure_by_entity.values())
@@ -637,16 +753,16 @@ def evaluate_simulation(
 
         actual_incomplete_entities: list[str] = []
         for entity in entities:
-            if entity.node_visits.get(config_item.node_id, 0) <= 0:
+            if entity.node_visits.get(evaluation_node_id, 0) <= 0:
                 continue
             reconstruction = reconstructed[entity.entity_id]
-            if not reconstruction.complete.get(config_item.node_id, False):
+            if not reconstruction.complete.get(evaluation_node_id, False):
                 actual_incomplete_entities.append(entity.entity_id)
         actual_complete = not actual_incomplete_entities
         total_actual = (
             sum(
                 reconstructed[entity.entity_id].totals.get(
-                    config_item.node_id, 0.0
+                    evaluation_node_id, 0.0
                 )
                 for entity in entities
             )
@@ -678,16 +794,16 @@ def evaluate_simulation(
         per_entity_metrics: list[PerEntityNodeMetrics] = []
         theoretical_values: list[float] = []
         for entity in entities:
-            visits = entity.node_visits.get(config_item.node_id, 0)
+            visits = entity.node_visits.get(evaluation_node_id, 0)
             if visits <= 0 and sample_count_by_entity.get(entity.entity_id, 0) == 0:
                 continue
             exposure = exposure_by_entity.get(entity.entity_id, 0.0)
             entity_reconstruction = reconstructed[entity.entity_id]
             actual_complete_entity = entity_reconstruction.complete.get(
-                config_item.node_id, False
+                evaluation_node_id, False
             )
             actual_elapsed = (
-                entity_reconstruction.totals.get(config_item.node_id, 0.0)
+                entity_reconstruction.totals.get(evaluation_node_id, 0.0)
                 if actual_complete_entity
                 else None
             )
@@ -705,7 +821,7 @@ def evaluate_simulation(
             per_entity = PerEntityNodeMetrics(
                 entity_id=entity.entity_id,
                 node_id=config_item.node_id,
-                planned_duration=process_node.duration,
+                planned_duration=planned_duration,
                 visit_count=visits,
                 sample_count=sample_count_by_entity.get(entity.entity_id, 0),
                 failure_count=failure_by_entity.get(entity.entity_id, 0),
@@ -722,14 +838,24 @@ def evaluate_simulation(
             if theoretical_values
             else None
         )
-        joint_probability = (
-            math.exp(-lam * total_exposure)
-            if theoretical_evaluable
-            else None
-        )
-        empirical_frequency = (
-            failure_count / sample_count if sample_count > 0 else None
-        )
+        if module_type == "stage":
+            joint_probability = (
+                stepwise_product if theoretical_evaluable else None
+            )
+        else:
+            joint_probability = (
+                math.exp(-lam * total_exposure)
+                if theoretical_evaluable
+                else None
+            )
+        if module_type == "stage":
+            empirical_frequency = (
+                failure_count / visit_count if visit_count > 0 else None
+            )
+        else:
+            empirical_frequency = (
+                failure_count / sample_count if sample_count > 0 else None
+            )
         node_small_sample = (
             unique_exposed > 0
             and unique_exposed < config.small_sample_threshold
@@ -753,9 +879,14 @@ def evaluate_simulation(
         node_metric = NodeMetrics(
             node_id=config_item.node_id,
             node_name=process_node.name,
+            scope_path=process_node_scope.get(config_item.node_id, []),
             lambda_per_day=lam,
             lambda_unit=config_item.lambda_unit,
-            planned_duration=process_node.duration,
+            module_type=(
+                "stage" if module_type == "stage" else "activity"
+            ),
+            stage_task_id=stage_task_id,
+            planned_duration=planned_duration,
             visit_count=visit_count,
             sample_count=sample_count,
             failure_count=failure_count,
@@ -773,6 +904,58 @@ def evaluate_simulation(
         )
         node_metrics.append(node_metric)
 
+    test_metrics: list[TestMetrics] = []
+    test_configs = sorted(
+        (
+            config_item
+            for config_item in reliability.nodes
+            if getattr(config_item, "module_type", "activity") == "test"
+        ),
+        key=lambda item: item.node_id,
+    )
+    for config_item in test_configs:
+        process_node = process_node_map.get(config_item.node_id)
+        if process_node is None:
+            warn(
+                "reliability_unknown_node",
+                "node",
+                "测试模块引用了当前 Process IR 中不存在的节点。",
+                node_id=config_item.node_id,
+            )
+            continue
+        records = [
+            record
+            for entity in entities
+            for record in entity.test_records
+            if record.node_id == config_item.node_id
+        ]
+        test_count = len(records)
+        had_fault_count = sum(1 for record in records if record.had_fault)
+        detected_count = sum(1 for record in records if record.detected)
+        undetected_count = had_fault_count - detected_count
+        test_metrics.append(
+            TestMetrics(
+                node_id=config_item.node_id,
+                node_name=process_node.name,
+                scope_path=process_node_scope.get(config_item.node_id, []),
+                detection_rate=float(config_item.detection_rate or 0.0),
+                test_count=test_count,
+                had_fault_count=had_fault_count,
+                detected_count=detected_count,
+                undetected_count=undetected_count,
+                detection_frequency=(
+                    detected_count / had_fault_count
+                    if had_fault_count > 0
+                    else None
+                ),
+                test_time=(
+                    config_item.test_time
+                    if config_item.test_time is not None
+                    else process_node.duration
+                ),
+            )
+        )
+
     entity_metrics = [
         EntityMetrics(
             entity_id=entity.entity_id,
@@ -787,6 +970,8 @@ def evaluate_simulation(
             completed=entity.completed,
             stopped=entity.stopped,
             stopped_reason=entity.stopped_reason,
+            available_time=entity.available_time,
+            unavailable_time=entity.unavailable_time,
             node_metrics=sorted(
                 entity_node_map[entity.entity_id],
                 key=lambda item: item.node_id,
@@ -817,6 +1002,17 @@ def evaluate_simulation(
                 else "存在 unknown 结束状态，正式结束完好率不可评价。"
             ),
         ),
+        _target_result(
+            "readiness",
+            target_config.readiness_min is not None,
+            overall.readiness,
+            target_config.readiness_min,
+            unevaluable_reason=(
+                None
+                if overall.readiness is not None
+                else "仿真时间窗口无效，战备完好度不可评价。"
+            ),
+        ),
     ]
 
     return EvaluationResult(
@@ -838,6 +1034,7 @@ def evaluate_simulation(
         is_small_sample=is_small_sample,
         overall=overall,
         nodes=node_metrics,
+        tests=test_metrics,
         entities=entity_metrics,
         targets=target_results,
         target_status=_overall_target_status(target_results),

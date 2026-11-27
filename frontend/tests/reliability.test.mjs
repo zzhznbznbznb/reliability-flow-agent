@@ -118,3 +118,97 @@ test("reliabilityNodeFor reads a revision bound to the node", () => {
   assert.equal(reliabilityNodeFor(document, "repair"), null);
   assert.equal(reliabilityNodeFor(null, "inspection"), null);
 });
+
+import { validateReliabilityReadiness } from "../src/reliability.js";
+
+const readinessSpec = {
+  nodes: [
+    { id: "start", type: "start", name: "开始" },
+    {
+      id: "storage",
+      type: "subprocess",
+      name: "贮存",
+      subflow: {
+        nodes: [
+          { id: "store", type: "task", name: "贮存", duration: 30 },
+          { id: "inspect", type: "task", name: "贮存检测", duration: 1 },
+        ],
+      },
+    },
+    { id: "test", type: "task", name: "第一次测试", duration: 1 },
+    { id: "transport", type: "task", name: "运输", duration: 2 },
+    { id: "end", type: "end", name: "结束" },
+  ],
+};
+
+test("readiness reports missing stage lambda and test detection rate", () => {
+  const result = validateReliabilityReadiness(
+    readinessSpec,
+    { nodes: [] },
+    { simulation_unit: "day" },
+  );
+  assert.equal(result.ready, false);
+  assert.match(result.issues.join("；"), /缺少阶段故障率/);
+  assert.match(result.issues.join("；"), /尚未配置为测试模块/);
+});
+
+test("readiness accepts stage lambda and test Ft with matching unit", () => {
+  const result = validateReliabilityReadiness(
+    readinessSpec,
+    {
+      nodes: [
+        {
+          node_id: "storage",
+          module_type: "stage",
+          lambda: 0.01,
+          lambda_unit: "per_day",
+          stage_task_id: "store",
+        },
+        {
+          node_id: "inspect",
+          module_type: "test",
+          detection_rate: 0.8,
+          test_time: 1,
+        },
+        {
+          node_id: "test",
+          module_type: "test",
+          detection_rate: 0.8,
+          test_time: 1,
+        },
+        {
+          node_id: "store",
+          module_type: "activity",
+          lambda: null,
+        },
+        {
+          node_id: "transport",
+          module_type: "activity",
+          lambda: null,
+        },
+      ],
+    },
+    { simulation_unit: "day" },
+  );
+  assert.deepEqual(result, { ready: true, issues: [] });
+});
+
+test("readiness reports lambda unit mismatch", () => {
+  const result = validateReliabilityReadiness(
+    readinessSpec,
+    {
+      nodes: [
+        {
+          node_id: "storage",
+          module_type: "stage",
+          lambda: 0.01,
+          lambda_unit: "per_hour",
+          stage_task_id: "store",
+        },
+      ],
+    },
+    { simulation_unit: "day" },
+  );
+  assert.equal(result.ready, false);
+  assert.match(result.issues.join("；"), /单位与仿真单位不一致/);
+});

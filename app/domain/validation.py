@@ -32,9 +32,22 @@ BUILTIN_CONDITION_FIELDS = {
     "failure_count",
     "repair_count",
     "current_status",
+    "test_detected",
+    "last_test_detected",
+    "unavailable_time",
 }
 NUMERIC_COMPARISONS = {"gt", "gte", "lt", "lte"}
 LOGICAL_OPS = {"and", "or", "not"}
+MAX_NESTING_DEPTH = 8
+
+# Codes that describe machine-executable configuration still missing from a
+# structurally valid process. They do not block previewing/editing the canvas,
+# but they must block simulation until the user supplies real values.
+CONFIG_PENDING_CODES = {
+    "missing_duration",
+    "missing_condition",
+    "attribute_not_written",
+}
 
 
 class ValidationIssue(StrictModel):
@@ -44,10 +57,14 @@ class ValidationIssue(StrictModel):
     node_id: str | None = None
     edge_id: str | None = None
     field: str | None = None
+    scope_path: list[str] | None = None
 
 
 class ValidationResult(StrictModel):
     valid: bool
+    structure_valid: bool = True
+    config_pending: bool = False
+    simulation_ready: bool = True
     issues: list[ValidationIssue] = Field(default_factory=list)
     content_hash: str
 
@@ -58,6 +75,26 @@ class ValidationResult(StrictModel):
     @property
     def warnings(self) -> list[ValidationIssue]:
         return [issue for issue in self.issues if issue.severity == "warning"]
+
+    @classmethod
+    def from_issues(
+        cls,
+        issues: list[ValidationIssue],
+        content_hash: str,
+    ) -> "ValidationResult":
+        errors = [issue for issue in issues if issue.severity == "error"]
+        config_pending = any(
+            issue.code in CONFIG_PENDING_CODES for issue in issues
+        )
+        structure_valid = not errors
+        return cls(
+            valid=structure_valid,
+            structure_valid=structure_valid,
+            config_pending=config_pending,
+            simulation_ready=structure_valid and not config_pending,
+            issues=issues,
+            content_hash=content_hash,
+        )
 
 
 class _Issues:
@@ -358,10 +395,82 @@ def _reachable(start: str, adjacency: dict[str, list[str]]) -> set[str]:
     return seen
 
 
-def validate_process(spec: ProcessSpec) -> ValidationResult:
+def _scope_has_decision(nodes: list[ProcessNode]) -> bool:
+    """Return True when a scope contains a decision, including nested blocks."""
+
+    for node in nodes:
+        if node.type == "decision":
+            return True
+        if node.type == "subprocess" and node.subflow is not None:
+            if _scope_has_decision(node.subflow.nodes):
+                return True
+    return False
+
+
+def _iter_all_nodes(spec: ProcessSpec):
+    for node in spec.nodes:
+        yield node
+        if node.subflow is not None:
+            sub_spec = ProcessSpec(
+                schema_version=spec.schema_version,
+                name=f"{spec.name}/{node.name}",
+                status_catalog=spec.status_catalog,
+                start_node_id=node.subflow.start_node_id,
+                end_node_ids=node.subflow.end_node_ids,
+                nodes=node.subflow.nodes,
+                edges=node.subflow.edges,
+                guards=node.subflow.guards,
+            )
+            yield from _iter_all_nodes(sub_spec)
+
+
+def _iter_all_edges(spec: ProcessSpec):
+    for edge in spec.edges:
+        yield edge
+    for node in spec.nodes:
+        if node.subflow is not None:
+            sub_spec = ProcessSpec(
+                schema_version=spec.schema_version,
+                name=f"{spec.name}/{node.name}",
+                status_catalog=spec.status_catalog,
+                start_node_id=node.subflow.start_node_id,
+                end_node_ids=node.subflow.end_node_ids,
+                nodes=node.subflow.nodes,
+                edges=node.subflow.edges,
+                guards=node.subflow.guards,
+            )
+            yield from _iter_all_edges(sub_spec)
+
+
+def validate_process(
+    spec: ProcessSpec,
+    *,
+    _scope_path: tuple[str, ...] = (),
+    _check_global_ids: bool = True,
+) -> ValidationResult:
     issues = _Issues()
     node_ids = [node.id for node in spec.nodes]
     node_map = {node.id: node for node in spec.nodes}
+
+    if _check_global_ids:
+        all_node_ids = [node.id for node in _iter_all_nodes(spec)]
+        for node_id, count in Counter(all_node_ids).items():
+            if count > 1:
+                issues.error(
+                    "duplicate_global_node_id",
+                    f"嵌套流程中节点 ID 全局重复: {node_id}",
+                    node_id=node_id,
+                    field="nodes",
+                )
+        all_edge_ids = [edge.id for edge in _iter_all_edges(spec)]
+        for edge_id, count in Counter(all_edge_ids).items():
+            if count > 1:
+                issues.error(
+                    "duplicate_global_edge_id",
+                    f"嵌套流程中连接 ID 全局重复: {edge_id}",
+                    edge_id=edge_id,
+                    field="edges",
+                )
 
     duplicates = [node_id for node_id, count in Counter(node_ids).items() if count > 1]
     for node_id in duplicates:
@@ -491,9 +600,12 @@ def validate_process(spec: ProcessSpec) -> ValidationResult:
 
         if edge.kind == "conditional":
             if edge.condition is None:
-                issues.error(
+                issues.warning(
                     "missing_condition",
-                    f"条件连接 {edge.id} 缺少 condition",
+                    (
+                        f"条件连接 {edge.id} 暂未配置机器可执行 condition，"
+                        "已按业务分支语义保留，仿真前需要补齐"
+                    ),
                     edge_id=edge.id,
                     field="condition",
                 )
@@ -524,16 +636,33 @@ def validate_process(spec: ProcessSpec) -> ValidationResult:
                 edge_id=edge.id,
             )
 
+        if edge.subflow_exit is not None:
+            if source is None or source.type != "subprocess":
+                issues.error(
+                    "subflow_exit_on_non_subprocess",
+                    f"连接 {edge.id} 的 subflow_exit 只能用于 subprocess 出口",
+                    edge_id=edge.id,
+                    field="subflow_exit",
+                )
+            elif edge.kind not in {"normal", "failure"}:
+                issues.error(
+                    "invalid_subflow_exit_edge_kind",
+                    f"连接 {edge.id} 映射子流程出口时只能是 normal 或 failure",
+                    edge_id=edge.id,
+                    field="subflow_exit",
+                )
+
     for node_id, edges in outgoing.items():
         counts = Counter(edge.kind for edge in edges)
-        for kind in ("normal", "failure", "default"):
-            if counts[kind] > 1:
-                issues.error(
-                    f"multiple_{kind}_edges",
-                    f"节点 {node_id} 包含多个 {kind} 出口",
-                    node_id=node_id,
-                    field="edges",
-                )
+        if node_map[node_id].type != "subprocess":
+            for kind in ("normal", "failure", "default"):
+                if counts[kind] > 1:
+                    issues.error(
+                        f"multiple_{kind}_edges",
+                        f"节点 {node_id} 包含多个 {kind} 出口",
+                        node_id=node_id,
+                        field="edges",
+                    )
         if any(edge.kind == "default" for edge in edges):
             for edge in edges:
                 if edge.kind in {"normal", "failure"}:
@@ -614,6 +743,17 @@ def validate_process(spec: ProcessSpec) -> ValidationResult:
                 node_id=start_nodes[0].id,
                 edge_id=edge.id,
             )
+    components = _strongly_connected_components(list(node_map), adjacency)
+    cycle_nodes: set[str] = set()
+    for component in components:
+        component_set = set(component)
+        is_cycle = len(component) > 1 or any(
+            edge.source == edge.target and edge.source in component_set
+            for edge in spec.edges
+        )
+        if is_cycle:
+            cycle_nodes.update(component)
+
     for end_node in end_nodes:
         if outgoing.get(end_node.id):
             for edge in outgoing[end_node.id]:
@@ -624,11 +764,21 @@ def validate_process(spec: ProcessSpec) -> ValidationResult:
                     edge_id=edge.id,
                 )
         if not incoming.get(end_node.id):
-            issues.error(
-                "end_without_incoming_edge",
-                f"end 节点 {end_node.id} 没有入边",
-                node_id=end_node.id,
-            )
+            if cycle_nodes:
+                issues.warning(
+                    "unreachable_end",
+                    (
+                        f"end 节点 {end_node.id} 没有入边；当前流程包含持续循环，"
+                        "该 end 仅作为结构占位，运行时会由仿真终止时间结束"
+                    ),
+                    node_id=end_node.id,
+                )
+            else:
+                issues.error(
+                    "end_without_incoming_edge",
+                    f"end 节点 {end_node.id} 没有入边",
+                    node_id=end_node.id,
+                )
 
     written_attributes: set[str] = set()
     node_written_attributes: dict[str, set[str]] = {}
@@ -642,9 +792,12 @@ def validate_process(spec: ProcessSpec) -> ValidationResult:
                 field="duration",
             )
         if node.type == "task" and node.duration is None:
-            issues.error(
+            issues.warning(
                 "missing_duration",
-                f"task 节点 {node.id} 缺少 duration",
+                (
+                    f"task 节点 {node.id} 尚未配置 duration，"
+                    "结构允许保留，仿真前必须补齐"
+                ),
                 node_id=node.id,
                 field="duration",
             )
@@ -688,11 +841,128 @@ def validate_process(spec: ProcessSpec) -> ValidationResult:
         node_written_attributes[node.id] = node_attributes
         written_attributes.update(node_attributes)
 
+        if node.type == "subprocess":
+            if spec.schema_version == "process-ir/1.0":
+                issues.error(
+                    "nested_requires_schema_1_1",
+                    f"subprocess 节点 {node.id} 需要使用 process-ir/1.1",
+                    node_id=node.id,
+                    field="schema_version",
+                )
+            if len(_scope_path) >= MAX_NESTING_DEPTH:
+                issues.error(
+                    "max_nesting_depth_exceeded",
+                    f"嵌套层级超过上限 {MAX_NESTING_DEPTH}",
+                    node_id=node.id,
+                )
+            elif node.subflow is None:
+                issues.error(
+                    "missing_subflow",
+                    f"subprocess 节点 {node.id} 缺少 subflow",
+                    node_id=node.id,
+                    field="subflow",
+                )
+            else:
+                sub_spec = ProcessSpec(
+                    schema_version=spec.schema_version,
+                    name=f"{spec.name}/{node.name}",
+                    status_catalog=spec.status_catalog,
+                    start_node_id=node.subflow.start_node_id,
+                    end_node_ids=node.subflow.end_node_ids,
+                    nodes=node.subflow.nodes,
+                    edges=node.subflow.edges,
+                    guards=node.subflow.guards,
+                )
+                sub_result = validate_process(
+                    sub_spec,
+                    _scope_path=_scope_path + (node.id,),
+                    _check_global_ids=False,
+                )
+                for sub_issue in sub_result.issues:
+                    if sub_issue.scope_path is None:
+                        sub_issue.scope_path = list(
+                            _scope_path + (node.id,)
+                        )
+                    issues.items.append(sub_issue)
+
+                subflow = node.subflow
+                exit_ids = set(subflow.end_node_ids)
+                mapped: dict[str, list[ProcessEdge]] = {}
+                for edge in outgoing.get(node.id, []):
+                    if edge.subflow_exit is None:
+                        continue
+                    if edge.subflow_exit not in exit_ids:
+                        issues.error(
+                            "unknown_subflow_exit",
+                            (
+                                f"连接 {edge.id} 引用了子流程 {node.id} 中"
+                                f"不存在的出口 {edge.subflow_exit}"
+                            ),
+                            node_id=node.id,
+                            edge_id=edge.id,
+                            field="subflow_exit",
+                        )
+                        continue
+                    mapped.setdefault(edge.subflow_exit, []).append(edge)
+                for end_id, mapped_edges in mapped.items():
+                    if len(mapped_edges) > 1:
+                        issues.error(
+                            "duplicate_subflow_exit_mapping",
+                            (
+                                f"子流程 {node.id} 的出口 {end_id} "
+                                "被多个父连接重复映射"
+                            ),
+                            node_id=node.id,
+                            field="subflow_exit",
+                        )
+                if len(exit_ids) > 1:
+                    for end_id in exit_ids:
+                        if end_id not in mapped:
+                            issues.error(
+                                "subflow_exit_not_mapped",
+                                (
+                                    f"子流程 {node.id} 的出口 {end_id} "
+                                    "没有对应的父流程连接"
+                                ),
+                                node_id=node.id,
+                                field="subflow_exit",
+                            )
+                parent_edges = outgoing.get(node.id, [])
+                for edge in parent_edges:
+                    if edge.kind not in {"normal", "failure"}:
+                        issues.error(
+                            "subprocess_invalid_exit_kind",
+                            (
+                                f"子流程 {node.id} 的父连接 {edge.id} "
+                                "只能是 normal 或 failure"
+                            ),
+                            node_id=node.id,
+                            edge_id=edge.id,
+                            field="kind",
+                        )
+                if len(parent_edges) > 1:
+                    for edge in parent_edges:
+                        if edge.subflow_exit is None:
+                            issues.error(
+                                "subflow_exit_required",
+                                (
+                                    f"子流程 {node.id} 有多个父出口时，"
+                                    f"连接 {edge.id} 必须指定 subflow_exit"
+                                ),
+                                node_id=node.id,
+                                edge_id=edge.id,
+                                field="subflow_exit",
+                            )
+
     for attribute, edge_id in sorted(attribute_refs):
         if attribute not in written_attributes:
             issues.warning(
                 "attribute_not_written",
-                f"条件引用的属性 {attribute} 没有被任何 outcomes 或效果写入",
+                (
+                    f"条件引用的属性 {attribute} 在当前作用域内没有被任何 "
+                    "outcomes 或效果写入，仿真前需要补齐；"
+                    "当前先保留业务分支结构"
+                ),
                 edge_id=edge_id,
                 field=f"attributes.{attribute}",
             )
@@ -721,21 +991,52 @@ def validate_process(spec: ProcessSpec) -> ValidationResult:
                 if previous not in can_reach_end:
                     can_reach_end.add(previous)
                     queue.append(previous)
+        can_reach_cycle = set(cycle_nodes)
+        queue = list(cycle_nodes)
+        while queue:
+            current = queue.pop()
+            for previous in reverse.get(current, []):
+                if previous not in can_reach_cycle:
+                    can_reach_cycle.add(previous)
+                    queue.append(previous)
+        start_continuous = bool(
+            start_nodes
+            and spec.start_node_id not in can_reach_end
+            and spec.start_node_id in can_reach_cycle
+        )
         for node in spec.nodes:
             if node.id not in can_reach_end:
-                issues.error(
-                    "cannot_reach_end",
-                    f"节点 {node.id} 无法到达任何 end 节点",
-                    node_id=node.id,
-                )
-        if start_nodes and spec.start_node_id not in can_reach_end:
+                if node.id in can_reach_cycle:
+                    issues.warning(
+                        "continuous_loop",
+                        (
+                            f"节点 {node.id} 处于持续循环或其前置路径中，"
+                            "按设计不会到达 end，视为合法的持续流程"
+                        ),
+                        node_id=node.id,
+                    )
+                else:
+                    issues.error(
+                        "cannot_reach_end",
+                        f"节点 {node.id} 无法到达任何 end 节点",
+                        node_id=node.id,
+                    )
+        if start_continuous:
+            issues.warning(
+                "continuous_process",
+                (
+                    "从 start 节点进入持续循环，按设计不会到达 end；"
+                    "运行时会由仿真终止时间结束"
+                ),
+                node_id=spec.start_node_id,
+            )
+        elif start_nodes and spec.start_node_id not in can_reach_end:
             issues.error(
                 "no_path_to_end",
                 "从 start 节点无法到达任何 end 节点",
                 node_id=spec.start_node_id,
             )
 
-    components = _strongly_connected_components(list(node_map), adjacency)
     for component in components:
         component_set = set(component)
         is_cycle = len(component) > 1 or any(
@@ -750,18 +1051,40 @@ def validate_process(spec: ProcessSpec) -> ValidationResult:
             for edge in spec.edges
             if edge.source in component_set and edge.target not in component_set
         ]
-        if not exit_edges:
-            issues.error(
-                "cycle_without_exit",
-                f"循环 {members} 没有退出连接，可能无限执行",
-                field="edges",
+        has_decision = any(
+            node_map[node_id].type == "decision"
+            or (
+                node_map[node_id].type == "subprocess"
+                and node_map[node_id].subflow is not None
+                and _scope_has_decision(node_map[node_id].subflow.nodes)
             )
-        if not any(node_map[node_id].type == "decision" for node_id in component):
+            for node_id in component
+        )
+        has_subprocess = any(
+            node_map[node_id].type == "subprocess" for node_id in component
+        )
+        if not has_decision:
             issues.error(
                 "cycle_without_decision",
                 f"循环 {members} 缺少 decision 节点，无法表达退出条件",
                 field="nodes",
             )
+        if not exit_edges:
+            if has_decision and has_subprocess:
+                issues.warning(
+                    "continuous_loop",
+                    (
+                        f"循环 {members} 通过子流程内部判断持续运行，"
+                        "没有外层退出连接，视为合法的持续循环"
+                    ),
+                    field="edges",
+                )
+            else:
+                issues.error(
+                    "cycle_without_exit",
+                    f"循环 {members} 没有退出连接，可能无限执行",
+                    field="edges",
+                )
         component_attributes: set[str] = set()
         for node_id in component:
             component_attributes.update(node_written_attributes.get(node_id, set()))
@@ -786,10 +1109,13 @@ def validate_process(spec: ProcessSpec) -> ValidationResult:
                 field="outcomes",
             )
 
-    return ValidationResult(
-        valid=not any(issue.severity == "error" for issue in issues.items),
-        issues=issues.items,
-        content_hash=compute_content_hash(spec),
+    for issue in issues.items:
+        if issue.scope_path is None:
+            issue.scope_path = list(_scope_path)
+
+    return ValidationResult.from_issues(
+        issues.items,
+        compute_content_hash(spec),
     )
 
 

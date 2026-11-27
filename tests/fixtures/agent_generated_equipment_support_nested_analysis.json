@@ -1,0 +1,535 @@
+{
+  "summary": "装备保障流程：根流程开始 -> 贮存子流程(贮存开始->贮存30天->贮存检测1天->故障判断，故障则贮存维修2天返回贮存30天，否则结束贮存) -> 运输2天 -> 阵地/测试场1天 -> 第一次测试1天 -> 故障判断(故障则维修2天返回第一次测试，否则短途运输1天->装舰1天->第二次测试1天) -> 第二次测试故障判断(故障则出值班1天->下舰1天->岸上维修3天->结束，否则进入值班子流程) -> 值班子流程(值班开始->值班5天->值班检测1天->故障判断，故障则值班维修2天返回值班5天，否则结束值班) -> 根流程结束。所有检测/测试故障概率未给出，标记为待配置。",
+  "steps": [
+    {
+      "id": "root_start",
+      "name": "装备保障流程开始",
+      "kind": "start",
+      "parent_id": null,
+      "description": "",
+      "duration": null
+    },
+    {
+      "id": "storage",
+      "name": "贮存",
+      "kind": "subprocess",
+      "parent_id": null,
+      "description": "嵌套子流程块，内部为贮存30天、贮存检测与贮存维修循环",
+      "duration": null
+    },
+    {
+      "id": "sto_start",
+      "name": "贮存开始",
+      "kind": "start",
+      "parent_id": "storage",
+      "description": "",
+      "duration": null
+    },
+    {
+      "id": "sto_30d",
+      "name": "贮存30天",
+      "kind": "task",
+      "parent_id": "storage",
+      "description": "",
+      "duration": 30.0
+    },
+    {
+      "id": "sto_check",
+      "name": "贮存检测",
+      "kind": "task",
+      "parent_id": "storage",
+      "description": "",
+      "duration": 1.0
+    },
+    {
+      "id": "sto_fault",
+      "name": "贮存检测是否故障",
+      "kind": "decision",
+      "parent_id": "storage",
+      "description": "",
+      "duration": null
+    },
+    {
+      "id": "sto_repair",
+      "name": "贮存维修",
+      "kind": "task",
+      "parent_id": "storage",
+      "description": "",
+      "duration": 2.0
+    },
+    {
+      "id": "sto_end",
+      "name": "贮存正常结束",
+      "kind": "end",
+      "parent_id": "storage",
+      "description": "",
+      "duration": null
+    },
+    {
+      "id": "transport",
+      "name": "运输",
+      "kind": "task",
+      "parent_id": null,
+      "description": "",
+      "duration": 2.0
+    },
+    {
+      "id": "staging",
+      "name": "阵地/测试场",
+      "kind": "task",
+      "parent_id": null,
+      "description": "",
+      "duration": 1.0
+    },
+    {
+      "id": "test1",
+      "name": "第一次测试",
+      "kind": "task",
+      "parent_id": null,
+      "description": "",
+      "duration": 1.0
+    },
+    {
+      "id": "test1_fault",
+      "name": "第一次测试是否故障",
+      "kind": "decision",
+      "parent_id": null,
+      "description": "",
+      "duration": null
+    },
+    {
+      "id": "repair1",
+      "name": "第一次测试故障维修",
+      "kind": "task",
+      "parent_id": null,
+      "description": "",
+      "duration": 2.0
+    },
+    {
+      "id": "short_haul",
+      "name": "短途运输",
+      "kind": "task",
+      "parent_id": null,
+      "description": "",
+      "duration": 1.0
+    },
+    {
+      "id": "ship_load",
+      "name": "装舰",
+      "kind": "task",
+      "parent_id": null,
+      "description": "",
+      "duration": 1.0
+    },
+    {
+      "id": "test2",
+      "name": "第二次测试",
+      "kind": "task",
+      "parent_id": null,
+      "description": "",
+      "duration": 1.0
+    },
+    {
+      "id": "test2_fault",
+      "name": "第二次测试是否故障",
+      "kind": "decision",
+      "parent_id": null,
+      "description": "",
+      "duration": null
+    },
+    {
+      "id": "off_duty",
+      "name": "出值班",
+      "kind": "task",
+      "parent_id": null,
+      "description": "",
+      "duration": 1.0
+    },
+    {
+      "id": "off_ship",
+      "name": "下舰",
+      "kind": "task",
+      "parent_id": null,
+      "description": "",
+      "duration": 1.0
+    },
+    {
+      "id": "shore_repair",
+      "name": "岸上维修",
+      "kind": "task",
+      "parent_id": null,
+      "description": "",
+      "duration": 3.0
+    },
+    {
+      "id": "shore_end",
+      "name": "岸上维修结束",
+      "kind": "end",
+      "parent_id": null,
+      "description": "",
+      "duration": null
+    },
+    {
+      "id": "duty",
+      "name": "值班",
+      "kind": "subprocess",
+      "parent_id": null,
+      "description": "嵌套子流程块，内部为值班5天、值班检测与值班维修循环",
+      "duration": null
+    },
+    {
+      "id": "duty_start",
+      "name": "值班开始",
+      "kind": "start",
+      "parent_id": "duty",
+      "description": "",
+      "duration": null
+    },
+    {
+      "id": "duty_5d",
+      "name": "值班5天",
+      "kind": "task",
+      "parent_id": "duty",
+      "description": "",
+      "duration": 5.0
+    },
+    {
+      "id": "duty_check",
+      "name": "值班检测",
+      "kind": "task",
+      "parent_id": "duty",
+      "description": "",
+      "duration": 1.0
+    },
+    {
+      "id": "duty_fault",
+      "name": "值班检测是否故障",
+      "kind": "decision",
+      "parent_id": "duty",
+      "description": "",
+      "duration": null
+    },
+    {
+      "id": "duty_repair",
+      "name": "值班维修",
+      "kind": "task",
+      "parent_id": "duty",
+      "description": "",
+      "duration": 2.0
+    },
+    {
+      "id": "duty_end",
+      "name": "值班正常结束",
+      "kind": "end",
+      "parent_id": "duty",
+      "description": "",
+      "duration": null
+    },
+    {
+      "id": "root_end",
+      "name": "装备保障流程结束",
+      "kind": "end",
+      "parent_id": null,
+      "description": "",
+      "duration": null
+    }
+  ],
+  "branches": [
+    {
+      "id": "e_root_start_storage",
+      "from_step": "root_start",
+      "to_step": "storage",
+      "kind": "normal",
+      "condition": null,
+      "loop": false,
+      "exit_step_id": null
+    },
+    {
+      "id": "e_sto_start_30d",
+      "from_step": "sto_start",
+      "to_step": "sto_30d",
+      "kind": "normal",
+      "condition": null,
+      "loop": false,
+      "exit_step_id": null
+    },
+    {
+      "id": "e_sto_30d_check",
+      "from_step": "sto_30d",
+      "to_step": "sto_check",
+      "kind": "normal",
+      "condition": null,
+      "loop": false,
+      "exit_step_id": null
+    },
+    {
+      "id": "e_sto_check_fault",
+      "from_step": "sto_check",
+      "to_step": "sto_fault",
+      "kind": "normal",
+      "condition": null,
+      "loop": false,
+      "exit_step_id": null
+    },
+    {
+      "id": "e_sto_fault_repair",
+      "from_step": "sto_fault",
+      "to_step": "sto_repair",
+      "kind": "conditional",
+      "condition": "贮存检测故障",
+      "loop": false,
+      "exit_step_id": null
+    },
+    {
+      "id": "e_sto_fault_ok",
+      "from_step": "sto_fault",
+      "to_step": "sto_end",
+      "kind": "default",
+      "condition": null,
+      "loop": false,
+      "exit_step_id": null
+    },
+    {
+      "id": "e_sto_repair_loop",
+      "from_step": "sto_repair",
+      "to_step": "sto_30d",
+      "kind": "normal",
+      "condition": null,
+      "loop": true,
+      "exit_step_id": null
+    },
+    {
+      "id": "e_storage_transport",
+      "from_step": "storage",
+      "to_step": "transport",
+      "kind": "normal",
+      "condition": null,
+      "loop": false,
+      "exit_step_id": "sto_end"
+    },
+    {
+      "id": "e_transport_staging",
+      "from_step": "transport",
+      "to_step": "staging",
+      "kind": "normal",
+      "condition": null,
+      "loop": false,
+      "exit_step_id": null
+    },
+    {
+      "id": "e_staging_test1",
+      "from_step": "staging",
+      "to_step": "test1",
+      "kind": "normal",
+      "condition": null,
+      "loop": false,
+      "exit_step_id": null
+    },
+    {
+      "id": "e_test1_fault",
+      "from_step": "test1",
+      "to_step": "test1_fault",
+      "kind": "normal",
+      "condition": null,
+      "loop": false,
+      "exit_step_id": null
+    },
+    {
+      "id": "e_test1_fault_yes",
+      "from_step": "test1_fault",
+      "to_step": "repair1",
+      "kind": "conditional",
+      "condition": "第一次测试故障",
+      "loop": false,
+      "exit_step_id": null
+    },
+    {
+      "id": "e_test1_fault_no",
+      "from_step": "test1_fault",
+      "to_step": "short_haul",
+      "kind": "default",
+      "condition": null,
+      "loop": false,
+      "exit_step_id": null
+    },
+    {
+      "id": "e_repair1_retest",
+      "from_step": "repair1",
+      "to_step": "test1",
+      "kind": "normal",
+      "condition": null,
+      "loop": true,
+      "exit_step_id": null
+    },
+    {
+      "id": "e_short_haul_ship_load",
+      "from_step": "short_haul",
+      "to_step": "ship_load",
+      "kind": "normal",
+      "condition": null,
+      "loop": false,
+      "exit_step_id": null
+    },
+    {
+      "id": "e_ship_load_test2",
+      "from_step": "ship_load",
+      "to_step": "test2",
+      "kind": "normal",
+      "condition": null,
+      "loop": false,
+      "exit_step_id": null
+    },
+    {
+      "id": "e_test2_fault",
+      "from_step": "test2",
+      "to_step": "test2_fault",
+      "kind": "normal",
+      "condition": null,
+      "loop": false,
+      "exit_step_id": null
+    },
+    {
+      "id": "e_test2_fault_yes",
+      "from_step": "test2_fault",
+      "to_step": "off_duty",
+      "kind": "conditional",
+      "condition": "第二次测试故障",
+      "loop": false,
+      "exit_step_id": null
+    },
+    {
+      "id": "e_test2_fault_no",
+      "from_step": "test2_fault",
+      "to_step": "duty",
+      "kind": "default",
+      "condition": null,
+      "loop": false,
+      "exit_step_id": null
+    },
+    {
+      "id": "e_off_duty_off_ship",
+      "from_step": "off_duty",
+      "to_step": "off_ship",
+      "kind": "normal",
+      "condition": null,
+      "loop": false,
+      "exit_step_id": null
+    },
+    {
+      "id": "e_off_ship_shore_repair",
+      "from_step": "off_ship",
+      "to_step": "shore_repair",
+      "kind": "normal",
+      "condition": null,
+      "loop": false,
+      "exit_step_id": null
+    },
+    {
+      "id": "e_shore_repair_end",
+      "from_step": "shore_repair",
+      "to_step": "shore_end",
+      "kind": "normal",
+      "condition": null,
+      "loop": false,
+      "exit_step_id": null
+    },
+    {
+      "id": "e_duty_start_5d",
+      "from_step": "duty_start",
+      "to_step": "duty_5d",
+      "kind": "normal",
+      "condition": null,
+      "loop": false,
+      "exit_step_id": null
+    },
+    {
+      "id": "e_duty_5d_check",
+      "from_step": "duty_5d",
+      "to_step": "duty_check",
+      "kind": "normal",
+      "condition": null,
+      "loop": false,
+      "exit_step_id": null
+    },
+    {
+      "id": "e_duty_check_fault",
+      "from_step": "duty_check",
+      "to_step": "duty_fault",
+      "kind": "normal",
+      "condition": null,
+      "loop": false,
+      "exit_step_id": null
+    },
+    {
+      "id": "e_duty_fault_repair",
+      "from_step": "duty_fault",
+      "to_step": "duty_repair",
+      "kind": "conditional",
+      "condition": "值班检测故障",
+      "loop": false,
+      "exit_step_id": null
+    },
+    {
+      "id": "e_duty_fault_ok",
+      "from_step": "duty_fault",
+      "to_step": "duty_end",
+      "kind": "default",
+      "condition": null,
+      "loop": false,
+      "exit_step_id": null
+    },
+    {
+      "id": "e_duty_repair_loop",
+      "from_step": "duty_repair",
+      "to_step": "duty_5d",
+      "kind": "normal",
+      "condition": null,
+      "loop": true,
+      "exit_step_id": null
+    },
+    {
+      "id": "e_duty_root_end",
+      "from_step": "duty",
+      "to_step": "root_end",
+      "kind": "normal",
+      "condition": null,
+      "loop": false,
+      "exit_step_id": "duty_end"
+    }
+  ],
+  "ambiguities": [
+    {
+      "id": "amb_sto_check_prob",
+      "question": "贮存检测的故障概率未给出，需在可靠性配置中作为待配置参数（本流程 IR 不假设具体数值）。",
+      "blocks_generation": false,
+      "options": []
+    },
+    {
+      "id": "amb_test1_prob",
+      "question": "第一次测试的故障概率未给出，需在可靠性配置中作为待配置参数（本流程 IR 不假设具体数值）。",
+      "blocks_generation": false,
+      "options": []
+    },
+    {
+      "id": "amb_test2_prob",
+      "question": "第二次测试的故障概率未给出，需在可靠性配置中作为待配置参数（本流程 IR 不假设具体数值）。",
+      "blocks_generation": false,
+      "options": []
+    },
+    {
+      "id": "amb_duty_check_prob",
+      "question": "值班检测的故障概率未给出，需在可靠性配置中作为待配置参数（本流程 IR 不假设具体数值）。",
+      "blocks_generation": false,
+      "options": []
+    },
+    {
+      "id": "amb_loop_target",
+      "question": "“贮存维修后返回贮存”“值班维修后返回值班”的循环目标节点按该阶段主活动（贮存30天 / 值班5天）建模，是否正确？",
+      "blocks_generation": false,
+      "options": [
+        "返回该阶段主活动节点（已采用：贮存维修→贮存30天，值班维修→值班5天）",
+        "返回子流程开始节点（但开始节点不允许入边）"
+      ]
+    }
+  ]
+}

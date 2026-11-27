@@ -256,6 +256,141 @@ export default function registerProjectCapabilities(pi: ExtensionAPI) {
   });
 
   pi.registerTool({
+    name: "analyze_requirements",
+    label: "Analyze Requirements",
+    description:
+      "Submit a complete structured requirement graph extracted from a long natural-language request. The graph must already be a Process IR blueprint: timed activities are tasks, judgement points are separate duration=null decisions, and decisions have conditional plus default exits. The backend validates the structure and rejects fabricated references.",
+    promptSnippet:
+      "For long multi-step requests, call analyze_requirements first and then generate Process IR from the exact step and branch ids.",
+    promptGuidelines: [
+      "List every explicitly named business activity, decision, start and end as a step.",
+      "A timed activity is a task. A judgement point is a separate decision with duration null; never mark a timed detection or test as a decision.",
+      "A named business phase with internal steps is a subprocess step. Its internal steps use parent_id = the subprocess step id.",
+      "A parent branch out of a subprocess uses exit_step_id to identify the child end step that returns to the parent.",
+      "Use the exact Process IR node id you will later use for each step, including structural decision nodes and subprocess block ids.",
+      "List sequential, conditional, default, failure and loop connections as branches.",
+      "Decision exits may only be conditional/default and need at least one of each. Task conditional exits need a default.",
+      "Put every missing duration, unclear predicate or unclear target into ambiguities.",
+      "If analyze_requirements returns valid=false, fix the analysis and resubmit before validating a Process IR.",
+      "If an ambiguity blocks generation, ask the user and do not produce a Process IR yet.",
+    ],
+    parameters: Type.Object(
+      {
+        analysis: Type.Object(
+          {
+            summary: Type.String({
+              description: "Short structured summary of the requirement.",
+            }),
+            steps: Type.Array(
+              Type.Object(
+                {
+                  id: Type.String({
+                    description:
+                      "Exact Process IR node id matching ^[A-Za-z][A-Za-z0-9_-]{0,63}$.",
+                  }),
+                  name: Type.String({ description: "Business step name." }),
+                  kind: Type.Union([
+                    Type.Literal("start"),
+                    Type.Literal("task"),
+                    Type.Literal("decision"),
+                    Type.Literal("end"),
+                    Type.Literal("subprocess"),
+                  ]),
+                  parent_id: Type.Optional(
+                    Type.String({
+                      description:
+                        "Parent subprocess step id; null/omitted for root scope.",
+                    }),
+                  ),
+                  description: Type.Optional(Type.String()),
+                  duration: Type.Optional(Type.Number({ minimum: 0 })),
+                },
+                { additionalProperties: false },
+              ),
+            ),
+            branches: Type.Array(
+              Type.Object(
+                {
+                  id: Type.String(),
+                  from_step: Type.String(),
+                  to_step: Type.String(),
+                  kind: Type.Optional(
+                    Type.Union([
+                      Type.Literal("normal"),
+                      Type.Literal("conditional"),
+                      Type.Literal("default"),
+                      Type.Literal("failure"),
+                    ]),
+                  ),
+                  condition: Type.Optional(Type.String()),
+                  loop: Type.Optional(Type.Boolean()),
+                  exit_step_id: Type.Optional(
+                    Type.String({
+                      description:
+                        "For a parent branch from a subprocess step, the child end step id used as its exit.",
+                    }),
+                  ),
+                },
+                { additionalProperties: false },
+              ),
+            ),
+            ambiguities: Type.Array(
+              Type.Object(
+                {
+                  id: Type.String(),
+                  question: Type.String(),
+                  blocks_generation: Type.Optional(Type.Boolean()),
+                  options: Type.Optional(Type.Array(Type.String())),
+                },
+                { additionalProperties: false },
+              ),
+            ),
+          },
+          { additionalProperties: false },
+        ),
+      },
+      { additionalProperties: false },
+    ),
+    async execute(_toolCallId, params, signal) {
+      const url = `${apiBaseUrl()}/api/agent/requirements/analyze`;
+      try {
+        const { response, payload } = await requestJson(
+          url,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(params.analysis),
+          },
+          signal,
+        );
+        if (!response.ok) {
+          const kind = response.status === 422 ? "schema_error" : "http_error";
+          return toolError({
+            error: {
+              kind,
+              http_status: response.status,
+              status_text: response.statusText,
+              url,
+            },
+            response: payload,
+          });
+        }
+        return {
+          content: [{ type: "text", text: JSON.stringify(payload, null, 2) }],
+          details: payload,
+        };
+      } catch (error) {
+        if (error instanceof ApiRequestFailure) {
+          return toolError({
+            error: { kind: error.kind, message: error.message, url },
+          });
+        }
+        throw error;
+      }
+    },
+  });
+
+  pi.registerTool({
     name: "validate_process_model",
     label: "Validate Process IR",
     description:

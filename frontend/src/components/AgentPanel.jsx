@@ -16,6 +16,7 @@ const TOOL_LABELS = {
   list_process_models: "列出已保存流程",
   get_process_model: "读取已保存流程",
   get_reliability_config: "读取可靠性配置",
+  analyze_requirements: "分析长文本需求",
   validate_process_model: "校验 Process IR",
   validate_reliability_model: "校验 Reliability IR",
   simulation_result: "仿真评估结果已记录",
@@ -42,19 +43,114 @@ function validationIssues(validation) {
   return Array.isArray(validation?.issues) ? validation.issues : [];
 }
 
+function isStructureValid(validation) {
+  if (!validation) return false;
+  if (typeof validation.structure_valid === "boolean") {
+    return validation.structure_valid;
+  }
+  return validation.valid === true;
+}
+
 function ValidationLine({ validation }) {
   if (!validation) {
     return <span className="agent-proposal-muted">尚未收到后端校验结果</span>;
   }
   const issues = validationIssues(validation);
   const errors = issues.filter((issue) => issue.severity === "error");
+  const warnings = issues.filter((issue) => issue.severity === "warning");
+  const structureValid = isStructureValid(validation);
+  const label = structureValid
+    ? validation.config_pending
+      ? `结构校验通过，仿真参数待配置（${warnings.length} 项提示）`
+      : "后端校验通过"
+    : `结构校验未通过（${errors.length} 个错误）`;
   return (
-    <span className={`agent-validation ${validation.valid ? "good" : "bad"}`}>
-      {validation.valid ? "后端校验通过" : `后端校验未通过（${errors.length} 个错误）`}
+    <span className={`agent-validation ${structureValid ? "good" : "bad"}`}>
+      {label}
       {validation.content_hash ? (
         <code>{String(validation.content_hash).replace(/^sha256:/, "").slice(0, 12)}</code>
       ) : null}
     </span>
+  );
+}
+
+function RequirementAnalysisMessage({ message }) {
+  const analysis = message.analysis || {};
+  const ambiguities = Array.isArray(analysis.ambiguities)
+    ? analysis.ambiguities
+    : [];
+  const issues = validationIssues(message.validation);
+  const valid = message.valid ?? message.validation?.valid;
+  return (
+    <div className="agent-analysis">
+      <div className="agent-proposal-head">
+        <div>
+          <span className="eyebrow">REQUIREMENT ANALYSIS</span>
+          <strong>长文本需求结构化结果</strong>
+        </div>
+        <span className={`pill ${valid ? "good" : "bad"}`}>
+          {valid ? "分析可用于建模" : "分析需修正"}
+        </span>
+      </div>
+      {analysis.summary && <p>{analysis.summary}</p>}
+      <p className="agent-proposal-meta">
+        {message.stepCount} 步骤 · {message.branchCount} 关系 · 待澄清{" "}
+        {message.ambiguityCount} 项（阻塞 {message.blockingCount} 项）
+      </p>
+      <ValidationLine validation={message.validation} />
+      {issues.length > 0 && (
+        <ul className="agent-issue-list">
+          {issues.slice(0, 8).map((issue, index) => (
+            <li key={`${issue.code}-${index}`} className={issue.severity}>
+              <code>{issue.code}</code> {issue.message}
+            </li>
+          ))}
+        </ul>
+      )}
+      {ambiguities.length > 0 && (
+        <ul className="agent-issue-list">
+          {ambiguities.map((item) => (
+            <li
+              key={item.id}
+              className={item.blocks_generation ? "error" : "warning"}
+            >
+              <code>{item.id}</code> {item.question}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+function ClarificationMessage({ message }) {
+  const questions = Array.isArray(message.questions) ? message.questions : [];
+  return (
+    <div className="agent-clarification">
+      <div className="agent-proposal-head">
+        <div>
+          <span className="eyebrow">NEEDS CLARIFICATION</span>
+          <strong>需要你确认后继续</strong>
+        </div>
+        <span className="pill warn">{questions.length} 个问题</span>
+      </div>
+      {message.text && <p>{message.text}</p>}
+      <ol className="agent-question-list">
+        {questions.map((item) => (
+          <li key={item.id || item.question}>
+            <span>{item.question}</span>
+            {Array.isArray(item.options) && item.options.length > 0 && (
+              <span className="agent-question-options">
+                {item.options.join(" / ")}
+              </span>
+            )}
+          </li>
+        ))}
+      </ol>
+      <p className="agent-proposal-hint">
+        直接在下方输入回答；Agent 不会在澄清前编造关系或参数。
+      </p>
+    </div>
   );
 }
 
@@ -63,7 +159,9 @@ function ProcessProposal({ message, onApply }) {
   const nodes = Array.isArray(spec.nodes) ? spec.nodes : [];
   const edges = Array.isArray(spec.edges) ? spec.edges : [];
   const issues = validationIssues(message.validation);
-  const canApply = message.validation?.valid === true && !message.applied;
+  const coverage = message.coverage || message.validation?.coverage;
+  const canApply = isStructureValid(message.validation) && !message.applied;
+  const structureValid = isStructureValid(message.validation);
   return (
     <div className="agent-proposal">
       <div className="agent-proposal-head">
@@ -71,12 +169,19 @@ function ProcessProposal({ message, onApply }) {
           <span className="eyebrow">PROCESS IR PROPOSAL</span>
           <strong>{spec.name || "未命名流程"}</strong>
         </div>
-        <span className={`pill ${message.validation?.valid ? "good" : "bad"}`}>
-          {message.validation?.valid ? "可应用" : "需修正"}
+        <span className={`pill ${structureValid ? "good" : "bad"}`}>
+          {structureValid
+            ? message.validation?.config_pending
+              ? "结构合法·待配置"
+              : "可应用"
+            : "需修正"}
         </span>
       </div>
       <p className="agent-proposal-meta">
         {nodes.length} 个节点 · {edges.length} 条连接
+        {coverage
+          ? ` · 需求覆盖 ${coverage.covered_step_count}/${coverage.step_count} 步骤、${coverage.covered_branch_count}/${coverage.branch_count} 关系`
+          : ""}
       </p>
       <ValidationLine validation={message.validation} />
       {issues.length > 0 && (
@@ -267,6 +372,20 @@ export default function AgentPanel({
               <div key={key} className="chat-message error">
                 <div className="chat-role">错误</div>
                 <div className="chat-bubble">{message.text}</div>
+              </div>
+            );
+          }
+          if (message.role === "analysis") {
+            return (
+              <div key={key} className="chat-message analysis">
+                <RequirementAnalysisMessage message={message} />
+              </div>
+            );
+          }
+          if (message.role === "clarification") {
+            return (
+              <div key={key} className="chat-message clarification">
+                <ClarificationMessage message={message} />
               </div>
             );
           }

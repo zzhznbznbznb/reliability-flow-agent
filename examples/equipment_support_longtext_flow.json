@@ -1,0 +1,491 @@
+{
+  "description": "本案例按用户纠正建模：第一次测试异常→维修→第一次测试；第二次测试异常→出值班→下舰→岸上维修→结束。任务持续时间均来自需求原文。检测/测试 outcome 权重 0.5/0.5 为占位值，待配置；贮存/值班检测是否包含在原持续时间内、值班合格后是否重新执行完整 5 天、维修后是否重走第一次测试之后的全部流程仍待确认。",
+  "edges": [
+    {
+      "from": "n_start",
+      "id": "e_start_storage",
+      "kind": "normal",
+      "label": "装备入库贮存",
+      "to": "n_storage"
+    },
+    {
+      "from": "n_storage",
+      "id": "e_storage_inspect",
+      "kind": "normal",
+      "label": "贮存期满执行贮存内部检测",
+      "to": "n_storage_inspect"
+    },
+    {
+      "from": "n_storage_inspect",
+      "id": "e_inspect_dec",
+      "kind": "normal",
+      "label": "检测完成待判定",
+      "to": "n_dec_storage_inspect"
+    },
+    {
+      "condition": {
+        "field": "attributes.storage_inspection_result",
+        "op": "eq",
+        "value": "pass"
+      },
+      "from": "n_dec_storage_inspect",
+      "id": "e_inspect_pass",
+      "kind": "conditional",
+      "label": "合格则进入运输",
+      "priority": 10,
+      "to": "n_transport"
+    },
+    {
+      "from": "n_dec_storage_inspect",
+      "id": "e_inspect_fail",
+      "kind": "default",
+      "label": "不合格则返回贮存内部检测",
+      "priority": 0,
+      "to": "n_storage_inspect"
+    },
+    {
+      "from": "n_transport",
+      "id": "e_transport_enter",
+      "kind": "normal",
+      "label": "到达阵地/测试场",
+      "to": "n_enter_site"
+    },
+    {
+      "from": "n_enter_site",
+      "id": "e_enter_first_test",
+      "kind": "normal",
+      "label": "进入阵地后执行第一次测试",
+      "to": "n_first_test"
+    },
+    {
+      "from": "n_first_test",
+      "id": "e_first_test_dec",
+      "kind": "normal",
+      "label": "第一次测试完成待判定",
+      "to": "n_dec_first_test"
+    },
+    {
+      "condition": {
+        "field": "attributes.first_test_result",
+        "op": "eq",
+        "value": "normal"
+      },
+      "from": "n_dec_first_test",
+      "id": "e_first_test_pass",
+      "kind": "conditional",
+      "label": "正常则短途运输",
+      "priority": 10,
+      "to": "n_short_transport"
+    },
+    {
+      "from": "n_dec_first_test",
+      "id": "e_first_test_fail",
+      "kind": "default",
+      "label": "不正常则维修",
+      "priority": 0,
+      "to": "n_repair"
+    },
+    {
+      "from": "n_short_transport",
+      "id": "e_short_transport_load",
+      "kind": "normal",
+      "label": "短途运输后装舰",
+      "to": "n_load_ship"
+    },
+    {
+      "from": "n_load_ship",
+      "id": "e_load_second_test",
+      "kind": "normal",
+      "label": "装舰后执行第二次测试",
+      "to": "n_second_test"
+    },
+    {
+      "from": "n_second_test",
+      "id": "e_second_test_dec",
+      "kind": "normal",
+      "label": "第二次测试完成待判定",
+      "to": "n_dec_second_test"
+    },
+    {
+      "condition": {
+        "field": "attributes.second_test_result",
+        "op": "eq",
+        "value": "normal"
+      },
+      "from": "n_dec_second_test",
+      "id": "e_second_test_pass",
+      "kind": "conditional",
+      "label": "正常则值班",
+      "priority": 10,
+      "to": "n_duty"
+    },
+    {
+      "from": "n_dec_second_test",
+      "id": "e_second_test_fail",
+      "kind": "default",
+      "label": "不正常则维修",
+      "priority": 0,
+      "to": "n_exit_duty"
+    },
+    {
+      "from": "n_repair",
+      "id": "e_repair_first_test",
+      "kind": "normal",
+      "label": "维修完成后返回第一次测试",
+      "to": "n_first_test"
+    },
+    {
+      "from": "n_duty",
+      "id": "e_duty_inspect",
+      "kind": "normal",
+      "label": "值班期间执行值班内部检测",
+      "to": "n_duty_inspect"
+    },
+    {
+      "from": "n_duty_inspect",
+      "id": "e_duty_inspect_dec",
+      "kind": "normal",
+      "label": "值班内部检测完成待判定",
+      "to": "n_dec_duty_inspect"
+    },
+    {
+      "condition": {
+        "field": "attributes.duty_inspection_result",
+        "op": "eq",
+        "value": "pass"
+      },
+      "from": "n_dec_duty_inspect",
+      "id": "e_duty_inspect_pass",
+      "kind": "conditional",
+      "label": "合格则继续值班",
+      "priority": 10,
+      "to": "n_duty"
+    },
+    {
+      "from": "n_dec_duty_inspect",
+      "id": "e_duty_inspect_fail",
+      "kind": "default",
+      "label": "不合格则出值班",
+      "priority": 0,
+      "to": "n_exit_duty"
+    },
+    {
+      "from": "n_exit_duty",
+      "id": "e_exit_duty_disembark",
+      "kind": "normal",
+      "label": "出值班后下舰",
+      "to": "n_disembark"
+    },
+    {
+      "from": "n_disembark",
+      "id": "e_disembark_shore_repair",
+      "kind": "normal",
+      "label": "下舰后岸上维修",
+      "to": "n_shore_repair"
+    },
+    {
+      "from": "n_shore_repair",
+      "id": "e_shore_repair_end",
+      "kind": "normal",
+      "label": "岸上维修完成后结束",
+      "to": "n_end"
+    }
+  ],
+  "end_node_ids": [
+    "n_end"
+  ],
+  "guards": {
+    "max_node_visits": 10000
+  },
+  "name": "装备贮存-运输-测试-值班可靠性流程",
+  "nodes": [
+    {
+      "description": "流程起点：装备待入库贮存",
+      "id": "n_start",
+      "name": "开始",
+      "position": {
+        "x": 0,
+        "y": 200
+      },
+      "type": "start"
+    },
+    {
+      "description": "装备进入贮存，持续30天",
+      "duration": 30,
+      "id": "n_storage",
+      "name": "贮存",
+      "position": {
+        "x": 200,
+        "y": 200
+      },
+      "type": "task"
+    },
+    {
+      "description": "贮存期间执行内部检测，持续1天；outcome 写入贮存检测结论",
+      "duration": 1,
+      "id": "n_storage_inspect",
+      "name": "贮存内部检测",
+      "outcomes": [
+        {
+          "attributes": {
+            "storage_inspection_result": "pass"
+          },
+          "id": "pass",
+          "name": "合格",
+          "weight": 0.5
+        },
+        {
+          "attributes": {
+            "storage_inspection_result": "fail"
+          },
+          "id": "fail",
+          "name": "不合格",
+          "weight": 0.5
+        }
+      ],
+      "position": {
+        "x": 400,
+        "y": 200
+      },
+      "type": "task"
+    },
+    {
+      "description": "对贮存内部检测结果做合格判定（无持续时间）",
+      "id": "n_dec_storage_inspect",
+      "name": "贮存内部检测是否合格",
+      "position": {
+        "x": 600,
+        "y": 200
+      },
+      "type": "decision"
+    },
+    {
+      "description": "运输持续2天，运往阵地/测试场",
+      "duration": 2,
+      "id": "n_transport",
+      "name": "运输",
+      "position": {
+        "x": 800,
+        "y": 200
+      },
+      "type": "task"
+    },
+    {
+      "description": "进入阵地/测试场，持续1天",
+      "duration": 1,
+      "id": "n_enter_site",
+      "name": "进入阵地/测试场",
+      "position": {
+        "x": 1000,
+        "y": 200
+      },
+      "type": "task"
+    },
+    {
+      "description": "第一次测试持续1天；outcome 写入第一次测试结论",
+      "duration": 1,
+      "id": "n_first_test",
+      "name": "第一次测试",
+      "outcomes": [
+        {
+          "attributes": {
+            "first_test_result": "normal"
+          },
+          "id": "normal",
+          "name": "正常",
+          "weight": 0.5
+        },
+        {
+          "attributes": {
+            "first_test_result": "abnormal"
+          },
+          "id": "abnormal",
+          "name": "不正常",
+          "weight": 0.5
+        }
+      ],
+      "position": {
+        "x": 1200,
+        "y": 200
+      },
+      "type": "task"
+    },
+    {
+      "description": "对第一次测试结果做判定（无持续时间）",
+      "id": "n_dec_first_test",
+      "name": "第一次测试结果是否正常",
+      "position": {
+        "x": 1400,
+        "y": 200
+      },
+      "type": "decision"
+    },
+    {
+      "description": "第一次测试正常后短途运输1天",
+      "duration": 1,
+      "id": "n_short_transport",
+      "name": "短途运输",
+      "position": {
+        "x": 1600,
+        "y": 200
+      },
+      "type": "task"
+    },
+    {
+      "description": "装舰持续1天",
+      "duration": 1,
+      "id": "n_load_ship",
+      "name": "装舰",
+      "position": {
+        "x": 1800,
+        "y": 200
+      },
+      "type": "task"
+    },
+    {
+      "description": "第二次测试持续1天；outcome 写入第二次测试结论",
+      "duration": 1,
+      "id": "n_second_test",
+      "name": "第二次测试",
+      "outcomes": [
+        {
+          "attributes": {
+            "second_test_result": "normal"
+          },
+          "id": "normal",
+          "name": "正常",
+          "weight": 0.5
+        },
+        {
+          "attributes": {
+            "second_test_result": "abnormal"
+          },
+          "id": "abnormal",
+          "name": "不正常",
+          "weight": 0.5
+        }
+      ],
+      "position": {
+        "x": 2000,
+        "y": 200
+      },
+      "type": "task"
+    },
+    {
+      "description": "对第二次测试结果做判定（无持续时间）",
+      "id": "n_dec_second_test",
+      "name": "第二次测试结果是否正常",
+      "position": {
+        "x": 2200,
+        "y": 200
+      },
+      "type": "decision"
+    },
+    {
+      "description": "测试不正常后维修2天，维修完成后返回第一次测试",
+      "duration": 2,
+      "id": "n_repair",
+      "name": "维修",
+      "position": {
+        "x": 1400,
+        "y": 420
+      },
+      "type": "task"
+    },
+    {
+      "description": "第二次测试正常后值班5天",
+      "duration": 5,
+      "id": "n_duty",
+      "name": "值班",
+      "position": {
+        "x": 2400,
+        "y": 200
+      },
+      "type": "task"
+    },
+    {
+      "description": "值班期间执行内部检测，持续1天；outcome 写入值班检测结论",
+      "duration": 1,
+      "id": "n_duty_inspect",
+      "name": "值班内部检测",
+      "outcomes": [
+        {
+          "attributes": {
+            "duty_inspection_result": "pass"
+          },
+          "id": "pass",
+          "name": "合格",
+          "weight": 0.5
+        },
+        {
+          "attributes": {
+            "duty_inspection_result": "fail"
+          },
+          "id": "fail",
+          "name": "不合格",
+          "weight": 0.5
+        }
+      ],
+      "position": {
+        "x": 2600,
+        "y": 200
+      },
+      "type": "task"
+    },
+    {
+      "description": "对值班内部检测结果做合格判定（无持续时间）",
+      "id": "n_dec_duty_inspect",
+      "name": "值班内部检测是否合格",
+      "position": {
+        "x": 2800,
+        "y": 200
+      },
+      "type": "decision"
+    },
+    {
+      "description": "内部检测不合格则出值班1天",
+      "duration": 1,
+      "id": "n_exit_duty",
+      "name": "出值班",
+      "position": {
+        "x": 2800,
+        "y": 420
+      },
+      "type": "task"
+    },
+    {
+      "description": "出值班后下舰1天",
+      "duration": 1,
+      "id": "n_disembark",
+      "name": "下舰",
+      "position": {
+        "x": 3000,
+        "y": 420
+      },
+      "type": "task"
+    },
+    {
+      "description": "下舰后进行岸上维修3天",
+      "duration": 3,
+      "id": "n_shore_repair",
+      "name": "岸上维修",
+      "position": {
+        "x": 3200,
+        "y": 420
+      },
+      "type": "task"
+    },
+    {
+      "description": "流程终点",
+      "id": "n_end",
+      "name": "结束",
+      "position": {
+        "x": 3400,
+        "y": 420
+      },
+      "type": "end"
+    }
+  ],
+  "schema_version": "process-ir/1.0",
+  "start_node_id": "n_start"
+}

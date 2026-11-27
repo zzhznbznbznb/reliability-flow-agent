@@ -5,6 +5,9 @@ from copy import deepcopy
 
 from datetime import datetime, timezone
 
+import pytest
+from pydantic import ValidationError
+
 from app.domain.reliability_ir import ReliabilityDocument, ReliabilityNodeConfig
 from app.simulation.config import SimulationConfig, SimulationLimits
 from app.simulation.engine import SimulationRuntime
@@ -249,7 +252,12 @@ def test_partial_exposure_failure_is_recorded_without_routing() -> None:
     result = _run(
         process,
         reliability,
-        SimulationConfig(entity_count=1, simulation_end=0.4, random_seed=15),
+        SimulationConfig(
+            entity_count=1,
+            simulation_end=0.4,
+            random_seed=15,
+            failure_sampling="interval_end",
+        ),
     )
     entity = result.entities[0]
     assert entity.completed is False
@@ -1177,3 +1185,203 @@ def test_partial_exposure_keeps_entity_at_task() -> None:
     assert entity.final_node_id == "work"
     assert entity.node_enter_time == 0
     assert entity.node_elapsed_time == 0.5
+
+
+def test_time_to_failure_is_sampled_inside_task_and_routed_at_failure_time() -> None:
+    process, reliability = _failure_setup(lam=1000)
+    result = _run(
+        process,
+        reliability,
+        SimulationConfig(entity_count=1, simulation_end=5, random_seed=101),
+    )
+    entity = result.entities[0]
+    sample = result.reliability_samples[0]
+    assert sample.failure_occurred is True
+    assert sample.failure_time is not None
+    assert 0.0 <= sample.exposure_time < 1.0
+    assert math.isclose(sample.exposure_time, sample.failure_time)
+    assert math.isclose(sample.time, sample.failure_time)
+    assert sample.reliability_probability == math.exp(
+        -1000.0 * sample.exposure_time
+    )
+    failure_routed = next(
+        event for event in entity.history if event.event_type == "failure_routed"
+    )
+    assert math.isclose(failure_routed.time, sample.failure_time)
+    assert entity.failure_count == 1
+    assert entity.node_visits["inspect"] == 1
+    assert not any(
+        event.event_type == "node_completed" and event.node_id == "inspect"
+        for event in entity.history
+    )
+    assert entity.completed is True
+
+
+def test_time_to_failure_survival_when_sampled_failure_exceeds_duration() -> None:
+    process, reliability = _failure_setup(lam=1e-6)
+    result = _run(
+        process,
+        reliability,
+        SimulationConfig(entity_count=1, simulation_end=5, random_seed=102),
+    )
+    entity = result.entities[0]
+    sample = result.reliability_samples[0]
+    assert sample.failure_occurred is False
+    assert sample.failure_time is None
+    assert sample.exposure_time == 1.0
+    assert sample.partial is False
+    assert sample.reliability_probability == math.exp(-1e-6)
+    assert sample.random_value > 1.0 - sample.reliability_probability
+    assert entity.completed is True
+    assert entity.failure_count == 0
+
+
+def test_failure_sampling_mode_changes_failure_time_for_same_seed() -> None:
+    process, reliability = _failure_setup(lam=1e9)
+    time_to_failure = _run(
+        process,
+        reliability,
+        SimulationConfig(entity_count=1, simulation_end=10, random_seed=21),
+    )
+    interval_end = _run(
+        process,
+        reliability,
+        SimulationConfig(
+            entity_count=1,
+            simulation_end=10,
+            random_seed=21,
+            failure_sampling="interval_end",
+        ),
+    )
+    sampled = time_to_failure.reliability_samples[0]
+    interval = interval_end.reliability_samples[0]
+    assert sampled.failure_occurred is True
+    assert interval.failure_occurred is True
+    assert sampled.time < 1.0
+    assert interval.time == 1.0
+    assert sampled.random_value == interval.random_value
+    assert time_to_failure.runtime_semantic_version == "time-to-failure/1.0"
+    assert interval_end.runtime_semantic_version == "interval-end/1.0"
+    assert time_to_failure.failure_sampling == "time_to_failure"
+    assert interval_end.failure_sampling == "interval_end"
+
+
+def test_lambda_changes_observed_failure_count() -> None:
+    process, no_failure = _failure_setup(lam=0)
+    zero = _run(
+        process,
+        no_failure,
+        SimulationConfig(entity_count=20, simulation_end=10, random_seed=103),
+    )
+    process, high_failure = _failure_setup(lam=5)
+    high = _run(
+        process,
+        high_failure,
+        SimulationConfig(entity_count=20, simulation_end=10, random_seed=103),
+    )
+    assert zero.total_failure_count == 0
+    assert all(sample.failure_occurred is False for sample in zero.reliability_samples)
+    assert high.total_failure_count > 0
+    assert high.total_failure_count > zero.total_failure_count
+
+
+def test_partial_time_to_failure_returns_survival_sample() -> None:
+    process, reliability = _failure_setup(lam=0.01)
+    result = _run(
+        process,
+        reliability,
+        SimulationConfig(entity_count=1, simulation_end=0.4, random_seed=104),
+    )
+    entity = result.entities[0]
+    sample = result.reliability_samples[0]
+    assert sample.failure_occurred is False
+    assert sample.failure_time is None
+    assert sample.exposure_time == 0.4
+    assert sample.partial is True
+    assert sample.time == 0.4
+    assert entity.final_node_id == "inspect"
+    assert entity.node_elapsed_time == 0.4
+    assert entity.failure_count == 0
+    assert entity.completed is False
+    types = {event.event_type for event in entity.history}
+    assert "failure_routed" not in types
+
+
+def test_stale_completion_event_after_mid_task_failure_is_ignored() -> None:
+    process, reliability = _failure_setup(lam=1e9)
+    result = _run(
+        process,
+        reliability,
+        SimulationConfig(entity_count=1, simulation_end=10, random_seed=21),
+    )
+    entity = result.entities[0]
+    assert entity.completed is True
+    assert entity.final_node_id == "end"
+    assert entity.failure_count == 1
+    assert entity.repair_count == 1
+    assert not any(
+        event.event_type == "node_completed" and event.node_id == "inspect"
+        for event in entity.history
+    )
+    assert (
+        sum(
+            1
+            for event in entity.history
+            if event.event_type == "entity_completed"
+        )
+        == 1
+    )
+
+
+def test_simulation_window_derives_end_from_duration_and_start() -> None:
+    config = SimulationConfig(
+        entity_count=1,
+        simulation_start=5,
+        simulation_duration=10,
+        random_seed=201,
+    )
+    assert config.simulation_end == 15
+    process = document_from_spec()
+    reliability = non_participating_reliability(process)
+    result = _run(process, reliability, config)
+    assert result.simulation_start == 5
+    assert result.simulation_end == 15
+    assert result.simulation_duration == 10
+    assert result.completed_count == 1
+    assert min(event.time for event in result.events) == 5
+    assert max(event.time for event in result.events) <= 15
+
+
+def test_simulation_window_rejects_missing_or_conflicting_bounds() -> None:
+    with pytest.raises(ValidationError):
+        SimulationConfig(entity_count=1)
+    with pytest.raises(ValidationError):
+        SimulationConfig(entity_count=1, simulation_start=5, simulation_end=5)
+    with pytest.raises(ValidationError):
+        SimulationConfig(
+            entity_count=1,
+            simulation_start=2,
+            simulation_end=10,
+            simulation_duration=5,
+        )
+
+
+def test_simulation_window_partial_exposure_uses_absolute_start() -> None:
+    process = document_from_spec()
+    reliability = non_participating_reliability(process)
+    result = _run(
+        process,
+        reliability,
+        SimulationConfig(
+            entity_count=1,
+            simulation_start=4,
+            simulation_duration=0.5,
+            random_seed=202,
+        ),
+    )
+    entity = result.entities[0]
+    assert entity.completed is False
+    assert entity.final_node_id == "work"
+    assert entity.node_enter_time == 4
+    assert entity.node_elapsed_time == 0.5
+    assert result.simulation_end == 4.5

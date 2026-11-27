@@ -1,0 +1,26 @@
+{
+  "validation": {
+    "valid": true,
+    "issues": [],
+    "content_hash": "sha256:b78da0719b22a73e22d9cecc17547a59a098343d39b0ba54dc26e7d38e0e2113",
+    "schema_valid": true,
+    "coverage": {
+      "covered": true,
+      "step_count": 29,
+      "covered_step_count": 29,
+      "branch_count": 29,
+      "covered_branch_count": 29,
+      "issues": []
+    }
+  },
+  "coverage": {
+    "covered": true,
+    "step_count": 29,
+    "covered_step_count": 29,
+    "branch_count": 29,
+    "covered_branch_count": 29,
+    "issues": []
+  },
+  "status": "idle",
+  "event_errors": []
+}

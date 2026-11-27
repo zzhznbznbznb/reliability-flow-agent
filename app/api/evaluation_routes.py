@@ -7,6 +7,7 @@ through the existing Evaluation layer.
 
 from __future__ import annotations
 
+import logging
 from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -22,8 +23,10 @@ from app.simulation.errors import (
     SimulationRuntimeError,
     SimulationValidationError,
 )
+from app.simulation.readiness import check_simulation_readiness
 
 router = APIRouter(prefix="/api/processes", tags=["evaluation"])
+logger = logging.getLogger(__name__)
 
 
 class SimulationEvaluationRequest(SimulationRequest):
@@ -72,6 +75,23 @@ def simulate_and_evaluate_process(
     if reliability is None:
         raise _reliability_not_bound(process_id, process)
 
+    readiness_issues = check_simulation_readiness(
+        process, reliability, request.simulation_unit
+    )
+    if readiness_issues:
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "code": "simulation_parameters_missing",
+                "valid": False,
+                "message": "仿真前参数检查未通过",
+                "issues": [
+                    issue.model_dump(mode="json")
+                    for issue in readiness_issues
+                ],
+            },
+        )
+
     config = SimulationConfig.model_validate(
         request.model_dump(
             exclude={
@@ -104,6 +124,9 @@ def simulate_and_evaluate_process(
             },
         ) from error
     except Exception as error:
+        logger.exception(
+            "Simulation evaluation failed for process %s", process_id
+        )
         raise HTTPException(
             status_code=500,
             detail={

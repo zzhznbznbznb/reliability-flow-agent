@@ -21,7 +21,10 @@ _WARNING_EXPLANATIONS = {
     "sample_unknown_entity": "可靠性抽样引用了结果设备列表中不存在的设备。",
     "reliability_lambda_mismatch": "抽样记录的 lambda 与当前 Reliability IR 配置不一致。",
     "reliability_unknown_node": "Reliability IR 引用了 Process IR 中不存在的节点。",
-    "reliability_invalid_node_type": "非 task 节点被配置为可靠性节点。",
+    "reliability_invalid_node_type": "可靠性模块类型与 Process IR 节点类型不匹配。",
+    "reliability_lambda_unit_mismatch": "故障率单位与仿真单位不一致。",
+    "reliability_missing_detection_rate": "测试模块缺少故障检测率 Ft。",
+    "reliability_missing_stage_task": "阶段模块没有可抽样的内部活动节点。",
 }
 
 
@@ -65,6 +68,12 @@ def explain_overall(result: EvaluationResult) -> str:
         f"完成 {overall.completed_entity_count} 台，"
         f"停止 {overall.stopped_entity_count} 台。"
     )
+    if overall.readiness is not None:
+        lines.append(
+            f"战备完好度（时间口径）Rdy = {_percent(overall.readiness)}；"
+            f"累计可用时间 {overall.total_available_time}，"
+            f"累计不可用时间 {overall.total_unavailable_time}。"
+        )
     return "\n".join(lines)
 
 

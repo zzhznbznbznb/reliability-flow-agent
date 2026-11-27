@@ -60,7 +60,7 @@ cd C:\Users\woain\Desktop\reliability-flow-agent
 .\.venv\Scripts\python.exe -m pytest
 ```
 
-当前结果：**139 passed**。
+当前结果：**289 passed**。
 
 前端辅助逻辑测试：
 
@@ -69,7 +69,7 @@ cd C:\Users\woain\Desktop\reliability-flow-agent\frontend
 npm test
 ```
 
-当前结果：**9 passed**。
+当前结果：**35 passed**。
 
 ## 主要功能
 
@@ -85,16 +85,20 @@ npm test
   - 缩放、平移、MiniMap、适应屏幕。
 - 左侧 Agent 面板（当前为离线命令模式）。
 - 右侧业务属性、连接条件和版本历史检查器。
+- 项目参数区域：项目名称、描述、装备使用可靠度目标值、战备完好度目标值、
+  仿真单位（小时/天/月/年）和导弹总数量；六项全部合法后才允许运行仿真。
 - 独立 Reliability IR：
-  - task 节点参与开关。
-  - 指数分布 λ（每自然日，允许 0）。
-  - 参数验证和清晰错误码。
+  - 阶段模块：贮存、值班等嵌套 subprocess 配置阶段故障率 λ。
+  - 测试模块：测试/检测 task 配置故障检测率 Ft 和测试时间，不配置 λ。
+  - 普通活动只使用 Process IR 持续时间，不在前端暴露 λ。
+  - λ 单位跟随项目仿真单位；参数验证和清晰错误码。
   - 与 Process IR 的 process_id / version / content_hash 精确绑定。
   - 旧版本可靠性配置保留，但不会自动绑定到新流程版本。
 - 离散事件仿真 Runtime：
   - 多设备独立状态、历史和随机流。
-  - task 持续时间推进和 decision/loop 执行。
-  - 指数分布可靠性区间抽样，λ=0 合法。
+  - 阶段内逐时间步抽取 p(t) 并与 R(t)=exp(-λt) 比较。
+  - 测试阶段每次只抽取一次 pt 并与 Ft 比较。
+  - 故障发生、发现、维修开始/结束时间和可用/不可用时间记录。
   - failure 出口、维修流程、状态恢复和故障计数。
   - 仿真结束时的部分暴露时间抽样。
   - 相同随机种子逐字段可复现。
@@ -103,6 +107,7 @@ npm test
 
 ## 示例流程
 
+- `examples/equipment_support_reliability_flow.json`（阶段 λ + 测试 Ft + 持续值班）
 - `examples/equipment_support_flow.json`
 - `examples/manufacturing_flow.json`
 - `examples/reliability_maintenance_flow.json`
@@ -178,6 +183,7 @@ data/               本地流程与实验数据
 - `docs/phase-2-report.md`
 - `docs/phase-3-report.md`
 - `docs/phase-3-review.md`
+
 
 
 

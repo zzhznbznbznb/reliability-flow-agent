@@ -4,7 +4,13 @@ from __future__ import annotations
 
 from html import escape
 
-from app.diagram.layout import DiagramLayout, EdgeRoute, NodeBox, layout_process
+from app.diagram.layout import (
+    DiagramLayout,
+    EdgeRoute,
+    NodeBox,
+    layout_nested_process,
+    layout_process,
+)
 from app.domain.process_ir import ProcessSpec
 from app.domain.versioning import short_hash
 
@@ -14,6 +20,13 @@ EDGE_COLORS = {
     "default": "#0f766e",
     "failure": "#dc2626",
 }
+
+
+def _iter_nodes(nodes):
+    for node in nodes:
+        yield node
+        if node.subflow is not None:
+            yield from _iter_nodes(node.subflow.nodes)
 
 
 def _text(value: str, x: float, y: float, css_class: str, anchor: str = "middle") -> str:
@@ -54,7 +67,10 @@ def _node_markup(box: NodeBox) -> str:
         )
 
     line_height = 18
-    start_y = box.center_y - (len(box.lines) - 1) * line_height / 2 + 5
+    if node.type == "subprocess":
+        start_y = box.y + 24
+    else:
+        start_y = box.center_y - (len(box.lines) - 1) * line_height / 2 + 5
     lines = "".join(
         _text(line, box.center_x, start_y + index * line_height, "node-label")
         for index, line in enumerate(box.lines)
@@ -126,6 +142,8 @@ def _styles() -> str:
       .node-start ellipse { fill: #ecfdf5; stroke: #10b981; }
       .node-end ellipse { fill: #eff6ff; stroke: #3b82f6; }
       .node-decision polygon { fill: #fff7ed; stroke: #f59e0b; }
+      .node-subprocess rect { fill: #f5f3ff; stroke: #8b5cf6; stroke-width: 2.4; }
+      .node-subprocess .node-label { font-weight: 700; fill: #4c1d95; }
       .node-label {
         font: 13px "Microsoft YaHei", "Segoe UI", sans-serif;
         fill: #0f172a;
@@ -152,7 +170,12 @@ def render_process_svg(
     version: int | None = None,
     content_hash: str | None = None,
 ) -> str:
-    layout: DiagramLayout = layout_process(spec)
+    has_subprocess = any(
+        node.type == "subprocess" for node in _iter_nodes(spec.nodes)
+    )
+    layout: DiagramLayout = (
+        layout_nested_process(spec) if has_subprocess else layout_process(spec)
+    )
     subtitle_parts = []
     if version is not None:
         subtitle_parts.append(f"版本 v{version}")
@@ -163,7 +186,11 @@ def render_process_svg(
     subtitle = " · ".join(subtitle_parts)
 
     hash_attr = escape(content_hash) if content_hash else "draft"
-    node_markup = "".join(_node_markup(box) for box in layout.boxes.values())
+    ordered_boxes = sorted(
+        layout.boxes.values(),
+        key=lambda box: (0 if box.node.type == "subprocess" else 1, box.layer),
+    )
+    node_markup = "".join(_node_markup(box) for box in ordered_boxes)
     edge_markup = "".join(_route_markup(route) for route in layout.routes)
 
     return (

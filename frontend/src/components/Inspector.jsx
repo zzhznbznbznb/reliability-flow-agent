@@ -1,12 +1,35 @@
 import { useEffect, useState } from "react";
 
-import { validateLambdaInput } from "../reliability";
+import { findNode } from "../flow/nested";
+import {
+  firstTaskId,
+  validateDetectionRateInput,
+  validateLambdaInput,
+  validateTestTimeInput,
+} from "../reliability";
+import { lambdaUnitFor, lambdaUnitLabel, unitLabel } from "../project.js";
+
+function collectSubflowTasks(node, result = []) {
+  for (const child of node?.subflow?.nodes || []) {
+    if (child.type === "task") result.push(child);
+    if (child.subflow) collectSubflowTasks(child, result);
+  }
+  return result;
+}
+
+function looksLikeTestNode(node) {
+  if (node?.type !== "task") return false;
+  const text = String(node.name || "").trim();
+  if (text.includes("场")) return false;
+  return text.includes("检测") || text.endsWith("测试");
+}
 
 const TYPE_LABEL = {
   start: "开始",
   task: "业务活动",
   decision: "判断",
   end: "结束",
+  subprocess: "嵌套流程块",
 };
 
 const EDGE_KIND_LABEL = {
@@ -50,12 +73,19 @@ function NodeEditor({
   reliabilityNode,
   reliabilityContext,
   onSaveReliability,
+  selectedNodePath = [],
+  project,
+  initialTab = "business",
 }) {
-  const [tab, setTab] = useState("business");
+  const [tab, setTab] = useState(initialTab);
   const [name, setName] = useState(node.name);
   const [type, setType] = useState(node.type);
   const [description, setDescription] = useState(node.description || "");
-  const [duration, setDuration] = useState(node.duration ?? 1);
+  const [duration, setDuration] = useState(
+    node.duration === null || node.duration === undefined
+      ? ""
+      : String(node.duration),
+  );
   const [statusOnEnter, setStatusOnEnter] = useState(node.status_on_enter || "");
   const [statusOnComplete, setStatusOnComplete] = useState(
     node.status_on_complete || "",
@@ -70,29 +100,75 @@ function NodeEditor({
     JSON.stringify(node.outcomes || [], null, 2),
   );
   const [error, setError] = useState("");
-  const [participates, setParticipates] = useState(
-    Boolean(reliabilityNode?.participates),
+  const [moduleType, setModuleType] = useState(
+    node.type === "subprocess"
+      ? "stage"
+      : reliabilityNode?.module_type === "test" || looksLikeTestNode(node)
+        ? "test"
+        : "activity",
   );
   const [lambdaInput, setLambdaInput] = useState(
     reliabilityNode?.lambda === null || reliabilityNode?.lambda === undefined
       ? ""
       : String(reliabilityNode.lambda),
   );
+  const [detectionInput, setDetectionInput] = useState(
+    reliabilityNode?.detection_rate === null ||
+      reliabilityNode?.detection_rate === undefined
+      ? ""
+      : String(reliabilityNode.detection_rate),
+  );
+  const [testTimeInput, setTestTimeInput] = useState(
+    reliabilityNode?.test_time === null ||
+      reliabilityNode?.test_time === undefined
+      ? ""
+      : String(reliabilityNode.test_time),
+  );
+  const [stageTaskInput, setStageTaskInput] = useState(
+    reliabilityNode?.stage_task_id ||
+      firstTaskId(node) ||
+      "",
+  );
   const [reliabilityError, setReliabilityError] = useState("");
   const [reliabilitySaving, setReliabilitySaving] = useState(false);
 
   useEffect(() => {
-    setParticipates(Boolean(reliabilityNode?.participates));
+    setModuleType(
+      node.type === "subprocess"
+        ? "stage"
+        : reliabilityNode?.module_type === "test" || looksLikeTestNode(node)
+          ? "test"
+          : "activity",
+    );
     setLambdaInput(
       reliabilityNode?.lambda === null || reliabilityNode?.lambda === undefined
         ? ""
         : String(reliabilityNode.lambda),
     );
+    setDetectionInput(
+      reliabilityNode?.detection_rate === null ||
+        reliabilityNode?.detection_rate === undefined
+        ? ""
+        : String(reliabilityNode.detection_rate),
+    );
+    setTestTimeInput(
+      reliabilityNode?.test_time === null ||
+        reliabilityNode?.test_time === undefined
+        ? ""
+        : String(reliabilityNode.test_time),
+    );
+    setStageTaskInput(
+      reliabilityNode?.stage_task_id || firstTaskId(node) || "",
+    );
     setReliabilityError("");
   }, [
+    node,
     reliabilityNode?.node_id,
-    reliabilityNode?.participates,
+    reliabilityNode?.module_type,
     reliabilityNode?.lambda,
+    reliabilityNode?.detection_rate,
+    reliabilityNode?.test_time,
+    reliabilityNode?.stage_task_id,
   ]);
 
   const apply = () => {
@@ -103,10 +179,14 @@ function NodeEditor({
       const parsedComplete = parseJsonArray(effectsComplete, "完成效果");
       const parsedOutcomes =
         type === "task" ? parseJsonArray(outcomes, "业务结果") : [];
+      let parsedDuration = null;
       if (type === "task") {
-        const numeric = Number(duration);
-        if (!Number.isFinite(numeric) || numeric < 0) {
-          throw new Error("持续时间必须是非负数字");
+        const text = String(duration ?? "").trim();
+        if (text) {
+          parsedDuration = Number(text);
+          if (!Number.isFinite(parsedDuration) || parsedDuration < 0) {
+            throw new Error("持续时间必须是非负数字");
+          }
         }
       }
       const updated = {
@@ -115,12 +195,13 @@ function NodeEditor({
         name: name.trim(),
         description,
         position: node.position,
-        duration: type === "task" ? Number(duration) : null,
+        duration: parsedDuration,
         status_on_enter: statusOnEnter || null,
         status_on_complete: statusOnComplete || null,
         on_enter: parsedEnter,
         on_complete: parsedComplete,
         outcomes: parsedOutcomes,
+        ...(type === "subprocess" ? { subflow: node.subflow } : {}),
       };
       onUpdate(updated);
     } catch (err) {
@@ -130,26 +211,59 @@ function NodeEditor({
 
   const saveReliability = async () => {
     setReliabilityError("");
-    const parsed = validateLambdaInput(participates, lambdaInput);
-    if (parsed.error) {
-      setReliabilityError(parsed.error);
-      return;
-    }
     if (!reliabilityContext?.canSave) {
       setReliabilityError(
         reliabilityContext?.hint || "当前流程状态不允许保存可靠性配置",
       );
       return;
     }
-    const lambdaToSave = participates
-      ? parsed.lambda
-      : reliabilityNode?.lambda ?? null;
+    const unit = project?.simulation_unit || "day";
+    let edit;
+    if (node.type === "subprocess") {
+      const parsed = validateLambdaInput(true, lambdaInput);
+      if (parsed.error) {
+        setReliabilityError(parsed.error);
+        return;
+      }
+      if (!stageTaskInput) {
+        setReliabilityError("阶段模块必须选择一个内部主任务");
+        return;
+      }
+      edit = {
+        module_type: "stage",
+        participates: true,
+        lambda: parsed.lambda,
+        lambda_unit: lambdaUnitFor(unit),
+        stage_task_id: stageTaskInput,
+      };
+    } else if (moduleType === "test") {
+      const detection = validateDetectionRateInput(detectionInput);
+      if (detection.error) {
+        setReliabilityError(detection.error);
+        return;
+      }
+      const testTime = validateTestTimeInput(testTimeInput);
+      if (testTime.error) {
+        setReliabilityError(testTime.error);
+        return;
+      }
+      edit = {
+        module_type: "test",
+        participates: false,
+        lambda: null,
+        detection_rate: detection.detectionRate,
+        test_time: testTime.testTime,
+      };
+    } else {
+      edit = {
+        module_type: "activity",
+        participates: false,
+        lambda: null,
+      };
+    }
     setReliabilitySaving(true);
     try {
-      const result = await onSaveReliability(node.id, {
-        participates,
-        lambda: lambdaToSave,
-      });
+      const result = await onSaveReliability(node.id, edit);
       if (result && !result.ok) {
         setReliabilityError(result.message || "可靠性配置保存失败");
       }
@@ -166,6 +280,11 @@ function NodeEditor({
         <p>
           {TYPE_LABEL[node.type]} · <code>{node.id}</code>
         </p>
+        {selectedNodePath.length > 0 && (
+          <p className="inspector-breadcrumb">
+            层级：root / {selectedNodePath.join(" / ")}
+          </p>
+        )}
       </div>
 
       <div className="segmented">
@@ -202,16 +321,24 @@ function NodeEditor({
                 id="node-type"
                 value={type}
                 onChange={(event) => setType(event.target.value)}
+                disabled={node.type === "subprocess"}
               >
-                {Object.entries(TYPE_LABEL).map(([value, label]) => (
-                  <option key={value} value={value}>
-                    {label} ({value})
-                  </option>
-                ))}
+                {Object.entries(TYPE_LABEL)
+                  .filter(
+                    ([value]) =>
+                      value !== "subprocess" || node.type === "subprocess",
+                  )
+                  .map(([value, label]) => (
+                    <option key={value} value={value}>
+                      {label} ({value})
+                    </option>
+                  ))}
               </select>
             </div>
             <div className="field">
-              <label htmlFor="node-duration">持续时间（天）</label>
+              <label htmlFor="node-duration">
+                持续时间（{unitLabel(project?.simulation_unit || "day")}）
+              </label>
               <input
                 id="node-duration"
                 type="number"
@@ -220,7 +347,12 @@ function NodeEditor({
                 value={duration}
                 onChange={(event) => setDuration(event.target.value)}
                 disabled={type !== "task"}
+                placeholder="必填，留空会阻止仿真"
               />
+              <p className="help">
+                与项目仿真单位一致，直接写入 Process IR；留空表示尚未配置，
+                运行仿真前会提示补充。
+              </p>
             </div>
           </div>
           <div className="field">
@@ -306,136 +438,195 @@ function NodeEditor({
             </button>
           </div>
         </>
+      ) : node.type === "start" ||
+        node.type === "end" ||
+        node.type === "decision" ? (
+        <div className="reliability-placeholder">
+          <span className="badge phase">不参与抽样</span>
+          <h3>该节点不参与可靠性计算</h3>
+          <p>
+            start、decision、end 节点正常执行业务流程，不进行随机故障抽样，
+            因此不需要 λ 或 Ft。
+          </p>
+        </div>
       ) : (
-        node.type !== "task" ? (
-          <div className="reliability-placeholder">
-            <span className="badge phase">不参与抽样</span>
-            <h3>该节点不参与可靠性计算</h3>
-            <p>
-              只有 task 节点需要可靠性配置。start、decision、end
-              节点正常执行业务流程，不进行随机故障抽样，因此不需要 λ。
-            </p>
-          </div>
-        ) : (
-          <div className="reliability-panel">
-            <div className="reliability-binding">
-              <div>
-                <span className="eyebrow">BOUND PROCESS IR</span>
-                <strong>
-                  {reliabilityContext?.process
-                    ? `v${reliabilityContext.process.version}`
-                    : "尚未保存"}
-                </strong>
-              </div>
-              <code>
+        <div className="reliability-panel">
+          <div className="reliability-binding">
+            <div>
+              <span className="eyebrow">BOUND PROCESS IR</span>
+              <strong>
                 {reliabilityContext?.process
-                  ? shortHash(reliabilityContext.process.content_hash)
-                  : "无绑定"}
-              </code>
+                  ? `v${reliabilityContext.process.version}`
+                  : "尚未保存"}
+              </strong>
             </div>
-            <p className="help">
-              可靠性配置独立存储，只绑定指定的 Process IR 版本和内容哈希；流程产生新版本后不会自动继承。
-            </p>
+            <code>
+              {reliabilityContext?.process
+                ? shortHash(reliabilityContext.process.content_hash)
+                : "无绑定"}
+            </code>
+          </div>
+          <p className="help">
+            可靠性配置独立存储，只绑定指定的 Process IR 版本和内容哈希；流程产生新版本后不会自动继承。
+          </p>
 
-            {reliabilityContext?.hint && (
-              <p className="help reliability-hint">{reliabilityContext.hint}</p>
-            )}
+          {reliabilityContext?.hint && (
+            <p className="help reliability-hint">{reliabilityContext.hint}</p>
+          )}
 
-            <div className="field">
-              <label>是否参与可靠性计算</label>
-              <label className="switch-row">
+          {node.type === "subprocess" ? (
+            <>
+              <div className="reliability-formula">
+                阶段故障率只作用于该嵌套子流程的主任务；t 为该阶段本次进入后的累计时间。
+                维修后重新进入主任务时，t 从 0 重新开始。
+              </div>
+              <div className="field">
+                <label htmlFor="node-lambda">
+                  阶段故障率 λ（次/{lambdaUnitLabel(project?.simulation_unit || "day")}）
+                </label>
                 <input
-                  type="checkbox"
-                  checked={participates}
-                  onChange={(event) => setParticipates(event.target.checked)}
+                  id="node-lambda"
+                  type="number"
+                  min="0"
+                  step="any"
+                  value={lambdaInput}
+                  onChange={(event) => setLambdaInput(event.target.value)}
+                  placeholder="例如 0.001"
                 />
-                <span>
-                  {participates
-                    ? "参与：按指数分布进行随机故障抽样"
-                    : "不参与：正常执行，不进行随机故障抽样"}
-                </span>
-              </label>
-            </div>
-
-            {participates ? (
-              <>
-                <div className="field">
-                  <label htmlFor="node-lambda">故障率 λ（次/自然日）</label>
-                  <input
-                    id="node-lambda"
-                    type="number"
-                    min="0"
-                    step="any"
-                    value={lambdaInput}
-                    onChange={(event) => setLambdaInput(event.target.value)}
-                    placeholder="例如 0.02"
-                  />
-                  <p className="help">
-                    单位：每自然日。允许 λ = 0。不允许同时输入可靠度 R；R
-                    由模型计算。
-                  </p>
-                </div>
-                <div className="field-row">
-                  <div className="field">
-                    <label>分布类型</label>
-                    <input value="exponential" readOnly />
-                  </div>
-                  <div className="field">
-                    <label>λ 单位</label>
-                    <input value="per_day（每自然日）" readOnly />
-                  </div>
-                </div>
-                <div className="reliability-formula">
-                  R(t) = exp(-λt)，t 为实际暴露时间（自然日）
-                </div>
-              </>
-            ) : (
-              <p className="help">
-                不参与可靠性的节点不需要 λ，也不会进行随机故障抽样；节点仍按
-                Process IR 中的持续时间正常执行。
-                {reliabilityNode?.lambda !== null &&
-                  reliabilityNode?.lambda !== undefined &&
-                  " 已配置的 λ 会保留在历史配置中，但当前版本不生效。"}
-              </p>
-            )}
-
-            {reliabilityError && (
-              <div className="form-error">{reliabilityError}</div>
-            )}
-
-            <div className="inspector-actions">
+                <p className="help">
+                  单位跟随项目仿真单位（{unitLabel(project?.simulation_unit || "day")}）。
+                  允许 λ = 0，表示该阶段不抽样故障。测试节点不配置 λ。
+                </p>
+              </div>
+              <div className="field">
+                <label htmlFor="stage-task">阶段主任务（累计计时对象）</label>
+                <select
+                  id="stage-task"
+                  value={stageTaskInput}
+                  onChange={(event) => setStageTaskInput(event.target.value)}
+                >
+                  <option value="">请选择</option>
+                  {collectSubflowTasks(node).map((task) => (
+                    <option key={task.id} value={task.id}>
+                      {task.name}（{task.id}，持续 {task.duration ?? "未设置"}）
+                    </option>
+                  ))}
+                </select>
+                <p className="help">
+                  例如贮存阶段的“贮存”任务、值班阶段的“值班”任务。普通活动只配置持续时间。
+                </p>
+              </div>
+            </>
+          ) : moduleType === "test" ? (
+            <>
+              <div className="reliability-formula">
+                测试模块：每次测试只抽取一次 pt，并与故障检测率 Ft 比较；
+                不配置故障率 λ，也不参与独立的指数故障抽样。
+              </div>
+              <div className="field">
+                <label htmlFor="node-detection">
+                  故障检测率 Ft（0 ~ 1）
+                </label>
+                <input
+                  id="node-detection"
+                  type="number"
+                  min="0"
+                  max="1"
+                  step="0.01"
+                  value={detectionInput}
+                  onChange={(event) => setDetectionInput(event.target.value)}
+                  placeholder="例如 0.8"
+                />
+              </div>
+              <div className="field">
+                <label htmlFor="node-test-time">
+                  测试时间（{unitLabel(project?.simulation_unit || "day")}，可选）
+                </label>
+                <input
+                  id="node-test-time"
+                  type="number"
+                  min="0"
+                  step="0.1"
+                  value={testTimeInput}
+                  onChange={(event) => setTestTimeInput(event.target.value)}
+                  placeholder="留空时使用节点持续时间"
+                />
+              </div>
               <button
                 type="button"
-                className="button primary"
-                onClick={saveReliability}
-                disabled={
-                  reliabilitySaving ||
-                  reliabilityContext?.busy ||
-                  !reliabilityContext?.canSave
-                }
+                className="button compact"
+                onClick={() => setModuleType("activity")}
               >
-                {reliabilitySaving ? "正在保存可靠性配置…" : "保存可靠性配置"}
+                改为普通活动
               </button>
-            </div>
-            {reliabilityContext?.reliability && (
+            </>
+          ) : (
+            <>
+              <div className="reliability-formula">
+                普通活动只配置持续时间，不配置故障率 λ，也不进行独立的指数分布故障抽样。
+              </div>
               <p className="help">
-                当前绑定：Process IR v
-                {reliabilityContext.reliability.process_version} ·{" "}
-                {shortHash(reliabilityContext.reliability.process_hash)} ·
-                可靠性修订 r{reliabilityContext.reliability.revision}
+                当前节点持续时间：{node.duration ?? "未设置"}{" "}
+                {unitLabel(project?.simulation_unit || "day")}。请在“业务属性”页修改持续时间。
               </p>
-            )}
+              {(reliabilityNode?.participates ||
+                (reliabilityNode?.lambda !== null &&
+                  reliabilityNode?.lambda !== undefined)) && (
+                <p className="help reliability-hint">
+                  该节点存在旧版活动级 λ 配置。新模型不再在普通活动上使用 λ；
+                  保存后将按普通活动处理。
+                </p>
+              )}
+              <button
+                type="button"
+                className="button compact"
+                onClick={() => {
+                  setModuleType("test");
+                  if (!detectionInput) setDetectionInput("1");
+                }}
+              >
+                设为测试模块
+              </button>
+            </>
+          )}
+
+          {reliabilityError && (
+            <div className="form-error">{reliabilityError}</div>
+          )}
+
+          <div className="inspector-actions">
+            <button
+              type="button"
+              className="button primary"
+              onClick={saveReliability}
+              disabled={
+                reliabilitySaving ||
+                reliabilityContext?.busy ||
+                !reliabilityContext?.canSave
+              }
+            >
+              {reliabilitySaving ? "正在保存可靠性配置…" : "保存可靠性配置"}
+            </button>
           </div>
-        )
+          {reliabilityContext?.reliability && (
+            <p className="help">
+              当前绑定：Process IR v
+              {reliabilityContext.reliability.process_version} ·{" "}
+              {shortHash(reliabilityContext.reliability.process_hash)} ·
+              可靠性修订 r{reliabilityContext.reliability.revision}
+            </p>
+          )}
+        </div>
       )}
     </div>
   );
 }
 
-function EdgeEditor({ edge, onUpdate, onDelete }) {
+function EdgeEditor({ edge, sourceNode, onUpdate, onDelete }) {
   const [kind, setKind] = useState(edge.kind);
   const [label, setLabel] = useState(edge.label || "");
   const [priority, setPriority] = useState(edge.priority ?? 0);
+  const [subflowExit, setSubflowExit] = useState(edge.subflow_exit || "");
   const [condition, setCondition] = useState(
     edge.condition ? JSON.stringify(edge.condition, null, 2) : "",
   );
@@ -462,6 +653,7 @@ function EdgeEditor({ edge, onUpdate, onDelete }) {
         label,
         priority: numericPriority,
         condition: parsedCondition,
+        subflow_exit: subflowExit || null,
       });
     } catch (err) {
       setError(err.message);
@@ -521,6 +713,26 @@ function EdgeEditor({ edge, onUpdate, onDelete }) {
           placeholder="例如：合格 / 不合格 / 默认"
         />
       </div>
+      {sourceNode?.type === "subprocess" && (
+        <div className="field">
+          <label htmlFor="edge-subflow-exit">子流程出口映射</label>
+          <select
+            id="edge-subflow-exit"
+            value={subflowExit}
+            onChange={(event) => setSubflowExit(event.target.value)}
+          >
+            <option value="">未指定</option>
+            {(sourceNode.subflow?.end_node_ids || []).map((endId) => (
+              <option key={endId} value={endId}>
+                {endId}
+              </option>
+            ))}
+          </select>
+          <p className="help">
+            父连接通过该字段指定从哪个子流程 end 出口返回。
+          </p>
+        </div>
+      )}
       {kind === "conditional" && (
         <div className="field">
           <label htmlFor="edge-condition">条件表达式 JSON</label>
@@ -722,6 +934,7 @@ export default function Inspector({
   viewingVersion,
   versions,
   selectedNode,
+  selectedNodePath = [],
   selectedEdge,
   reliabilityNode,
   reliabilityContext,
@@ -732,7 +945,12 @@ export default function Inspector({
   onUpdateProcess,
   onLoadVersion,
   onSaveReliability,
+  project,
+  initialTab = "business",
 }) {
+  const selectedEdgeSourceNode = selectedEdge
+    ? findNode(spec, selectedEdge.from)?.node || null
+    : null;
   return (
     <aside className="inspector">
       {!spec ? (
@@ -745,7 +963,7 @@ export default function Inspector({
         </div>
       ) : selectedNode ? (
         <NodeEditor
-          key={`${selectedNode.id}-${selectedNode.name}-${selectedNode.type}`}
+          key={`${selectedNode.id}-${selectedNode.name}-${selectedNode.type}-${selectedNode.duration ?? "none"}-${initialTab}`}
           node={selectedNode}
           spec={spec}
           onUpdate={onUpdateNode}
@@ -753,11 +971,15 @@ export default function Inspector({
           reliabilityNode={reliabilityNode}
           reliabilityContext={reliabilityContext}
           onSaveReliability={onSaveReliability}
+          selectedNodePath={selectedNodePath}
+          project={project}
+          initialTab={initialTab}
         />
       ) : selectedEdge ? (
         <EdgeEditor
           key={selectedEdge.id}
           edge={selectedEdge}
+          sourceNode={selectedEdgeSourceNode}
           onUpdate={onUpdateEdge}
           onDelete={onDeleteEdge}
         />

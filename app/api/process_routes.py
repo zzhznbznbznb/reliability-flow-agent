@@ -7,10 +7,11 @@ from typing import Any
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from pydantic import Field
 
+from app.agent.domain_rules import validate_process_with_domain
 from app.api.deps import get_process_store
 from app.diagram.svg import render_process_svg
 from app.domain.process_ir import ProcessDocument, ProcessSpec, StrictModel
-from app.domain.validation import ValidationResult, validate_process
+from app.domain.validation import ValidationResult
 from app.domain.versioning import compute_content_hash
 from app.processes.store import (
     ProcessNotFound,
@@ -39,7 +40,7 @@ def _invalid_detail(result: ValidationResult) -> dict[str, Any]:
 
 
 def _ensure_valid(spec: ProcessSpec) -> ValidationResult:
-    result = validate_process(spec)
+    result = validate_process_with_domain(spec)
     if not result.valid:
         raise HTTPException(status_code=400, detail=_invalid_detail(result))
     return result
@@ -47,7 +48,7 @@ def _ensure_valid(spec: ProcessSpec) -> ValidationResult:
 
 @router.post("/validate")
 def validate_process_spec(spec: ProcessSpec) -> ValidationResult:
-    return validate_process(spec)
+    return validate_process_with_domain(spec)
 
 
 @router.post("/preview.svg")

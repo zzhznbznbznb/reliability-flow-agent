@@ -1,0 +1,373 @@
+{
+  "summary": "装备先贮存 30 天并执行贮存内部检测 1 天，合格进入运输，不合格返回贮存内部检测；运输 2 天进入阵地/测试场 1 天；第一次测试 1 天，正常进入短途运输 1 天、装舰 1 天、第二次测试 1 天，异常维修 2 天后返回第一次测试；第二次测试正常进入值班 5 天和值班内部检测 1 天，检测合格继续值班，检测不合格出值班 1 天、下舰 1 天、岸上维修 3 天后结束；第二次测试异常按用户纠正进入出值班 → 下舰 → 岸上维修 → 结束。",
+  "steps": [
+    {
+      "id": "n_start",
+      "name": "开始",
+      "kind": "start",
+      "description": "流程起点：装备待入库贮存",
+      "duration": null
+    },
+    {
+      "id": "n_storage",
+      "name": "贮存",
+      "kind": "task",
+      "description": "装备进入贮存，持续30天（贮存期内安排贮存内部检测）",
+      "duration": 30.0
+    },
+    {
+      "id": "n_storage_inspect",
+      "name": "贮存内部检测",
+      "kind": "task",
+      "description": "贮存期间执行内部检测，持续1天",
+      "duration": 1.0
+    },
+    {
+      "id": "n_dec_storage_inspect",
+      "name": "贮存内部检测是否合格",
+      "kind": "decision",
+      "description": "对贮存内部检测结果做判定，无持续时间",
+      "duration": null
+    },
+    {
+      "id": "n_transport",
+      "name": "运输",
+      "kind": "task",
+      "description": "运输持续2天，运往阵地/测试场",
+      "duration": 2.0
+    },
+    {
+      "id": "n_enter_site",
+      "name": "进入阵地/测试场",
+      "kind": "task",
+      "description": "到达并进入阵地/测试场，持续1天",
+      "duration": 1.0
+    },
+    {
+      "id": "n_first_test",
+      "name": "第一次测试",
+      "kind": "task",
+      "description": "第一次测试持续1天",
+      "duration": 1.0
+    },
+    {
+      "id": "n_dec_first_test",
+      "name": "第一次测试结果是否正常",
+      "kind": "decision",
+      "description": "对第一次测试结果做判定，无持续时间",
+      "duration": null
+    },
+    {
+      "id": "n_short_transport",
+      "name": "短途运输",
+      "kind": "task",
+      "description": "第一次测试正常后短途运输1天",
+      "duration": 1.0
+    },
+    {
+      "id": "n_load_ship",
+      "name": "装舰",
+      "kind": "task",
+      "description": "装舰持续1天",
+      "duration": 1.0
+    },
+    {
+      "id": "n_second_test",
+      "name": "第二次测试",
+      "kind": "task",
+      "description": "第二次测试持续1天",
+      "duration": 1.0
+    },
+    {
+      "id": "n_dec_second_test",
+      "name": "第二次测试结果是否正常",
+      "kind": "decision",
+      "description": "对第二次测试结果做判定，无持续时间",
+      "duration": null
+    },
+    {
+      "id": "n_repair",
+      "name": "维修",
+      "kind": "task",
+      "description": "测试不正常后维修2天，维修完成后返回第一次测试",
+      "duration": 2.0
+    },
+    {
+      "id": "n_duty",
+      "name": "值班",
+      "kind": "task",
+      "description": "第二次测试正常后值班5天（值班期内安排值班内部检测）",
+      "duration": 5.0
+    },
+    {
+      "id": "n_duty_inspect",
+      "name": "值班内部检测",
+      "kind": "task",
+      "description": "值班期间执行内部检测，持续1天",
+      "duration": 1.0
+    },
+    {
+      "id": "n_dec_duty_inspect",
+      "name": "值班内部检测是否合格",
+      "kind": "decision",
+      "description": "对值班内部检测结果做判定，无持续时间",
+      "duration": null
+    },
+    {
+      "id": "n_exit_duty",
+      "name": "出值班",
+      "kind": "task",
+      "description": "值班内部检测不合格则出值班1天",
+      "duration": 1.0
+    },
+    {
+      "id": "n_disembark",
+      "name": "下舰",
+      "kind": "task",
+      "description": "出值班后下舰1天",
+      "duration": 1.0
+    },
+    {
+      "id": "n_shore_repair",
+      "name": "岸上维修",
+      "kind": "task",
+      "description": "下舰后进行岸上维修3天",
+      "duration": 3.0
+    },
+    {
+      "id": "n_end",
+      "name": "结束",
+      "kind": "end",
+      "description": "流程终点",
+      "duration": null
+    }
+  ],
+  "branches": [
+    {
+      "id": "b_start_storage",
+      "from_step": "n_start",
+      "to_step": "n_storage",
+      "kind": "normal",
+      "condition": null,
+      "loop": false
+    },
+    {
+      "id": "b_storage_inspect",
+      "from_step": "n_storage",
+      "to_step": "n_storage_inspect",
+      "kind": "normal",
+      "condition": null,
+      "loop": false
+    },
+    {
+      "id": "b_inspect_dec",
+      "from_step": "n_storage_inspect",
+      "to_step": "n_dec_storage_inspect",
+      "kind": "normal",
+      "condition": null,
+      "loop": false
+    },
+    {
+      "id": "b_inspect_pass",
+      "from_step": "n_dec_storage_inspect",
+      "to_step": "n_transport",
+      "kind": "conditional",
+      "condition": "storage_inspection_result == pass",
+      "loop": false
+    },
+    {
+      "id": "b_inspect_fail",
+      "from_step": "n_dec_storage_inspect",
+      "to_step": "n_storage_inspect",
+      "kind": "default",
+      "condition": null,
+      "loop": true
+    },
+    {
+      "id": "b_transport_enter",
+      "from_step": "n_transport",
+      "to_step": "n_enter_site",
+      "kind": "normal",
+      "condition": null,
+      "loop": false
+    },
+    {
+      "id": "b_enter_first_test",
+      "from_step": "n_enter_site",
+      "to_step": "n_first_test",
+      "kind": "normal",
+      "condition": null,
+      "loop": false
+    },
+    {
+      "id": "b_first_test_dec",
+      "from_step": "n_first_test",
+      "to_step": "n_dec_first_test",
+      "kind": "normal",
+      "condition": null,
+      "loop": false
+    },
+    {
+      "id": "b_first_test_pass",
+      "from_step": "n_dec_first_test",
+      "to_step": "n_short_transport",
+      "kind": "conditional",
+      "condition": "first_test_result == normal",
+      "loop": false
+    },
+    {
+      "id": "b_first_test_fail",
+      "from_step": "n_dec_first_test",
+      "to_step": "n_repair",
+      "kind": "default",
+      "condition": null,
+      "loop": false
+    },
+    {
+      "id": "b_short_transport_load",
+      "from_step": "n_short_transport",
+      "to_step": "n_load_ship",
+      "kind": "normal",
+      "condition": null,
+      "loop": false
+    },
+    {
+      "id": "b_load_second_test",
+      "from_step": "n_load_ship",
+      "to_step": "n_second_test",
+      "kind": "normal",
+      "condition": null,
+      "loop": false
+    },
+    {
+      "id": "b_second_test_dec",
+      "from_step": "n_second_test",
+      "to_step": "n_dec_second_test",
+      "kind": "normal",
+      "condition": null,
+      "loop": false
+    },
+    {
+      "id": "b_second_test_pass",
+      "from_step": "n_dec_second_test",
+      "to_step": "n_duty",
+      "kind": "conditional",
+      "condition": "second_test_result == normal",
+      "loop": false
+    },
+    {
+      "id": "b_second_test_fail",
+      "from_step": "n_dec_second_test",
+      "to_step": "n_exit_duty",
+      "kind": "default",
+      "condition": null,
+      "loop": false
+    },
+    {
+      "id": "b_repair_first_test",
+      "from_step": "n_repair",
+      "to_step": "n_first_test",
+      "kind": "normal",
+      "condition": null,
+      "loop": true
+    },
+    {
+      "id": "b_duty_inspect",
+      "from_step": "n_duty",
+      "to_step": "n_duty_inspect",
+      "kind": "normal",
+      "condition": null,
+      "loop": false
+    },
+    {
+      "id": "b_duty_inspect_dec",
+      "from_step": "n_duty_inspect",
+      "to_step": "n_dec_duty_inspect",
+      "kind": "normal",
+      "condition": null,
+      "loop": false
+    },
+    {
+      "id": "b_duty_inspect_pass",
+      "from_step": "n_dec_duty_inspect",
+      "to_step": "n_duty",
+      "kind": "conditional",
+      "condition": "duty_inspection_result == pass",
+      "loop": true
+    },
+    {
+      "id": "b_duty_inspect_fail",
+      "from_step": "n_dec_duty_inspect",
+      "to_step": "n_exit_duty",
+      "kind": "default",
+      "condition": null,
+      "loop": false
+    },
+    {
+      "id": "b_exit_duty_disembark",
+      "from_step": "n_exit_duty",
+      "to_step": "n_disembark",
+      "kind": "normal",
+      "condition": null,
+      "loop": false
+    },
+    {
+      "id": "b_disembark_shore_repair",
+      "from_step": "n_disembark",
+      "to_step": "n_shore_repair",
+      "kind": "normal",
+      "condition": null,
+      "loop": false
+    },
+    {
+      "id": "b_shore_repair_end",
+      "from_step": "n_shore_repair",
+      "to_step": "n_end",
+      "kind": "normal",
+      "condition": null,
+      "loop": false
+    }
+  ],
+  "ambiguities": [
+    {
+      "id": "amb_storage_nesting",
+      "question": "“贮存期间执行贮存内部检测1天”：检测是包含在30天贮存期内（并发/重叠），还是在30天之后额外增加1天？当前按顺序建模为贮存30天+内部检测1天。",
+      "blocks_generation": false,
+      "options": [
+        "顺序建模：贮存30天 -> 内部检测1天（当前）",
+        "重叠建模：检测落在30天贮存期内，总时长仍为30天"
+      ]
+    },
+    {
+      "id": "amb_duty_nesting",
+      "question": "“值班期间执行值班内部检测1天”以及“合格则继续值班”：检测是否计入5天值班期？合格后是返回“值班”任务（再加5天）还是返回检测节点？当前按顺序建模为值班5天+检测1天，合格返回值班任务。",
+      "blocks_generation": false,
+      "options": [
+        "顺序建模：值班5天 -> 检测1天 -> 合格返回值班（当前）",
+        "重叠建模：检测在5天值班期内，合格返回检测节点"
+      ]
+    },
+    {
+      "id": "amb_exit_duty_vs_end",
+      "question": "需求末尾“出值班和岸上维修完成后都到结束”与“出值班后下舰1天，随后岸上维修3天”存在冲突：出值班之后是否还有一条直接到结束的路径？当前按单链建模：出值班 -> 下舰 -> 岸上维修 -> 结束。",
+      "blocks_generation": false,
+      "options": [
+        "单链：出值班 -> 下舰 -> 岸上维修 -> 结束（当前）",
+        "双出边：出值班既可到结束也可到下游",
+        "并列：出值班->结束，另有下舰->岸上维修->结束"
+      ]
+    },
+    {
+      "id": "amb_detection_predicates",
+      "question": "各检测/测试的合格判定字段与合格概率未给出（属于 Reliability IR 参数，不影响流程结构）。",
+      "blocks_generation": false,
+      "options": []
+    },
+    {
+      "id": "amb_repair_reentry",
+      "question": "维修完成后是否重新执行完整的短途运输/装舰/第二次测试链，还是仅重测第一次测试？当前按“返回第一次测试节点并沿主线继续”建模。",
+      "blocks_generation": false,
+      "options": []
+    }
+  ]
+}

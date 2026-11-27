@@ -9,6 +9,25 @@ from app.domain.reliability_ir import ReliabilityDocument
 from app.domain.versioning import compute_content_hash
 
 
+def project_payload(
+    *,
+    missile_count: int = 3,
+    simulation_unit: str = "day",
+    reliability_target: float = 0.9,
+    readiness_target: float = 0.9,
+    simulation_total_time: float | None = 30.0,
+) -> dict[str, Any]:
+    return {
+        "name": "测试项目",
+        "description": "用于自动化测试的项目描述",
+        "reliability_target": reliability_target,
+        "readiness_target": readiness_target,
+        "simulation_unit": simulation_unit,
+        "missile_count": missile_count,
+        "simulation_total_time": simulation_total_time,
+    }
+
+
 def minimal_process_dict() -> dict[str, Any]:
     return {
         "schema_version": "process-ir/1.0",
@@ -270,12 +289,88 @@ def reliability_document_from_process(
     )
 
 
+def _iter_nodes(nodes):
+    for node in nodes:
+        yield node
+        if node.subflow is not None:
+            yield from _iter_nodes(node.subflow.nodes)
+
+
+EQUIPMENT_STAGE_NODES = {
+    "n_storage": "s_store",
+    "n_duty": "d_duty",
+}
+EQUIPMENT_TEST_NODES = {
+    "s_inspect",
+    "n_first_test",
+    "n_second_test",
+    "d_inspect",
+}
+
+
+def lambda_unit_for(unit: str) -> str:
+    return {
+        "hour": "per_hour",
+        "day": "per_day",
+        "month": "per_month",
+        "year": "per_year",
+    }[unit]
+
+
+def equipment_reliability_nodes(
+    process: ProcessDocument,
+    *,
+    lambda1: float = 0.0,
+    lambda2: float = 0.0,
+    detection_rate: float = 1.0,
+    simulation_unit: str = "day",
+    test_time: float = 1.0,
+) -> list[dict[str, Any]]:
+    unit = lambda_unit_for(simulation_unit)
+    nodes: list[dict[str, Any]] = []
+    for node in _iter_nodes(process.nodes):
+        if node.type != "task":
+            continue
+        if node.id in EQUIPMENT_TEST_NODES:
+            nodes.append(
+                {
+                    "node_id": node.id,
+                    "module_type": "test",
+                    "participates": False,
+                    "detection_rate": detection_rate,
+                    "test_time": test_time,
+                    "lambda_unit": unit,
+                }
+            )
+        else:
+            nodes.append(
+                {
+                    "node_id": node.id,
+                    "module_type": "activity",
+                    "participates": False,
+                    "lambda_unit": unit,
+                }
+            )
+    for host_id, task_id in EQUIPMENT_STAGE_NODES.items():
+        nodes.append(
+            {
+                "node_id": host_id,
+                "module_type": "stage",
+                "participates": True,
+                "lambda": lambda1 if host_id == "n_storage" else lambda2,
+                "lambda_unit": unit,
+                "stage_task_id": task_id,
+            }
+        )
+    return nodes
+
+
 def non_participating_reliability(process: ProcessDocument) -> ReliabilityDocument:
     return reliability_document_from_process(
         process,
         [
             {"node_id": node.id, "participates": False}
-            for node in process.nodes
+            for node in _iter_nodes(process.nodes)
             if node.type == "task"
         ],
     )

@@ -57,6 +57,34 @@ def _utc_now() -> datetime:
     return datetime.now(timezone.utc)
 
 
+def _iter_nodes(nodes):
+    for node in nodes:
+        yield node
+        if node.subflow is not None:
+            yield from _iter_nodes(node.subflow.nodes)
+
+
+def _iter_edges(edges, nodes):
+    yield from edges
+    for node in nodes:
+        if node.subflow is not None:
+            yield from _iter_edges(node.subflow.edges, node.subflow.nodes)
+
+
+def _scope_counts(document: ProcessDocument) -> dict[str, int]:
+    nodes = list(_iter_nodes(document.nodes))
+    edges = list(_iter_edges(document.edges, document.nodes))
+    return {
+        "node_count": len(nodes),
+        "edge_count": len(edges),
+        "top_level_node_count": len(document.nodes),
+        "top_level_edge_count": len(document.edges),
+        "subprocess_count": sum(
+            1 for node in nodes if node.type == "subprocess"
+        ),
+    }
+
+
 class ProcessStore:
     def __init__(self, root: Path) -> None:
         self.root = Path(root)
@@ -157,8 +185,7 @@ class ProcessStore:
                     "content_hash": document.content_hash,
                     "created_at": document.created_at.isoformat(),
                     "name": document.name,
-                    "node_count": len(document.nodes),
-                    "edge_count": len(document.edges),
+                    **_scope_counts(document),
                 }
                 for document in store_file.versions
             ]
@@ -181,8 +208,7 @@ class ProcessStore:
                         "latest_version": latest.version,
                         "content_hash": latest.content_hash,
                         "created_at": latest.created_at.isoformat(),
-                        "node_count": len(latest.nodes),
-                        "edge_count": len(latest.edges),
+                        **_scope_counts(latest),
                         "version_count": len(store_file.versions),
                     }
                 )

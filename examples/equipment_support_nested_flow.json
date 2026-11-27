@@ -1,0 +1,349 @@
+{
+  "schema_version": "process-ir/1.1",
+  "name": "装备保障嵌套流程",
+  "description": "按 docs/reference/equipment_support_nested_reference.jpg 的嵌套表达建模。贮存和值班为真正的嵌套流程块，内部包含主任务、检测、是否故障判断、维修和故障循环，正常出口返回父流程。外层流程保留此前确认的拓扑。持续时间来自既有测试案例；检测/测试结果概率 0.5/0.5 为占位值，待配置。手绘图与旧外层拓扑冲突的分支保留为待确认项。",
+  "status_catalog": [],
+  "start_node_id": "n_start",
+  "end_node_ids": ["n_end"],
+  "nodes": [
+    { "id": "n_start", "type": "start", "name": "开始" },
+    {
+      "id": "n_storage",
+      "type": "subprocess",
+      "name": "贮存",
+      "description": "嵌套块：贮存 -> 检测 -> 是否故障；是则维修并返回贮存，否则正常退出进入运输。",
+      "subflow": {
+        "start_node_id": "s_start",
+        "end_node_ids": ["s_done"],
+        "nodes": [
+          { "id": "s_start", "type": "start", "name": "贮存开始" },
+          {
+            "id": "s_store",
+            "type": "task",
+            "name": "贮存",
+            "duration": 30,
+            "description": "持续时间来自既有测试案例，待业务确认。"
+          },
+          {
+            "id": "s_inspect",
+            "type": "task",
+            "name": "贮存检测",
+            "duration": 1,
+            "description": "检测结果概率为 0.5/0.5 占位值，待配置。",
+            "outcomes": [
+              {
+                "id": "fault",
+                "name": "故障",
+                "weight": 0.5,
+                "attributes": { "storage_fault": "yes" }
+              },
+              {
+                "id": "ok",
+                "name": "无故障",
+                "weight": 0.5,
+                "attributes": { "storage_fault": "no" }
+              }
+            ]
+          },
+          { "id": "s_dec", "type": "decision", "name": "贮存检测是否故障" },
+          {
+            "id": "s_repair",
+            "type": "task",
+            "name": "贮存维修",
+            "duration": 2,
+            "description": "持续时间来自既有测试案例，待业务确认。"
+          },
+          { "id": "s_done", "type": "end", "name": "贮存正常完成" }
+        ],
+        "edges": [
+          {
+            "id": "e_s_start_store",
+            "from": "s_start",
+            "to": "s_store",
+            "kind": "normal"
+          },
+          {
+            "id": "e_s_store_inspect",
+            "from": "s_store",
+            "to": "s_inspect",
+            "kind": "normal"
+          },
+          {
+            "id": "e_s_inspect_dec",
+            "from": "s_inspect",
+            "to": "s_dec",
+            "kind": "normal"
+          },
+          {
+            "id": "e_s_dec_repair",
+            "from": "s_dec",
+            "to": "s_repair",
+            "kind": "conditional",
+            "condition": {
+              "op": "eq",
+              "field": "attributes.storage_fault",
+              "value": "yes"
+            },
+            "label": "是，维修"
+          },
+          {
+            "id": "e_s_dec_done",
+            "from": "s_dec",
+            "to": "s_done",
+            "kind": "default",
+            "label": "否，正常退出"
+          },
+          {
+            "id": "e_s_repair_store",
+            "from": "s_repair",
+            "to": "s_store",
+            "kind": "normal",
+            "label": "维修后返回贮存"
+          }
+        ],
+        "guards": { "max_node_visits": 10000 }
+      }
+    },
+    { "id": "n_transport", "type": "task", "name": "运输", "duration": 2 },
+    { "id": "n_site", "type": "task", "name": "阵地/测试场", "duration": 1 },
+    {
+      "id": "n_first_test",
+      "type": "task",
+      "name": "第一次测试",
+      "duration": 1,
+      "description": "测试结果概率为占位值，待配置。",
+      "outcomes": [
+        {
+          "id": "fault",
+          "name": "故障",
+          "weight": 0.5,
+          "attributes": { "first_test_fault": "yes" }
+        },
+        {
+          "id": "ok",
+          "name": "无故障",
+          "weight": 0.5,
+          "attributes": { "first_test_fault": "no" }
+        }
+      ]
+    },
+    { "id": "n_dec_first_test", "type": "decision", "name": "第一次测试是否故障" },
+    { "id": "n_short_transport", "type": "task", "name": "短途运输", "duration": 1 },
+    { "id": "n_load_ship", "type": "task", "name": "装舰", "duration": 1 },
+    {
+      "id": "n_second_test",
+      "type": "task",
+      "name": "第二次测试",
+      "duration": 1,
+      "description": "测试结果概率为占位值，待配置。",
+      "outcomes": [
+        {
+          "id": "fault",
+          "name": "故障",
+          "weight": 0.5,
+          "attributes": { "second_test_fault": "yes" }
+        },
+        {
+          "id": "ok",
+          "name": "无故障",
+          "weight": 0.5,
+          "attributes": { "second_test_fault": "no" }
+        }
+      ]
+    },
+    { "id": "n_dec_second_test", "type": "decision", "name": "第二次测试是否故障" },
+    { "id": "n_repair", "type": "task", "name": "维修", "duration": 2 },
+    {
+      "id": "n_duty",
+      "type": "subprocess",
+      "name": "值班",
+      "description": "嵌套块：值班 -> 检测 -> 是否故障；是则维修并返回值班，否则正常退出返回父流程结束。",
+      "subflow": {
+        "start_node_id": "d_start",
+        "end_node_ids": ["d_done"],
+        "nodes": [
+          { "id": "d_start", "type": "start", "name": "值班开始" },
+          {
+            "id": "d_duty",
+            "type": "task",
+            "name": "值班",
+            "duration": 5,
+            "description": "持续时间来自既有测试案例，待业务确认。"
+          },
+          {
+            "id": "d_inspect",
+            "type": "task",
+            "name": "值班检测",
+            "duration": 1,
+            "description": "检测结果概率为 0.5/0.5 占位值，待配置。",
+            "outcomes": [
+              {
+                "id": "fault",
+                "name": "故障",
+                "weight": 0.5,
+                "attributes": { "duty_fault": "yes" }
+              },
+              {
+                "id": "ok",
+                "name": "无故障",
+                "weight": 0.5,
+                "attributes": { "duty_fault": "no" }
+              }
+            ]
+          },
+          { "id": "d_dec", "type": "decision", "name": "值班检测是否故障" },
+          {
+            "id": "d_repair",
+            "type": "task",
+            "name": "值班维修",
+            "duration": 2,
+            "description": "持续时间来自既有测试案例，待业务确认。"
+          },
+          { "id": "d_done", "type": "end", "name": "值班正常完成" }
+        ],
+        "edges": [
+          {
+            "id": "e_d_start_duty",
+            "from": "d_start",
+            "to": "d_duty",
+            "kind": "normal"
+          },
+          {
+            "id": "e_d_duty_inspect",
+            "from": "d_duty",
+            "to": "d_inspect",
+            "kind": "normal"
+          },
+          {
+            "id": "e_d_inspect_dec",
+            "from": "d_inspect",
+            "to": "d_dec",
+            "kind": "normal"
+          },
+          {
+            "id": "e_d_dec_repair",
+            "from": "d_dec",
+            "to": "d_repair",
+            "kind": "conditional",
+            "condition": {
+              "op": "eq",
+              "field": "attributes.duty_fault",
+              "value": "yes"
+            },
+            "label": "是，维修"
+          },
+          {
+            "id": "e_d_dec_done",
+            "from": "d_dec",
+            "to": "d_done",
+            "kind": "default",
+            "label": "否，正常退出"
+          },
+          {
+            "id": "e_d_repair_duty",
+            "from": "d_repair",
+            "to": "d_duty",
+            "kind": "normal",
+            "label": "维修后返回值班"
+          }
+        ],
+        "guards": { "max_node_visits": 10000 }
+      }
+    },
+    { "id": "n_exit_duty", "type": "task", "name": "出值班", "duration": 1 },
+    { "id": "n_disembark", "type": "task", "name": "下舰", "duration": 1 },
+    { "id": "n_shore_repair", "type": "task", "name": "岸上维修", "duration": 3 },
+    { "id": "n_end", "type": "end", "name": "结束" }
+  ],
+  "edges": [
+    { "id": "e_start_storage", "from": "n_start", "to": "n_storage", "kind": "normal" },
+    {
+      "id": "e_storage_transport",
+      "from": "n_storage",
+      "to": "n_transport",
+      "kind": "normal",
+      "subflow_exit": "s_done"
+    },
+    { "id": "e_transport_site", "from": "n_transport", "to": "n_site", "kind": "normal" },
+    { "id": "e_site_test1", "from": "n_site", "to": "n_first_test", "kind": "normal" },
+    {
+      "id": "e_test1_dec",
+      "from": "n_first_test",
+      "to": "n_dec_first_test",
+      "kind": "normal"
+    },
+    {
+      "id": "e_test1_normal",
+      "from": "n_dec_first_test",
+      "to": "n_short_transport",
+      "kind": "default",
+      "label": "否，无故障"
+    },
+    {
+      "id": "e_test1_fault",
+      "from": "n_dec_first_test",
+      "to": "n_repair",
+      "kind": "conditional",
+      "condition": {
+        "op": "eq",
+        "field": "attributes.first_test_fault",
+        "value": "yes"
+      },
+      "label": "是，维修后返回第一次测试"
+    },
+    {
+      "id": "e_short_load",
+      "from": "n_short_transport",
+      "to": "n_load_ship",
+      "kind": "normal"
+    },
+    {
+      "id": "e_load_test2",
+      "from": "n_load_ship",
+      "to": "n_second_test",
+      "kind": "normal"
+    },
+    {
+      "id": "e_test2_dec",
+      "from": "n_second_test",
+      "to": "n_dec_second_test",
+      "kind": "normal"
+    },
+    {
+      "id": "e_test2_normal",
+      "from": "n_dec_second_test",
+      "to": "n_duty",
+      "kind": "default",
+      "label": "否，无故障，进入值班"
+    },
+    {
+      "id": "e_test2_abnormal",
+      "from": "n_dec_second_test",
+      "to": "n_exit_duty",
+      "kind": "conditional",
+      "condition": {
+        "op": "eq",
+        "field": "attributes.second_test_fault",
+        "value": "yes"
+      },
+      "label": "是，故障，出值班"
+    },
+    { "id": "e_repair_test1", "from": "n_repair", "to": "n_first_test", "kind": "normal" },
+    {
+      "id": "e_duty_end",
+      "from": "n_duty",
+      "to": "n_end",
+      "kind": "normal",
+      "subflow_exit": "d_done"
+    },
+    { "id": "e_exit_unload", "from": "n_exit_duty", "to": "n_disembark", "kind": "normal" },
+    {
+      "id": "e_unload_shore",
+      "from": "n_disembark",
+      "to": "n_shore_repair",
+      "kind": "normal"
+    },
+    { "id": "e_shore_end", "from": "n_shore_repair", "to": "n_end", "kind": "normal" }
+  ],
+  "guards": { "max_node_visits": 10000 }
+}

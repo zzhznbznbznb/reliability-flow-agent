@@ -10,6 +10,10 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from fastapi.responses import StreamingResponse
 from pydantic import Field
 
+from app.agent.requirements import (
+    RequirementAnalysis,
+    validate_requirement_analysis,
+)
 from app.agent.rpc_client import PiRpcError, PiRpcUnavailable
 from app.agent.session import (
     AgentError,
@@ -25,12 +29,29 @@ router = APIRouter(prefix="/api/agent", tags=["agent"])
 
 
 class AgentMessageRequest(StrictModel):
-    message: str = Field(min_length=1, max_length=20000)
+    message: str = Field(min_length=1, max_length=100000)
     context: dict[str, Any] | None = None
 
 
 class SimulationResultRequest(StrictModel):
     result_id: str = Field(min_length=1, max_length=64)
+
+
+@router.post("/requirements/analyze")
+def analyze_requirements(
+    analysis: RequirementAnalysis,
+) -> dict[str, Any]:
+    result = validate_requirement_analysis(analysis)
+    payload = analysis.model_dump(mode="json")
+    return {
+        "valid": result.valid,
+        "issues": [issue.model_dump(mode="json") for issue in result.issues],
+        "analysis": payload,
+        "step_count": len(analysis.steps),
+        "branch_count": len(analysis.branches),
+        "ambiguity_count": len(analysis.ambiguities),
+        "blocking_count": len(analysis.blocking_ambiguities),
+    }
 
 
 def _simulation_event_summary(record) -> dict[str, Any]:

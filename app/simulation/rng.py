@@ -13,6 +13,7 @@ import random
 
 RELIABILITY_STREAM = "reliability"
 BUSINESS_STREAM = "business"
+DETECTION_STREAM = "detection"
 
 
 def derive_stream_seed(base_seed: int, entity_id: str, stream: str) -> int:
@@ -26,6 +27,7 @@ def make_stream_rng(base_seed: int, entity_id: str, stream: str) -> random.Rando
 
 __all__ = [
     "BUSINESS_STREAM",
+    "DETECTION_STREAM",
     "RELIABILITY_STREAM",
     "derive_stream_seed",
     "make_stream_rng",

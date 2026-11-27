@@ -14,11 +14,25 @@ import dagre from "@dagrejs/dagre";
 import { api, issuesFromError } from "./api";
 import { nodeTypes, nodeSize } from "./flow/nodes";
 import { edgeTypes } from "./flow/edges";
+import * as nested from "./flow/nested";
 import AgentPanel from "./components/AgentPanel";
 import Toolbar from "./components/Toolbar";
 import Inspector from "./components/Inspector";
 import SimulationPanel from "./components/SimulationPanel";
-import { buildReliabilityNodes, reliabilityNodeFor } from "./reliability";
+import ProjectPanel from "./components/ProjectPanel";
+import {
+  buildReliabilityNodes,
+  reliabilityNodeFor,
+  validateReliabilityReadiness,
+} from "./reliability";
+import {
+  emptyProject,
+  lambdaUnitFor,
+  buildProjectPayload,
+  buildTargetsFromProject,
+  validateProject,
+} from "./project.js";
+import { formatSimulationError } from "./simulation.js";
 
 const EDGE_COLORS = {
   normal: "#64748b",
@@ -38,11 +52,20 @@ const INITIAL_MESSAGES = [
   },
 ];
 
+const DEFAULT_SIMULATION_FORM = {
+  simulation_start: "0",
+  random_seed: "2026",
+  failure_policy: "require_failure_exit",
+  failure_sampling: "time_to_failure",
+};
+
 const AGENT_EVENT_TYPES = [
   "assistant_delta",
   "assistant_message",
   "tool_start",
   "tool_end",
+  "requirement_analysis",
+  "clarification",
   "process_ir",
   "reliability_ir",
   "validation_result",
@@ -57,6 +80,7 @@ const TYPE_LABEL = {
   task: "业务活动",
   decision: "判断",
   end: "结束",
+  subprocess: "嵌套流程块",
 };
 
 function clone(value) {
@@ -65,6 +89,14 @@ function clone(value) {
 
 function shortHash(hash) {
   return hash ? hash.replace(/^sha256:/, "").slice(0, 12) : "未保存";
+}
+
+function isStructureValid(validation) {
+  if (!validation) return false;
+  if (typeof validation.structure_valid === "boolean") {
+    return validation.structure_valid;
+  }
+  return validation.valid === true;
 }
 
 function conditionText(condition) {
@@ -105,136 +137,44 @@ function edgeLabel(edge) {
 }
 
 function normalizeSpec(raw) {
-  const source = raw && raw.process ? raw.process : raw;
-  return {
-    schema_version: source.schema_version || "process-ir/1.0",
-    name: source.name || "未命名流程",
-    description: source.description || "",
-    status_catalog: Array.isArray(source.status_catalog)
-      ? clone(source.status_catalog)
-      : [],
-    start_node_id: source.start_node_id || "",
-    end_node_ids: Array.isArray(source.end_node_ids)
-      ? [...source.end_node_ids]
-      : [],
-    nodes: (source.nodes || []).map((node) => ({
-      ...node,
-      position: node.position ? { ...node.position } : null,
-      on_enter: node.on_enter || [],
-      on_complete: node.on_complete || [],
-      outcomes: node.outcomes || [],
-    })),
-    edges: (source.edges || []).map((edge) => ({
-      ...edge,
-      from: edge.from ?? edge.source,
-      to: edge.to ?? edge.target,
-    })),
-    guards: {
-      max_node_visits: source.guards?.max_node_visits ?? 10000,
-    },
-  };
+  return nested.normalizeSpec(raw);
 }
 
 function syncSpecialRefs(spec) {
-  const starts = spec.nodes.filter((node) => node.type === "start");
-  const ends = spec.nodes.filter((node) => node.type === "end");
-  return {
-    ...spec,
-    start_node_id: starts[0]?.id || "",
-    end_node_ids: ends.map((node) => node.id),
-  };
+  return nested.syncSpecialRefs(spec);
 }
 
 function autoLayoutSpec(spec) {
-  const graph = new dagre.graphlib.Graph();
-  graph.setGraph({
-    rankdir: "LR",
-    nodesep: 58,
-    ranksep: 112,
-    marginx: 60,
-    marginy: 60,
-  });
-  graph.setDefaultEdgeLabel(() => ({}));
-  spec.nodes.forEach((node) => {
-    const size = nodeSize(node.type);
-    graph.setNode(node.id, { width: size.width, height: size.height });
-  });
-  const nodeIds = new Set(spec.nodes.map((node) => node.id));
-  spec.edges.forEach((edge) => {
-    if (nodeIds.has(edge.from) && nodeIds.has(edge.to)) {
-      graph.setEdge(edge.from, edge.to);
-    }
-  });
-  dagre.layout(graph);
-  return {
-    ...spec,
-    nodes: spec.nodes.map((node) => {
-      const laidOut = graph.node(node.id);
-      const size = nodeSize(node.type);
-      return {
-        ...node,
-        position: {
-          x: Math.round((laidOut?.x || 0) - size.width / 2),
-          y: Math.round((laidOut?.y || 0) - size.height / 2),
-        },
-      };
-    }),
-  };
+  return nested.autoLayoutSpec(spec);
 }
 
 function ensurePositions(spec) {
-  if (spec.nodes.length > 0 && spec.nodes.some((node) => !node.position)) {
-    return autoLayoutSpec(spec);
-  }
-  return spec;
+  return nested.ensurePositions(spec);
 }
 
-function toFlowNodes(spec, selectedNodeId) {
-  return spec.nodes.map((node) => ({
-    id: node.id,
-    type: node.type,
-    position: node.position || { x: 0, y: 0 },
-    data: { node },
-    selected: node.id === selectedNodeId,
-    draggable: true,
-    deletable: true,
-    connectable: true,
-    style: { width: nodeSize(node.type).width },
-  }));
+function toFlowNodes(
+  spec,
+  selectedNodeId,
+  expandedBlocks = {},
+  onToggle = null,
+  options = {},
+) {
+  return nested.toFlowNodes(
+    spec,
+    selectedNodeId,
+    expandedBlocks,
+    onToggle,
+    options,
+  );
 }
 
-function toFlowEdges(spec, selectedEdgeId) {
-  const nodeMap = new Map(spec.nodes.map((node) => [node.id, node]));
-  return spec.edges.map((edge) => {
-    const source = nodeMap.get(edge.from);
-    const target = nodeMap.get(edge.to);
-    const isSelf = edge.from === edge.to;
-    const isBack =
-      isSelf ||
-      (source?.position &&
-        target?.position &&
-        target.position.x < source.position.x);
-    const color = EDGE_COLORS[edge.kind] || EDGE_COLORS.normal;
-    return {
-      id: edge.id,
-      source: edge.from,
-      target: edge.to,
-      sourceHandle: "out",
-      targetHandle: "in",
-      type: "business",
-      label: edgeLabel(edge),
-      selected: edge.id === selectedEdgeId,
-      deletable: true,
-      data: { kind: edge.kind, color, isBack: Boolean(isBack) },
-      markerEnd: {
-        type: MarkerType.ArrowClosed,
-        color,
-        width: 18,
-        height: 18,
-      },
-      style: { stroke: color, strokeWidth: 1.8 },
-    };
-  });
+function toFlowEdges(spec, selectedEdgeId, expandedBlocks = {}) {
+  return nested.toFlowEdges(
+    spec,
+    selectedEdgeId,
+    expandedBlocks,
+    edgeLabel,
+  );
 }
 
 function nextNodeId(spec, type) {
@@ -270,7 +210,7 @@ function createDraft(name = "未命名流程") {
         type: "task",
         name: "业务流程节点",
         description: "",
-        duration: 1,
+        duration: null,
         on_enter: [],
         on_complete: [],
         outcomes: [],
@@ -314,7 +254,7 @@ function findNodeByName(spec, query) {
 
 function summarizeSpec(spec) {
   if (!spec) return "当前没有流程草稿。";
-  const tasks = spec.nodes.filter((node) => node.type === "task");
+  const tasks = nested.listTasks(spec);
   const decisions = spec.nodes.filter((node) => node.type === "decision");
   const nodeMap = new Map(spec.nodes.map((node) => [node.id, node]));
   const loops = spec.edges.filter((edge) => {
@@ -407,6 +347,9 @@ export default function App() {
   const [contentHash, setContentHash] = useState(null);
   const [selectedNodeId, setSelectedNodeId] = useState(null);
   const [selectedEdgeId, setSelectedEdgeId] = useState(null);
+  const [inspectorTab, setInspectorTab] = useState("business");
+  const [project, setProject] = useState(emptyProject);
+  const [expandedBlocks, setExpandedBlocks] = useState({});
   const [messages, setMessages] = useState(INITIAL_MESSAGES);
   const [agentSessionId, setAgentSessionId] = useState(null);
   const [agentStatus, setAgentStatus] = useState("disconnected");
@@ -419,8 +362,17 @@ export default function App() {
   const [reliabilityProcess, setReliabilityProcess] = useState(null);
   const [reliabilityBusy, setReliabilityBusy] = useState(false);
   const [simulationOpen, setSimulationOpen] = useState(false);
+  const [projectCollapsed, setProjectCollapsed] = useState(false);
+  const [simulationForm, setSimulationForm] = useState(
+    DEFAULT_SIMULATION_FORM,
+  );
+  const [simulationRunning, setSimulationRunning] = useState(false);
+  const [simulationPhase, setSimulationPhase] = useState("idle");
+  const [simulationResult, setSimulationResult] = useState(null);
+  const [simulationError, setSimulationError] = useState("");
   const [experiments, setExperiments] = useState([]);
   const [experimentLoading, setExperimentLoading] = useState(false);
+  const [preview, setPreview] = useState(null);
   const [toast, setToast] = useState("");
   const [rfNodes, setRfNodes, onNodesChange] = useNodesState([]);
   const [rfEdges, setRfEdges, onEdgesChange] = useEdgesState([]);
@@ -445,9 +397,125 @@ export default function App() {
 
   const fitLater = useCallback(() => {
     window.setTimeout(() => {
-      fitView({ padding: 0.22, duration: 300 });
+      fitView({ padding: 0.18, minZoom: 0.4, maxZoom: 1.15, duration: 300 });
     }, 180);
   }, [fitView]);
+
+  const focusBlock = useCallback(
+    (blockId) => {
+      if (!spec) return;
+      const ids = nested.collectBlockNodeIds(spec, blockId);
+      window.setTimeout(() => {
+        fitView({
+          nodes: ids.map((id) => ({ id })),
+          padding: 0.12,
+          minZoom: 0.55,
+          maxZoom: 1.25,
+          duration: 350,
+        });
+      }, 220);
+    },
+    [fitView, spec],
+  );
+
+  const projectValidation = useMemo(
+    () => validateProject(project),
+    [project],
+  );
+
+  const reliabilityReadiness = useMemo(
+    () => validateReliabilityReadiness(spec, reliability, project),
+    [spec, reliability, project],
+  );
+
+  const storageKey = `rfa.project.${processId || "draft"}`;
+  const skipProjectSaveRef = useRef(true);
+
+  useEffect(() => {
+    skipProjectSaveRef.current = true;
+    try {
+      const stored = window.localStorage.getItem(storageKey);
+      if (stored) {
+        setProject({ ...emptyProject(), ...JSON.parse(stored) });
+      } else {
+        setProject(emptyProject());
+      }
+    } catch {
+      // A corrupt local project cache must never block the editor.
+      setProject(emptyProject());
+    }
+  }, [storageKey]);
+
+  useEffect(() => {
+    if (skipProjectSaveRef.current) {
+      skipProjectSaveRef.current = false;
+      return;
+    }
+    try {
+      window.localStorage.setItem(storageKey, JSON.stringify(project));
+    } catch {
+      // Ignore storage quota/disabled errors.
+    }
+  }, [project, storageKey]);
+
+  useEffect(() => {
+    if (!spec) return;
+    setProject((current) =>
+      current.name
+        ? current
+        : { ...current, name: spec.name || "" },
+    );
+  }, [spec]);
+
+  const updateProject = useCallback((key, value) => {
+    setProject((current) => ({ ...current, [key]: value }));
+  }, []);
+
+  const reliabilityByNode = useMemo(() => {
+    const map = {};
+    for (const node of reliability?.nodes || []) {
+      map[node.node_id] = node;
+    }
+    return map;
+  }, [reliability]);
+
+  const openNodeParameters = useCallback((nodeId) => {
+    setSelectedNodeId(nodeId);
+    setSelectedEdgeId(null);
+    setInspectorTab("reliability");
+  }, []);
+
+  const handleToggleBlock = useCallback(
+    (blockId) => {
+      const next = nested.toggleBlock(expandedBlocks, blockId);
+      setExpandedBlocks(next);
+      if (next[blockId]) {
+        focusBlock(blockId);
+      } else {
+        fitLater();
+      }
+    },
+    [expandedBlocks, fitLater, focusBlock],
+  );
+
+  const expandAllBlocks = useCallback(() => {
+    setExpandedBlocks((current) => {
+      if (!spec) return current;
+      const next = { ...current };
+      nested.walkScopes(spec, (scope) => {
+        for (const node of scope.nodes || []) {
+          if (node.type === "subprocess") next[node.id] = true;
+        }
+      });
+      return next;
+    });
+    fitLater();
+  }, [fitLater, spec]);
+
+  const collapseAllBlocks = useCallback(() => {
+    setExpandedBlocks({});
+    fitLater();
+  }, [fitLater]);
 
   const refreshProcesses = useCallback(async () => {
     const data = await api.listProcesses();
@@ -544,12 +612,39 @@ export default function App() {
   );
 
   useEffect(() => {
-    if (spec) setRfNodes(toFlowNodes(spec, selectedNodeId));
-  }, [spec, selectedNodeId, setRfNodes]);
+    if (spec) {
+      setRfNodes(
+        toFlowNodes(spec, selectedNodeId, expandedBlocks, handleToggleBlock, {
+          onEditParameters: openNodeParameters,
+          reliabilityByNode,
+          unit: project.simulation_unit || "day",
+        }),
+      );
+    }
+  }, [
+    spec,
+    selectedNodeId,
+    expandedBlocks,
+    handleToggleBlock,
+    openNodeParameters,
+    reliabilityByNode,
+    project.simulation_unit,
+    setRfNodes,
+  ]);
 
   useEffect(() => {
-    if (spec) setRfEdges(toFlowEdges(spec, selectedEdgeId));
-  }, [spec, selectedEdgeId, setRfEdges]);
+    if (spec) {
+      setRfEdges(toFlowEdges(spec, selectedEdgeId, expandedBlocks));
+    }
+  }, [spec, selectedEdgeId, expandedBlocks, setRfEdges]);
+
+  useEffect(() => {
+    if (!spec) return undefined;
+    const timer = window.setTimeout(() => {
+      fitView({ padding: 0.18, minZoom: 0.4, maxZoom: 1.15, duration: 0 });
+    }, 360);
+    return () => window.clearTimeout(timer);
+  }, [spec, fitView]);
 
   useEffect(() => {
     if (!spec) return undefined;
@@ -698,13 +793,8 @@ export default function App() {
   const updateNode = useCallback(
     (updatedNode) => {
       mutateSpec(
-        (current) => ({
-          ...current,
-          nodes: current.nodes.map((node) =>
-            node.id === updatedNode.id ? { ...node, ...updatedNode } : node,
-          ),
-        }),
-        true,
+        (current) => nested.updateNode(current, updatedNode.id, updatedNode),
+        false,
       );
     },
     [mutateSpec],
@@ -713,38 +803,61 @@ export default function App() {
   const addNode = useCallback(
     (type, name = null) => {
       if (!spec) return null;
-      const id = nextNodeId(spec, type);
-      const selected = spec.nodes.find((node) => node.id === selectedNodeId);
-      const position = selected?.position
-        ? { x: selected.position.x + 250, y: selected.position.y + 30 }
+      const selected = selectedNodeId
+        ? nested.findNode(spec, selectedNodeId)
+        : null;
+      const targetPath =
+        selected?.node.type === "subprocess"
+          ? [...selected.path, selected.node.id]
+          : selected?.path || [];
+      const position = selected?.node.position
+        ? {
+            x: selected.node.position.x + 240,
+            y: selected.node.position.y + 40,
+          }
         : { x: 280, y: 220 };
       const labels = {
         task: "新任务",
         decision: "新判断",
         start: "新开始",
         end: "新结束",
+        subprocess: "嵌套流程块",
       };
-      const node = {
-        id,
-        type,
-        name: name || labels[type] || "新节点",
-        description: "",
-        position,
-        on_enter: [],
-        on_complete: [],
-        outcomes: [],
-      };
-      if (type === "task") node.duration = 1;
-      setSpec((current) =>
-        syncSpecialRefs({
-          ...current,
-          nodes: [...current.nodes, node],
-        }),
-      );
+      let node;
+      if (type === "subprocess") {
+        node = nested.createSubprocessNode(
+          spec,
+          targetPath,
+          position,
+          name || "嵌套流程块",
+        );
+      } else {
+        const id = nested.nextNodeId(spec, type);
+        node = {
+          id,
+          type,
+          name: name || labels[type] || "新节点",
+          description: "",
+          position,
+          on_enter: [],
+          on_complete: [],
+          outcomes: [],
+        };
+        if (type === "task") node.duration = null;
+      }
+      setSpec((current) => {
+        const next = nested.addNode(current, targetPath, node);
+        return type === "subprocess"
+          ? { ...next, schema_version: "process-ir/1.1" }
+          : next;
+      });
       setDirty(true);
-      setSelectedNodeId(id);
+      setSelectedNodeId(node.id);
       setSelectedEdgeId(null);
-      showToast(`已添加${TYPE_LABEL[type]}「${node.name}」`);
+      if (type === "subprocess") {
+        setExpandedBlocks((current) => ({ ...current, [node.id]: true }));
+      }
+      showToast(`已添加${TYPE_LABEL[type] || labels[type]}「${node.name}」`);
       return node;
     },
     [selectedNodeId, showToast, spec],
@@ -752,15 +865,7 @@ export default function App() {
 
   const deleteNode = useCallback(
     (nodeId) => {
-      setSpec((current) =>
-        syncSpecialRefs({
-          ...current,
-          nodes: current.nodes.filter((node) => node.id !== nodeId),
-          edges: current.edges.filter(
-            (edge) => edge.from !== nodeId && edge.to !== nodeId,
-          ),
-        }),
-      );
+      setSpec((current) => nested.deleteNodes(current, [nodeId]));
       setDirty(true);
       if (selectedNodeId === nodeId) setSelectedNodeId(null);
       showToast("节点及其连接已删除");
@@ -771,15 +876,29 @@ export default function App() {
   const addEdge = useCallback(
     (source, target) => {
       if (!spec) return null;
-      const sourceNode = spec.nodes.find((node) => node.id === source);
-      if (!sourceNode || !spec.nodes.some((node) => node.id === target)) {
+      const sourceContext = nested.findNode(spec, source);
+      const targetContext = nested.findNode(spec, target);
+      if (!sourceContext || !targetContext) return null;
+      const sourcePath = JSON.stringify(sourceContext.path);
+      const targetPath = JSON.stringify(targetContext.path);
+      if (sourcePath !== targetPath) {
+        showToast("禁止跨层级连接：内部节点只能连接同一子流程内的节点。");
         return null;
       }
-      const outgoing = spec.edges.filter((edge) => edge.from === source);
+      const scope = sourceContext.scope;
+      const sourceNode = sourceContext.node;
+      const outgoing = (scope.edges || []).filter((edge) => edge.from === source);
       let kind = "normal";
       let condition = null;
       let label = "";
-      if (sourceNode.type === "decision") {
+      let subflow_exit = null;
+      if (sourceNode.type === "subprocess") {
+        const ends = sourceNode.subflow?.end_node_ids || [];
+        if (ends.length > 0) subflow_exit = ends[0];
+        if (ends.length > 1) {
+          showToast("该嵌套块有多个出口，请在右侧选择正确的子流程出口。");
+        }
+      } else if (sourceNode.type === "decision") {
         const hasDefault = outgoing.some((edge) => edge.kind === "default");
         kind = hasDefault ? "conditional" : "default";
         label = hasDefault ? "条件" : "默认";
@@ -799,7 +918,7 @@ export default function App() {
           value: 1,
         };
       }
-      const id = nextEdgeId(spec, source, target);
+      const id = nested.nextEdgeId(spec, source, target);
       const edge = {
         id,
         from: source,
@@ -808,8 +927,9 @@ export default function App() {
         label,
         priority: kind === "default" ? 0 : 10,
         ...(condition ? { condition } : {}),
+        ...(subflow_exit ? { subflow_exit } : {}),
       };
-      setSpec((current) => ({ ...current, edges: [...current.edges, edge] }));
+      setSpec((current) => nested.addEdge(current, sourceContext.path, edge));
       setDirty(true);
       setSelectedEdgeId(id);
       setSelectedNodeId(null);
@@ -825,22 +945,16 @@ export default function App() {
 
   const updateEdge = useCallback(
     (updatedEdge) => {
-      mutateSpec((current) => ({
-        ...current,
-        edges: current.edges.map((edge) =>
-          edge.id === updatedEdge.id ? updatedEdge : edge,
-        ),
-      }));
+      mutateSpec((current) =>
+        nested.updateEdge(current, updatedEdge.id, updatedEdge),
+      );
     },
     [mutateSpec],
   );
 
   const deleteEdge = useCallback(
     (edgeId) => {
-      setSpec((current) => ({
-        ...current,
-        edges: current.edges.filter((edge) => edge.id !== edgeId),
-      }));
+      setSpec((current) => nested.deleteEdges(current, [edgeId]));
       setDirty(true);
       if (selectedEdgeId === edgeId) setSelectedEdgeId(null);
       showToast("连接已删除");
@@ -922,12 +1036,13 @@ export default function App() {
       if (!reliabilityProcess) {
         return { ok: false, message: "尚未加载当前 Process IR 绑定信息" };
       }
-      const tasks = spec.nodes.filter((node) => node.type === "task");
+      const reliabilityNodes = nested.listReliabilityNodes(spec);
       const nodes = buildReliabilityNodes(
-        tasks,
+        reliabilityNodes,
         reliability?.nodes || [],
         nodeId,
         edit,
+        { simulationUnit: project.simulation_unit || "day" },
       );
       setReliabilityBusy(true);
       try {
@@ -968,6 +1083,7 @@ export default function App() {
       dirty,
       latestVersion,
       processId,
+      project,
       reliability,
       reliabilityProcess,
       showToast,
@@ -993,6 +1109,10 @@ export default function App() {
   const loadExperiment = useCallback(
     async (resultId) => {
       const data = await api.getExperiment(resultId);
+      setSimulationResult(data.experiment);
+      setSimulationError("");
+      setSimulationPhase("success");
+      setSimulationOpen(true);
       return data.experiment;
     },
     [],
@@ -1024,6 +1144,129 @@ export default function App() {
     [agentSessionId, processId, refreshExperiments, viewingVersion],
   );
 
+  const startSimulation = useCallback(async () => {
+    if (simulationRunning) return;
+    setSimulationOpen(true);
+    setSimulationError("");
+    setSimulationResult(null);
+    setSimulationPhase("preparing");
+    setSimulationRunning(true);
+
+    const fail = (message) => {
+      setSimulationError(message);
+      setSimulationPhase("error");
+    };
+
+    try {
+      let projectPayload;
+      try {
+        projectPayload = buildProjectPayload(project);
+      } catch (projectError) {
+        fail(projectError.message);
+        return;
+      }
+      if (!projectPayload.simulation_total_time) {
+        fail("仿真总时间必须大于 0。");
+        return;
+      }
+      if (!processId) {
+        fail("请先保存 Process IR，再运行仿真。");
+        return;
+      }
+      if (viewingVersion && latestVersion && viewingVersion !== latestVersion) {
+        fail("当前正在查看历史版本，请切换到最新版本后再运行仿真。");
+        return;
+      }
+      if (dirty) {
+        fail("当前流程有未保存修改，请先保存新版本后再运行仿真。");
+        return;
+      }
+      if (validationState !== "valid") {
+        const validation = await validateNow();
+        if (!validation || !validation.valid) {
+          const firstIssue = (validation?.issues || [])[0];
+          fail(
+            firstIssue
+              ? `流程结构校验未通过：${firstIssue.message}`
+              : "流程结构校验未通过，请先修正校验问题。",
+          );
+          return;
+        }
+      }
+      if (!reliabilityReadiness?.ready) {
+        const issues = reliabilityReadiness?.issues || [];
+        fail(
+          issues.length
+            ? `仿真参数未就绪：${issues.join("；")}`
+            : "仿真参数未就绪，请补齐阶段故障率、检测率或持续时间。",
+        );
+        return;
+      }
+      if (reliabilityStatus !== "bound") {
+        fail("当前 Process IR 版本没有绑定 Reliability IR，请先保存可靠性配置。");
+        return;
+      }
+
+      const simulationStart = Number(simulationForm.simulation_start);
+      if (!Number.isFinite(simulationStart) || simulationStart < 0) {
+        fail("仿真开始时间必须是大于等于 0 的数字。");
+        return;
+      }
+      const randomSeed = Number(simulationForm.random_seed);
+      if (!Number.isInteger(randomSeed) || randomSeed < 0) {
+        fail("随机种子必须是大于等于 0 的整数。");
+        return;
+      }
+
+      const targets = buildTargetsFromProject(project);
+      const payload = {
+        entity_count: projectPayload.missile_count,
+        simulation_unit: projectPayload.simulation_unit,
+        project: projectPayload,
+        simulation_start: simulationStart,
+        simulation_duration: projectPayload.simulation_total_time,
+        random_seed: randomSeed,
+        failure_policy:
+          simulationForm.failure_policy || "require_failure_exit",
+        failure_sampling:
+          simulationForm.failure_sampling || "time_to_failure",
+      };
+      if (targets) payload.evaluation_targets = targets;
+
+      setSimulationPhase("running");
+      const data = await runSimulationEvaluation(payload);
+      setSimulationResult(data);
+      setSimulationPhase("success");
+    } catch (runError) {
+      fail(formatSimulationError(runError));
+    } finally {
+      setSimulationRunning(false);
+    }
+  }, [
+    dirty,
+    latestVersion,
+    processId,
+    project,
+    reliabilityReadiness,
+    reliabilityStatus,
+    runSimulationEvaluation,
+    simulationForm,
+    simulationRunning,
+    validateNow,
+    validationState,
+    viewingVersion,
+  ]);
+
+  const updateSimulationForm = useCallback((key, value) => {
+    setSimulationForm((current) => ({ ...current, [key]: value }));
+  }, []);
+
+  useEffect(() => {
+    setSimulationResult(null);
+    setSimulationError("");
+    setSimulationPhase("idle");
+  }, [processId, viewingVersion]);
+
   const loadVersion = useCallback(
     async (version) => {
       if (!processId) return;
@@ -1050,48 +1293,30 @@ export default function App() {
 
   const handleNodeDragStop = useCallback(
     (_event, node) => {
-      mutateSpec((current) => ({
-        ...current,
-        nodes: current.nodes.map((item) =>
-          item.id === node.id
-            ? {
-                ...item,
-                position: {
-                  x: Math.round(node.position.x),
-                  y: Math.round(node.position.y),
-                },
-              }
-            : item,
-        ),
-      }));
+      const specPosition = nested.flowPositionToSpec(
+        node.position,
+        node.parentId || null,
+      );
+      mutateSpec((current) =>
+        nested.updateNodePosition(current, node.id, specPosition),
+      );
     },
     [mutateSpec],
   );
 
   const handleNodesDelete = useCallback(
     (deletedNodes) => {
-      const ids = new Set(deletedNodes.map((node) => node.id));
-      setSpec((current) =>
-        syncSpecialRefs({
-          ...current,
-          nodes: current.nodes.filter((node) => !ids.has(node.id)),
-          edges: current.edges.filter(
-            (edge) => !ids.has(edge.from) && !ids.has(edge.to),
-          ),
-        }),
-      );
+      const ids = deletedNodes.map((node) => node.id);
+      setSpec((current) => nested.deleteNodes(current, ids));
       setDirty(true);
-      if (ids.has(selectedNodeId)) setSelectedNodeId(null);
+      if (ids.includes(selectedNodeId)) setSelectedNodeId(null);
     },
     [selectedNodeId],
   );
 
   const handleEdgesDelete = useCallback((deletedEdges) => {
-    const ids = new Set(deletedEdges.map((edge) => edge.id));
-    setSpec((current) => ({
-      ...current,
-      edges: current.edges.filter((edge) => !ids.has(edge.id)),
-    }));
+    const ids = deletedEdges.map((edge) => edge.id);
+    setSpec((current) => nested.deleteEdges(current, ids));
     setDirty(true);
   }, []);
 
@@ -1277,6 +1502,51 @@ export default function App() {
       return;
     }
 
+    if (type === "requirement_analysis") {
+      const messageId = `analysis:${taskId || "task"}`;
+      setMessages((current) => {
+        const next = {
+          id: messageId,
+          role: "analysis",
+          taskId,
+          analysis: data.analysis || null,
+          valid: data.valid ?? data.validation?.valid ?? null,
+          validation: data.validation || null,
+          stepCount: data.step_count ?? 0,
+          branchCount: data.branch_count ?? 0,
+          ambiguityCount: data.ambiguity_count ?? 0,
+          blockingCount: data.blocking_count ?? 0,
+        };
+        const existing = current.some((message) => message.id === messageId);
+        return existing
+          ? current.map((message) =>
+              message.id === messageId ? next : message,
+            )
+          : [...current, next];
+      });
+      return;
+    }
+
+    if (type === "clarification") {
+      const messageId = `clarification:${taskId || "task"}`;
+      setMessages((current) => {
+        const next = {
+          id: messageId,
+          role: "clarification",
+          taskId,
+          text: data.message || "",
+          questions: Array.isArray(data.questions) ? data.questions : [],
+        };
+        const existing = current.some((message) => message.id === messageId);
+        return existing
+          ? current.map((message) =>
+              message.id === messageId ? next : message,
+            )
+          : [...current, next];
+      });
+      return;
+    }
+
     if (type === "process_ir") {
       const messageId = `proposal:process:${taskId || "task"}`;
       const baseProcessId =
@@ -1296,6 +1566,8 @@ export default function App() {
           taskId,
           spec: data.spec || null,
           validation: data.validation || null,
+          coverage:
+            data.requirement_coverage || data.validation?.coverage || null,
           baseProcessId,
           applied: sameSpec ? Boolean(existing.applied) : false,
         };
@@ -1303,6 +1575,22 @@ export default function App() {
           ? current.map((message) => (message.id === messageId ? next : message))
           : [...current, next];
       });
+      if (data.spec && isStructureValid(data.validation)) {
+        api
+          .previewSvg(data.spec)
+          .then((svg) => {
+            if (typeof svg === "string" && svg.trim().startsWith("<svg")) {
+              setPreview({
+                svg,
+                spec: data.spec,
+                validation: data.validation || null,
+                taskId,
+                visible: true,
+              });
+            }
+          })
+          .catch(() => {});
+      }
       return;
     }
 
@@ -1600,6 +1888,10 @@ export default function App() {
   const applyProcessProposal = useCallback(
     (message) => {
       if (!message?.spec) return;
+      if (!isStructureValid(message.validation)) {
+        showToast("该 Process IR 存在结构错误，不能应用到画布。");
+        return;
+      }
       const state = agentStateRef.current;
       const baseProcessId =
         message.baseProcessId ||
@@ -1779,12 +2071,15 @@ export default function App() {
     [showToast],
   );
 
-  const selectedNode = useMemo(
-    () => spec?.nodes.find((node) => node.id === selectedNodeId) || null,
+  const selectedNodeContext = useMemo(
+    () => (selectedNodeId ? nested.findNode(spec, selectedNodeId) : null),
     [selectedNodeId, spec],
   );
+  const selectedNode = selectedNodeContext?.node || null;
+  const selectedNodePath = selectedNodeContext?.path || [];
   const selectedEdge = useMemo(
-    () => spec?.edges.find((edge) => edge.id === selectedEdgeId) || null,
+    () =>
+      selectedEdgeId ? nested.findEdge(spec, selectedEdgeId)?.edge || null : null,
     [selectedEdgeId, spec],
   );
 
@@ -1813,7 +2108,16 @@ export default function App() {
     } else if (reliabilityStatus === "proposed") {
       hint = "当前显示 Agent 提议的可靠性配置，尚未保存。请检查每个 task 节点并确认保存。";
     } else if (reliabilityStatus === "bound") {
-      hint = `可靠性配置已绑定当前 Process IR v${viewingVersion}。`;
+      const expectedUnit = lambdaUnitFor(project.simulation_unit || "day");
+      const unitMismatch = (reliability?.nodes || []).some(
+        (node) =>
+          node.module_type === "stage" &&
+          node.lambda_unit &&
+          node.lambda_unit !== expectedUnit,
+      );
+      hint = unitMismatch
+        ? "阶段故障率 λ 的单位与当前项目仿真单位不一致，请重新保存可靠性配置。"
+        : `可靠性配置已绑定当前 Process IR v${viewingVersion}。`;
     }
     const canSave =
       Boolean(processId) &&
@@ -1830,11 +2134,13 @@ export default function App() {
       hint,
       canSave,
       busy: reliabilityBusy,
+      simulationUnit: project.simulation_unit || "day",
     };
   }, [
     dirty,
     latestVersion,
     processId,
+    project.simulation_unit,
     reliability,
     reliabilityBusy,
     reliabilityProcess,
@@ -1886,6 +2192,18 @@ export default function App() {
         />
 
         <main className="canvas-column">
+          <ProjectPanel
+            project={project}
+            onChange={updateProject}
+            validation={projectValidation}
+            onOpenSimulation={() => setSimulationOpen(true)}
+            simulationOpen={simulationOpen}
+            collapsed={projectCollapsed}
+            onToggleCollapsed={() =>
+              setProjectCollapsed((current) => !current)
+            }
+          />
+
           <Toolbar
             spec={spec}
             processId={processId}
@@ -1907,6 +2225,11 @@ export default function App() {
             onReload={() => processId && openProcess(processId)}
             onOpenSimulation={() => setSimulationOpen((current) => !current)}
             simulationOpen={simulationOpen}
+            simulationRunning={simulationRunning}
+            simulationPhase={simulationPhase}
+            onRunSimulation={startSimulation}
+            onExpandAll={expandAllBlocks}
+            onCollapseAll={collapseAllBlocks}
           />
 
           <div className="canvas-card">
@@ -1920,22 +2243,29 @@ export default function App() {
               onNodeClick={(_event, node) => {
                 setSelectedNodeId(node.id);
                 setSelectedEdgeId(null);
+                setInspectorTab("business");
+              }}
+              onNodeDoubleClick={(_event, node) => {
+                if (node.type === "subprocess") handleToggleBlock(node.id);
               }}
               onEdgeClick={(_event, edge) => {
                 setSelectedEdgeId(edge.id);
                 setSelectedNodeId(null);
+                setInspectorTab("business");
               }}
               onPaneClick={() => {
                 setSelectedNodeId(null);
                 setSelectedEdgeId(null);
+                setInspectorTab("business");
               }}
               onNodeDragStop={handleNodeDragStop}
               onNodesDelete={handleNodesDelete}
               onEdgesDelete={handleEdgesDelete}
               onConnect={handleConnect}
-              minZoom={0.25}
+              minZoom={0.3}
               maxZoom={1.8}
               fitView
+              fitViewOptions={{ padding: 0.18, minZoom: 0.4, maxZoom: 1.15 }}
               proOptions={{ hideAttribution: true }}
               deleteKeyCode={["Backspace", "Delete"]}
               connectionLineStyle={{ stroke: "#7c3aed", strokeWidth: 1.8 }}
@@ -1950,11 +2280,76 @@ export default function App() {
                     end: "#3b82f6",
                     decision: "#f59e0b",
                     task: "#6479cb",
+                    subprocess: "#7c3aed",
                   })[node.type] || "#94a3b8"
                 }
               />
               <Controls showInteractive={false} />
             </ReactFlow>
+            {preview?.svg && preview.visible && (
+              <div className="canvas-preview-overlay">
+                <div className="canvas-preview-toolbar">
+                  <span>
+                    SVG 预览 ·{" "}
+                    {isStructureValid(preview.validation)
+                      ? "结构合法"
+                      : "存在结构错误"}
+                    {preview.validation?.config_pending
+                      ? " · 仿真参数待配置"
+                      : ""}
+                  </span>
+                  <div className="canvas-preview-actions">
+                    <button
+                      type="button"
+                      className="button primary compact"
+                      onClick={() => {
+                        applyProcessProposal({
+                          id: `preview:${preview.taskId || "task"}`,
+                          spec: preview.spec,
+                          validation: preview.validation,
+                          baseProcessId: null,
+                          taskId: preview.taskId,
+                        });
+                        setPreview((current) =>
+                          current ? { ...current, visible: false } : current,
+                        );
+                      }}
+                      disabled={!isStructureValid(preview.validation)}
+                    >
+                      应用到画布
+                    </button>
+                    <button
+                      type="button"
+                      className="button compact"
+                      onClick={() =>
+                        setPreview((current) =>
+                          current ? { ...current, visible: false } : current,
+                        )
+                      }
+                    >
+                      关闭预览
+                    </button>
+                  </div>
+                </div>
+                <div
+                  className="canvas-preview-svg"
+                  dangerouslySetInnerHTML={{ __html: preview.svg }}
+                />
+              </div>
+            )}
+            {preview?.svg && !preview.visible && (
+              <button
+                type="button"
+                className="canvas-preview-reopen"
+                onClick={() =>
+                  setPreview((current) =>
+                    current ? { ...current, visible: true } : current,
+                  )
+                }
+              >
+                重新打开 SVG 预览
+              </button>
+            )}
             {!spec && (
               <div className="empty-overlay">
                 <h2>还没有流程</h2>
@@ -1970,7 +2365,17 @@ export default function App() {
             processVersion={viewingVersion}
             dirty={dirty}
             reliabilityStatus={reliabilityStatus}
-            onRun={runSimulationEvaluation}
+            project={project}
+            projectValidation={projectValidation}
+            reliabilityReadiness={reliabilityReadiness}
+            validationState={validationState}
+            form={simulationForm}
+            onFormChange={updateSimulationForm}
+            onRun={startSimulation}
+            running={simulationRunning}
+            phase={simulationPhase}
+            error={simulationError}
+            result={simulationResult}
             experiments={experiments}
             experimentLoading={experimentLoading}
             onListExperiments={refreshExperiments}
@@ -1987,6 +2392,7 @@ export default function App() {
           viewingVersion={viewingVersion}
           versions={versions}
           selectedNode={selectedNode}
+          selectedNodePath={selectedNodePath}
           selectedEdge={selectedEdge}
           reliabilityNode={reliabilityNode}
           reliabilityContext={reliabilityContext}
@@ -1997,6 +2403,8 @@ export default function App() {
           onUpdateProcess={updateProcess}
           onLoadVersion={loadVersion}
           onSaveReliability={saveReliabilityForNode}
+          project={project}
+          initialTab={inspectorTab}
         />
       </div>
 
