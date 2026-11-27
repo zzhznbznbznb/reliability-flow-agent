@@ -1156,7 +1156,7 @@ class SimulationRuntime:
         if not entity.repair_pending:
             return
         recovered = was_failed and not entity.currently_failed
-        repair_path_finished = node.type == "end"
+        repair_path_finished = node.type == "end" and not entity.scope_stack
         explicit_increment = (
             entity.repair_count != entity.repair_count_at_failure
         )

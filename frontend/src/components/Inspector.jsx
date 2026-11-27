@@ -744,8 +744,10 @@ function EdgeEditor({ edge, sourceNode, onUpdate, onDelete }) {
             placeholder='{"op":"eq","field":"attributes.inspection_passed","value":true}'
           />
           <p className="help">
-            字段可使用 currently_failed、failure_count、repair_count、
-            current_status、attributes.* 或 node_visits.*。
+            字段可使用 test_detected、last_test_detected、currently_failed、
+            failure_count、repair_count、current_status、ever_failed、
+            unavailable_time、attributes.* 或 node_visits.*。
+            测试节点后的“故障”分支通常使用 test_detected = true。
           </p>
         </div>
       )}
@@ -977,7 +979,7 @@ export default function Inspector({
         />
       ) : selectedEdge ? (
         <EdgeEditor
-          key={selectedEdge.id}
+          key={`${selectedEdge.id}-${JSON.stringify(selectedEdge.condition)}`}
           edge={selectedEdge}
           sourceNode={selectedEdgeSourceNode}
           onUpdate={onUpdateEdge}
