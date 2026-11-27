@@ -9,6 +9,39 @@ const QUICK_COMMANDS = [
 const PLACEHOLDER =
   "直接用自然语言描述业务需求，例如：装备完成任务后进行检查，如果正常则结束，如果发现故障则进入维修，维修完成后重新执行任务。";
 
+const FLOW_REQUIREMENT_TEMPLATE = `请按下面结构描述流程；不知道的写“未确定”，不要猜。没有判断、循环或子流程时写“无”。
+
+1. 流程目标：
+2. 开始：
+3. 主要步骤（按顺序）：
+   - 步骤名称：
+   - 前一步：
+   - 下一步：
+4. 判断分支（如有）：
+   - 判断名称：
+   - 判断依据（正常/异常如何区分）：
+   - 正常分支去向：
+   - 异常/故障分支去向：
+   - 默认分支去向：
+   - 维修后返回哪个步骤：
+5. 循环（如有）：
+   - 从哪个步骤回到哪个步骤：
+   - 继续循环的条件：
+   - 退出循环的条件：
+6. 子流程（如有）：
+   - 子流程名称：
+   - 属于父流程哪个步骤：
+   - 子流程内部步骤：
+   - 子流程内部判断与分支：
+   - 正常出口及返回父流程的位置：
+   - 异常/故障出口及返回父流程的位置：
+7. 结束：
+   - 结束节点及其业务含义：
+8. 未确定信息：
+   - 未确定的持续时间、判断依据、分支去向等：
+
+不要自行填写故障率、检测率或概率；未提供的参数由系统提示补充。`;
+
 const TOOL_LABELS = {
   get_project_capabilities: "读取项目能力",
   get_process_ir_schema: "读取 Process IR Schema",
@@ -320,6 +353,7 @@ export default function AgentPanel({
 }) {
   const [input, setInput] = useState("");
   const scrollRef = useRef(null);
+  const textareaRef = useRef(null);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -332,6 +366,17 @@ export default function AgentPanel({
     if (!text || busy) return;
     setInput("");
     onSend(text);
+  };
+
+  const insertTemplate = () => {
+    if (input.trim()) {
+      const replace = window.confirm(
+        "输入框已有内容，是否用流程需求模板替换？",
+      );
+      if (!replace) return;
+    }
+    setInput(FLOW_REQUIREMENT_TEMPLATE);
+    window.requestAnimationFrame(() => textareaRef.current?.focus());
   };
 
   const statusText = STATUS_LABELS[agentStatus] || agentStatus || "未连接";
@@ -452,6 +497,7 @@ export default function AgentPanel({
 
       <div className="composer">
         <textarea
+          ref={textareaRef}
           value={input}
           placeholder={PLACEHOLDER}
           rows={3}
@@ -464,15 +510,28 @@ export default function AgentPanel({
           }}
         />
         <div className="composer-footer">
-          <span>Enter 发送，Shift+Enter 换行</span>
-          <button
-            type="button"
-            className="button primary compact"
-            onClick={submit}
-            disabled={busy || !input.trim()}
-          >
-            发送
-          </button>
+          <div className="composer-hints">
+            <span>Enter 发送，Shift+Enter 换行</span>
+            <span>模板只会填入输入框，不会自动提交</span>
+          </div>
+          <div className="composer-actions">
+            <button
+              type="button"
+              className="button compact template-trigger"
+              onClick={insertTemplate}
+              disabled={busy}
+            >
+              使用模板
+            </button>
+            <button
+              type="button"
+              className="button primary compact"
+              onClick={submit}
+              disabled={busy || !input.trim()}
+            >
+              发送
+            </button>
+          </div>
         </div>
       </div>
 
